@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _refresh();
   }
 
-  void _refresh() => setState(() => _data = _load());
+  void _refresh() => setState(() { _data = _load(); });
 
   Future<_HomeData> _load() async {
     final results = await Future.wait([
