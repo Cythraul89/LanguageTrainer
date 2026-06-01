@@ -4,11 +4,11 @@ All words currently in the trainer, grouped by CEFR level. Please correct any er
 
 ---
 
-## Nouns (60 total)
+## Nouns (179 total)
 
 Article drill: choose **der / die / das**. Plural shown for reference only.
 
-### A1 (20 nouns)
+### A1 (60 nouns)
 
 | Article | Word | Plural | English |
 |---------|------|--------|---------|
@@ -32,8 +32,48 @@ Article drill: choose **der / die / das**. Plural shown for reference only.
 | der | Vater | Väter | father |
 | das | Wasser | — | water |
 | das | Auto | Autos | car |
+| der | Apfel | Äpfel | apple |
+| das | Brot | Brote | bread |
+| die | Milch | — | milk |
+| der | Stuhl | Stühle | chair |
+| das | Bett | Betten | bed |
+| der | Name | Namen | name |
+| die | Zahl | Zahlen | number |
+| die | Farbe | Farben | colour |
+| der | Ball | Bälle | ball |
+| der | Schuh | Schuhe | shoe |
+| das | Hemd | Hemden | shirt |
+| der | Rock | Röcke | skirt |
+| das | Kleid | Kleider | dress |
+| die | Uhr | Uhren | clock / watch |
+| die | Stunde | Stunden | hour |
+| die | Minute | Minuten | minute |
+| der | Monat | Monate | month |
+| das | Wort | Wörter | word |
+| die | Nummer | Nummern | number / no. |
+| das | Telefon | Telefone | telephone |
+| das | Zimmer | Zimmer | room |
+| der | Kühlschrank | Kühlschränke | refrigerator |
+| das | Glas | Gläser | glass |
+| die | Tasse | Tassen | cup |
+| der | Löffel | Löffel | spoon |
+| das | Messer | Messer | knife |
+| die | Gabel | Gabeln | fork |
+| der | Teller | Teller | plate |
+| der | Boden | Böden | floor / ground |
+| die | Wand | Wände | wall |
+| die | Treppe | Treppen | stairs |
+| der | Garten | Gärten | garden |
+| die | Straße | Straßen | street |
+| der | Bus | Busse | bus |
+| der | Zug | Züge | train |
+| das | Flugzeug | Flugzeuge | aeroplane |
+| der | Bahnhof | Bahnhöfe | train station |
+| der | Supermarkt | Supermärkte | supermarket |
+| der | Arzt | Ärzte | doctor (male) |
+| das | Krankenhaus | Krankenhäuser | hospital |
 
-### A2 (20 nouns)
+### A2 (59 nouns)
 
 | Article | Word | Plural | English |
 |---------|------|--------|---------|
@@ -45,10 +85,8 @@ Article drill: choose **der / die / das**. Plural shown for reference only.
 | der | Baum | Bäume | tree |
 | die | Blume | Blumen | flower |
 | das | Geld | — | money |
-| die | Straße | Straßen | street |
 | der | Weg | Wege | way / path |
 | die | Zeit | Zeiten | time |
-| das | Bett | Betten | bed |
 | die | Küche | Küchen | kitchen |
 | der | Morgen | Morgen | morning |
 | die | Musik | — | music |
@@ -57,8 +95,49 @@ Article drill: choose **der / die / das**. Plural shown for reference only.
 | der | Lehrer | Lehrer | teacher (male) |
 | das | Tier | Tiere | animal |
 | die | Woche | Wochen | week |
+| der | Abend | Abende | evening |
+| der | Nachmittag | Nachmittage | afternoon |
+| der | Bruder | Brüder | brother |
+| die | Schwester | Schwestern | sister |
+| der | Großvater | Großväter | grandfather |
+| die | Großmutter | Großmütter | grandmother |
+| der | Sohn | Söhne | son |
+| die | Tochter | Töchter | daughter |
+| die | Wohnung | Wohnungen | flat / apartment |
+| der | Kühlschrank | Kühlschränke | refrigerator |
+| die | Zeitung | Zeitungen | newspaper |
+| der | Brief | Briefe | letter |
+| die | Reise | Reisen | journey / trip |
+| das | Hotel | Hotels | hotel |
+| das | Restaurant | Restaurants | restaurant |
+| der | Preis | Preise | price |
+| der | Einkauf | Einkäufe | shopping |
+| die | Farbe | Farben | colour |
+| der | Sport | — | sport |
+| der | Film | Filme | film / movie |
+| das | Foto | Fotos | photo |
+| der | Computer | Computer | computer |
+| das | Handy | Handys | mobile phone |
+| der | Schüler | Schüler | pupil (male) |
+| die | Klasse | Klassen | class / classroom |
+| die | Hausaufgabe | Hausaufgaben | homework |
+| der | Fluss | Flüsse | river |
+| der | Berg | Berge | mountain |
+| das | Meer | Meere | sea |
+| das | Land | Länder | country / land |
+| das | Wetter | — | weather |
+| der | Sommer | Sommer | summer |
+| der | Winter | Winter | winter |
+| der | Frühling | Frühlinge | spring |
+| der | Herbst | Herbste | autumn |
+| der | Regen | — | rain |
+| der | Schnee | — | snow |
+| die | Sonne | — | sun |
+| die | Luft | — | air |
+| das | Feuer | Feuer | fire |
+| das | Licht | Lichter | light |
 
-### B1 (20 nouns)
+### B1 (60 nouns)
 
 | Article | Word | Plural | English |
 |---------|------|--------|---------|
@@ -82,15 +161,55 @@ Article drill: choose **der / die / das**. Plural shown for reference only.
 | die | Bedeutung | Bedeutungen | meaning / significance |
 | der | Zusammenhang | Zusammenhänge | context / connection |
 | die | Verantwortung | — | responsibility |
+| die | Erfahrung | Erfahrungen | experience |
+| die | Kenntnisse | Kenntnisse | knowledge / skills |
+| das | Interesse | Interessen | interest |
+| die | Wirkung | Wirkungen | effect |
+| der | Einfluss | Einflüsse | influence |
+| das | Ziel | Ziele | goal / aim |
+| die | Chance | Chancen | chance / opportunity |
+| das | Risiko | Risiken | risk |
+| die | Wirtschaft | Wirtschaften | economy |
+| die | Politik | — | politics |
+| die | Umwelt | — | environment |
+| die | Kultur | Kulturen | culture |
+| die | Bildung | — | education |
+| die | Gesundheit | — | health |
+| die | Kraft | Kräfte | strength / power |
+| der | Vorschlag | Vorschläge | suggestion |
+| die | Entscheidung | Entscheidungen | decision |
+| der | Vorteil | Vorteile | advantage |
+| der | Nachteil | Nachteile | disadvantage |
+| der | Wert | Werte | value |
+| das | Angebot | Angebote | offer |
+| die | Nachricht | Nachrichten | message / news |
+| der | Bericht | Berichte | report |
+| das | Gespräch | Gespräche | conversation |
+| das | Verhältnis | Verhältnisse | relationship / ratio |
+| die | Folge | Folgen | consequence |
+| die | Maßnahme | Maßnahmen | measure / action |
+| die | Kritik | Kritiken | criticism |
+| die | Leistung | Leistungen | performance / achievement |
+| die | Stärke | Stärken | strength |
+| die | Schwäche | Schwächen | weakness |
+| der | Konflikt | Konflikte | conflict |
+| die | Unterstützung | — | support |
+| der | Fortschritt | Fortschritte | progress |
+| die | Planung | Planungen | planning |
+| der | Durchschnitt | Durchschnitte | average |
+| die | Mehrheit | Mehrheiten | majority |
+| die | Minderheit | Minderheiten | minority |
+| die | Ursache | Ursachen | cause / origin |
+| die | Wirklichkeit | — | reality |
 
 ---
 
-## Verbs (25 total)
+## Verbs (75 total)
 
 Conjugation drill: fill in the correct form for the given person and tense.  
 Perfekt = auxiliary (haben/sein) + Partizip II.
 
-### A1 (10 verbs)
+### A1 (30 verbs)
 
 #### sein — to be &nbsp;·&nbsp; Aux: sein &nbsp;·&nbsp; P2: gewesen
 
@@ -202,9 +321,229 @@ Perfekt = auxiliary (haben/sein) + Partizip II.
 | ihr | wollt | wolltet | habt gewollt |
 | sie/Sie | wollen | wollten | haben gewollt |
 
+#### kaufen — to buy &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gekauft
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | kaufe | kaufte | habe gekauft |
+| du | kaufst | kauftest | hast gekauft |
+| er/sie/es | kauft | kaufte | hat gekauft |
+| wir | kaufen | kauften | haben gekauft |
+| ihr | kauft | kauftet | habt gekauft |
+| sie/Sie | kaufen | kauften | haben gekauft |
+
+#### spielen — to play &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gespielt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | spiele | spielte | habe gespielt |
+| du | spielst | spieltest | hast gespielt |
+| er/sie/es | spielt | spielte | hat gespielt |
+| wir | spielen | spielten | haben gespielt |
+| ihr | spielt | spieltet | habt gespielt |
+| sie/Sie | spielen | spielten | haben gespielt |
+
+#### trinken — to drink &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: getrunken
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | trinke | trank | habe getrunken |
+| du | trinkst | trankst | hast getrunken |
+| er/sie/es | trinkt | trank | hat getrunken |
+| wir | trinken | tranken | haben getrunken |
+| ihr | trinkt | trankt | habt getrunken |
+| sie/Sie | trinken | tranken | haben getrunken |
+
+#### essen — to eat &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gegessen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | esse | aß | habe gegessen |
+| du | isst | aßest | hast gegessen |
+| er/sie/es | isst | aß | hat gegessen |
+| wir | essen | aßen | haben gegessen |
+| ihr | esst | aßt | habt gegessen |
+| sie/Sie | essen | aßen | haben gegessen |
+
+#### wohnen — to live / reside &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gewohnt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | wohne | wohnte | habe gewohnt |
+| du | wohnst | wohntest | hast gewohnt |
+| er/sie/es | wohnt | wohnte | hat gewohnt |
+| wir | wohnen | wohnten | haben gewohnt |
+| ihr | wohnt | wohntet | habt gewohnt |
+| sie/Sie | wohnen | wohnten | haben gewohnt |
+
+#### lernen — to learn &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gelernt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | lerne | lernte | habe gelernt |
+| du | lernst | lerntest | hast gelernt |
+| er/sie/es | lernt | lernte | hat gelernt |
+| wir | lernen | lernten | haben gelernt |
+| ihr | lernt | lerntet | habt gelernt |
+| sie/Sie | lernen | lernten | haben gelernt |
+
+#### heißen — to be called &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geheißen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | heiße | hieß | habe geheißen |
+| du | heißt | hießt | hast geheißen |
+| er/sie/es | heißt | hieß | hat geheißen |
+| wir | heißen | hießen | haben geheißen |
+| ihr | heißt | hießt | habt geheißen |
+| sie/Sie | heißen | hießen | haben geheißen |
+
+#### schlafen — to sleep &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geschlafen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | schlafe | schlief | habe geschlafen |
+| du | schläfst | schliefst | hast geschlafen |
+| er/sie/es | schläft | schlief | hat geschlafen |
+| wir | schlafen | schliefen | haben geschlafen |
+| ihr | schlaft | schlieft | habt geschlafen |
+| sie/Sie | schlafen | schliefen | haben geschlafen |
+
+#### laufen — to run / walk &nbsp;·&nbsp; Aux: sein &nbsp;·&nbsp; P2: gelaufen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | laufe | lief | bin gelaufen |
+| du | läufst | liefst | bist gelaufen |
+| er/sie/es | läuft | lief | ist gelaufen |
+| wir | laufen | liefen | sind gelaufen |
+| ihr | lauft | lieft | seid gelaufen |
+| sie/Sie | laufen | liefen | sind gelaufen |
+
+#### suchen — to look for / search &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gesucht
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | suche | suchte | habe gesucht |
+| du | suchst | suchtest | hast gesucht |
+| er/sie/es | sucht | suchte | hat gesucht |
+| wir | suchen | suchten | haben gesucht |
+| ihr | sucht | suchtet | habt gesucht |
+| sie/Sie | suchen | suchten | haben gesucht |
+
+#### fragen — to ask &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gefragt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | frage | fragte | habe gefragt |
+| du | fragst | fragtest | hast gefragt |
+| er/sie/es | fragt | fragte | hat gefragt |
+| wir | fragen | fragten | haben gefragt |
+| ihr | fragt | fragtet | habt gefragt |
+| sie/Sie | fragen | fragten | haben gefragt |
+
+#### arbeiten — to work &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gearbeitet
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | arbeite | arbeitete | habe gearbeitet |
+| du | arbeitest | arbeitetest | hast gearbeitet |
+| er/sie/es | arbeitet | arbeitete | hat gearbeitet |
+| wir | arbeiten | arbeiteten | haben gearbeitet |
+| ihr | arbeitet | arbeitetet | habt gearbeitet |
+| sie/Sie | arbeiten | arbeiteten | haben gearbeitet |
+
+#### hören — to hear / listen &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gehört
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | höre | hörte | habe gehört |
+| du | hörst | hörtest | hast gehört |
+| er/sie/es | hört | hörte | hat gehört |
+| wir | hören | hörten | haben gehört |
+| ihr | hört | hörtet | habt gehört |
+| sie/Sie | hören | hörten | haben gehört |
+
+#### kennen — to know (a person/place) &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gekannt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | kenne | kannte | habe gekannt |
+| du | kennst | kanntest | hast gekannt |
+| er/sie/es | kennt | kannte | hat gekannt |
+| wir | kennen | kannten | haben gekannt |
+| ihr | kennt | kanntet | habt gekannt |
+| sie/Sie | kennen | kannten | haben gekannt |
+
+#### bringen — to bring &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gebracht
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | bringe | brachte | habe gebracht |
+| du | bringst | brachtest | hast gebracht |
+| er/sie/es | bringt | brachte | hat gebracht |
+| wir | bringen | brachten | haben gebracht |
+| ihr | bringt | brachtet | habt gebracht |
+| sie/Sie | bringen | brachten | haben gebracht |
+
+#### liegen — to lie / be situated &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gelegen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | liege | lag | habe gelegen |
+| du | liegst | lagst | hast gelegen |
+| er/sie/es | liegt | lag | hat gelegen |
+| wir | liegen | lagen | haben gelegen |
+| ihr | liegt | lagt | habt gelegen |
+| sie/Sie | liegen | lagen | haben gelegen |
+
+#### helfen — to help &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geholfen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | helfe | half | habe geholfen |
+| du | hilfst | halfst | hast geholfen |
+| er/sie/es | hilft | half | hat geholfen |
+| wir | helfen | halfen | haben geholfen |
+| ihr | helft | halft | habt geholfen |
+| sie/Sie | helfen | halfen | haben geholfen |
+
+#### finden — to find &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gefunden
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | finde | fand | habe gefunden |
+| du | findest | fandst | hast gefunden |
+| er/sie/es | findet | fand | hat gefunden |
+| wir | finden | fanden | haben gefunden |
+| ihr | findet | fandet | habt gefunden |
+| sie/Sie | finden | fanden | haben gefunden |
+
+#### brauchen — to need &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gebraucht
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | brauche | brauchte | habe gebraucht |
+| du | brauchst | brauchtest | hast gebraucht |
+| er/sie/es | braucht | brauchte | hat gebraucht |
+| wir | brauchen | brauchten | haben gebraucht |
+| ihr | braucht | brauchtet | habt gebraucht |
+| sie/Sie | brauchen | brauchten | haben gebraucht |
+
+#### bezahlen — to pay &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: bezahlt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | bezahle | bezahlte | habe bezahlt |
+| du | bezahlst | bezahltest | hast bezahlt |
+| er/sie/es | bezahlt | bezahlte | hat bezahlt |
+| wir | bezahlen | bezahlten | haben bezahlt |
+| ihr | bezahlt | bezahltet | habt bezahlt |
+| sie/Sie | bezahlen | bezahlten | haben bezahlt |
+
 ---
 
-### A2 (10 verbs)
+### A2 (30 verbs)
 
 #### sollen — should / to be supposed to &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gesollt
 
@@ -316,10 +655,6 @@ Perfekt = auxiliary (haben/sein) + Partizip II.
 | ihr | steht | standet | habt gestanden |
 | sie/Sie | stehen | standen | haben gestanden |
 
----
-
-### B1 (5 verbs)
-
 #### schreiben — to write &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geschrieben
 
 | Person | Präsens | Präteritum | Perfekt |
@@ -331,27 +666,218 @@ Perfekt = auxiliary (haben/sein) + Partizip II.
 | ihr | schreibt | schriebt | habt geschrieben |
 | sie/Sie | schreiben | schrieben | haben geschrieben |
 
-#### essen — to eat &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gegessen
+#### bleiben — to stay / remain &nbsp;·&nbsp; Aux: sein &nbsp;·&nbsp; P2: geblieben
 
 | Person | Präsens | Präteritum | Perfekt |
 |--------|---------|------------|---------|
-| ich | esse | aß | habe gegessen |
-| du | isst | aßt | hast gegessen |
-| er/sie/es | isst | aß | hat gegessen |
-| wir | essen | aßen | haben gegessen |
-| ihr | esst | aßt | habt gegessen |
-| sie/Sie | essen | aßen | haben gegessen |
+| ich | bleibe | blieb | bin geblieben |
+| du | bleibst | bliebst | bist geblieben |
+| er/sie/es | bleibt | blieb | ist geblieben |
+| wir | bleiben | blieben | sind geblieben |
+| ihr | bleibt | bliebt | seid geblieben |
+| sie/Sie | bleiben | blieben | sind geblieben |
 
-#### trinken — to drink &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: getrunken
+#### treffen — to meet &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: getroffen
 
 | Person | Präsens | Präteritum | Perfekt |
 |--------|---------|------------|---------|
-| ich | trinke | trank | habe getrunken |
-| du | trinkst | trankst | hast getrunken |
-| er/sie/es | trinkt | trank | hat getrunken |
-| wir | trinken | tranken | haben getrunken |
-| ihr | trinkt | trankt | habt getrunken |
-| sie/Sie | trinken | tranken | haben getrunken |
+| ich | treffe | traf | habe getroffen |
+| du | triffst | trafst | hast getroffen |
+| er/sie/es | trifft | traf | hat getroffen |
+| wir | treffen | trafen | haben getroffen |
+| ihr | trefft | traft | habt getroffen |
+| sie/Sie | treffen | trafen | haben getroffen |
+
+#### fangen — to catch &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gefangen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | fange | fing | habe gefangen |
+| du | fängst | fingst | hast gefangen |
+| er/sie/es | fängt | fing | hat gefangen |
+| wir | fangen | fingen | haben gefangen |
+| ihr | fangt | fingt | habt gefangen |
+| sie/Sie | fangen | fingen | haben gefangen |
+
+#### tragen — to carry / wear &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: getragen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | trage | trug | habe getragen |
+| du | trägst | trugst | hast getragen |
+| er/sie/es | trägt | trug | hat getragen |
+| wir | tragen | trugen | haben getragen |
+| ihr | tragt | trugt | habt getragen |
+| sie/Sie | tragen | trugen | haben getragen |
+
+#### rufen — to call / shout &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gerufen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | rufe | rief | habe gerufen |
+| du | rufst | riefst | hast gerufen |
+| er/sie/es | ruft | rief | hat gerufen |
+| wir | rufen | riefen | haben gerufen |
+| ihr | ruft | rieft | habt gerufen |
+| sie/Sie | rufen | riefen | haben gerufen |
+
+#### fallen — to fall &nbsp;·&nbsp; Aux: sein &nbsp;·&nbsp; P2: gefallen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | falle | fiel | bin gefallen |
+| du | fällst | fielst | bist gefallen |
+| er/sie/es | fällt | fiel | ist gefallen |
+| wir | fallen | fielen | sind gefallen |
+| ihr | fallt | fielt | seid gefallen |
+| sie/Sie | fallen | fielen | sind gefallen |
+
+#### zeigen — to show / point &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gezeigt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | zeige | zeigte | habe gezeigt |
+| du | zeigst | zeigtest | hast gezeigt |
+| er/sie/es | zeigt | zeigte | hat gezeigt |
+| wir | zeigen | zeigten | haben gezeigt |
+| ihr | zeigt | zeigtet | habt gezeigt |
+| sie/Sie | zeigen | zeigten | haben gezeigt |
+
+#### öffnen — to open &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geöffnet
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | öffne | öffnete | habe geöffnet |
+| du | öffnest | öffnetest | hast geöffnet |
+| er/sie/es | öffnet | öffnete | hat geöffnet |
+| wir | öffnen | öffneten | haben geöffnet |
+| ihr | öffnet | öffnetet | habt geöffnet |
+| sie/Sie | öffnen | öffneten | haben geöffnet |
+
+#### schließen — to close &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geschlossen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | schließe | schloss | habe geschlossen |
+| du | schließt | schlossest | hast geschlossen |
+| er/sie/es | schließt | schloss | hat geschlossen |
+| wir | schließen | schlossen | haben geschlossen |
+| ihr | schließt | schlosset | habt geschlossen |
+| sie/Sie | schließen | schlossen | haben geschlossen |
+
+#### beginnen — to begin &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: begonnen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | beginne | begann | habe begonnen |
+| du | beginnst | begannst | hast begonnen |
+| er/sie/es | beginnt | begann | hat begonnen |
+| wir | beginnen | begannen | haben begonnen |
+| ihr | beginnt | begannt | habt begonnen |
+| sie/Sie | beginnen | begannen | haben begonnen |
+
+#### kosten — to cost &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gekostet
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | koste | kostete | habe gekostet |
+| du | kostest | kostetest | hast gekostet |
+| er/sie/es | kostet | kostete | hat gekostet |
+| wir | kosten | kosteten | haben gekostet |
+| ihr | kostet | kostetet | habt gekostet |
+| sie/Sie | kosten | kosteten | haben gekostet |
+
+#### reisen — to travel &nbsp;·&nbsp; Aux: sein &nbsp;·&nbsp; P2: gereist
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | reise | reiste | bin gereist |
+| du | reist | reistest | bist gereist |
+| er/sie/es | reist | reiste | ist gereist |
+| wir | reisen | reisten | sind gereist |
+| ihr | reist | reistet | seid gereist |
+| sie/Sie | reisen | reisten | sind gereist |
+
+#### einladen — to invite &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: eingeladen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | lade ein | lud ein | habe eingeladen |
+| du | lädst ein | ludst ein | hast eingeladen |
+| er/sie/es | lädt ein | lud ein | hat eingeladen |
+| wir | laden ein | luden ein | haben eingeladen |
+| ihr | ladet ein | ludet ein | habt eingeladen |
+| sie/Sie | laden ein | luden ein | haben eingeladen |
+
+#### anrufen — to phone / call &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: angerufen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | rufe an | rief an | habe angerufen |
+| du | rufst an | riefst an | hast angerufen |
+| er/sie/es | ruft an | rief an | hat angerufen |
+| wir | rufen an | riefen an | haben angerufen |
+| ihr | ruft an | rieft an | habt angerufen |
+| sie/Sie | rufen an | riefen an | haben angerufen |
+
+#### aufstehen — to get up / stand up &nbsp;·&nbsp; Aux: sein &nbsp;·&nbsp; P2: aufgestanden
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | stehe auf | stand auf | bin aufgestanden |
+| du | stehst auf | standst auf | bist aufgestanden |
+| er/sie/es | steht auf | stand auf | ist aufgestanden |
+| wir | stehen auf | standen auf | sind aufgestanden |
+| ihr | steht auf | standet auf | seid aufgestanden |
+| sie/Sie | stehen auf | standen auf | sind aufgestanden |
+
+#### abholen — to pick up / collect &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: abgeholt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | hole ab | holte ab | habe abgeholt |
+| du | holst ab | holtest ab | hast abgeholt |
+| er/sie/es | holt ab | holte ab | hat abgeholt |
+| wir | holen ab | holten ab | haben abgeholt |
+| ihr | holt ab | holtet ab | habt abgeholt |
+| sie/Sie | holen ab | holten ab | haben abgeholt |
+
+#### verstehen — to understand &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: verstanden
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | verstehe | verstand | habe verstanden |
+| du | verstehst | verstandst | hast verstanden |
+| er/sie/es | versteht | verstand | hat verstanden |
+| wir | verstehen | verstanden | haben verstanden |
+| ihr | versteht | verstandet | habt verstanden |
+| sie/Sie | verstehen | verstanden | haben verstanden |
+
+#### putzen — to clean &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geputzt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | putze | putzte | habe geputzt |
+| du | putzt | putztest | hast geputzt |
+| er/sie/es | putzt | putzte | hat geputzt |
+| wir | putzen | putzten | haben geputzt |
+| ihr | putzt | putztet | habt geputzt |
+| sie/Sie | putzen | putzten | haben geputzt |
+
+#### wechseln — to change / exchange &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gewechselt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | wechsle | wechselte | habe gewechselt |
+| du | wechselst | wechseltest | hast gewechselt |
+| er/sie/es | wechselt | wechselte | hat gewechselt |
+| wir | wechseln | wechselten | haben gewechselt |
+| ihr | wechselt | wechseltet | habt gewechselt |
+| sie/Sie | wechseln | wechselten | haben gewechselt |
+
+---
+
+### B1 (15 verbs)
 
 #### sprechen — to speak &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gesprochen
 
@@ -374,3 +900,146 @@ Perfekt = auxiliary (haben/sein) + Partizip II.
 | wir | denken | dachten | haben gedacht |
 | ihr | denkt | dachtet | habt gedacht |
 | sie/Sie | denken | dachten | haben gedacht |
+
+#### entscheiden — to decide &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: entschieden
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | entscheide | entschied | habe entschieden |
+| du | entscheidest | entschiedst | hast entschieden |
+| er/sie/es | entscheidet | entschied | hat entschieden |
+| wir | entscheiden | entschieden | haben entschieden |
+| ihr | entscheidet | entschiedet | habt entschieden |
+| sie/Sie | entscheiden | entschieden | haben entschieden |
+
+#### erklären — to explain &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: erklärt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | erkläre | erklärte | habe erklärt |
+| du | erklärst | erklärtest | hast erklärt |
+| er/sie/es | erklärt | erklärte | hat erklärt |
+| wir | erklären | erklärten | haben erklärt |
+| ihr | erklärt | erklärtet | habt erklärt |
+| sie/Sie | erklären | erklärten | haben erklärt |
+
+#### empfehlen — to recommend &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: empfohlen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | empfehle | empfahl | habe empfohlen |
+| du | empfiehlst | empfahlst | hast empfohlen |
+| er/sie/es | empfiehlt | empfahl | hat empfohlen |
+| wir | empfehlen | empfahlen | haben empfohlen |
+| ihr | empfehlt | empfahlt | habt empfohlen |
+| sie/Sie | empfehlen | empfahlen | haben empfohlen |
+
+#### versprechen — to promise &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: versprochen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | verspreche | versprach | habe versprochen |
+| du | versprichst | versprachst | hast versprochen |
+| er/sie/es | verspricht | versprach | hat versprochen |
+| wir | versprechen | versprachen | haben versprochen |
+| ihr | versprecht | verspracht | habt versprochen |
+| sie/Sie | versprechen | versprachen | haben versprochen |
+
+#### verlieren — to lose &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: verloren
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | verliere | verlor | habe verloren |
+| du | verlierst | verlorst | hast verloren |
+| er/sie/es | verliert | verlor | hat verloren |
+| wir | verlieren | verloren | haben verloren |
+| ihr | verliert | verlort | habt verloren |
+| sie/Sie | verlieren | verloren | haben verloren |
+
+#### gewinnen — to win &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gewonnen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | gewinne | gewann | habe gewonnen |
+| du | gewinnst | gewannst | hast gewonnen |
+| er/sie/es | gewinnt | gewann | hat gewonnen |
+| wir | gewinnen | gewannen | haben gewonnen |
+| ihr | gewinnt | gewannt | habt gewonnen |
+| sie/Sie | gewinnen | gewannen | haben gewonnen |
+
+#### erscheinen — to appear / be published &nbsp;·&nbsp; Aux: sein &nbsp;·&nbsp; P2: erschienen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | erscheine | erschien | bin erschienen |
+| du | erscheinst | erschienst | bist erschienen |
+| er/sie/es | erscheint | erschien | ist erschienen |
+| wir | erscheinen | erschienen | sind erschienen |
+| ihr | erscheint | erschient | seid erschienen |
+| sie/Sie | erscheinen | erschienen | sind erschienen |
+
+#### benutzen — to use &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: benutzt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | benutze | benutzte | habe benutzt |
+| du | benutzt | benutztest | hast benutzt |
+| er/sie/es | benutzt | benutzte | hat benutzt |
+| wir | benutzen | benutzten | haben benutzt |
+| ihr | benutzt | benutztet | habt benutzt |
+| sie/Sie | benutzen | benutzten | haben benutzt |
+
+#### vergleichen — to compare &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: verglichen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | vergleiche | verglich | habe verglichen |
+| du | vergleichst | verglichst | hast verglichen |
+| er/sie/es | vergleicht | verglich | hat verglichen |
+| wir | vergleichen | verglichen | haben verglichen |
+| ihr | vergleicht | verglichet | habt verglichen |
+| sie/Sie | vergleichen | verglichen | haben verglichen |
+
+#### erinnern — to remember / remind &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: erinnert
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | erinnere | erinnerte | habe erinnert |
+| du | erinnerst | erinnertest | hast erinnert |
+| er/sie/es | erinnert | erinnerte | hat erinnert |
+| wir | erinnern | erinnerten | haben erinnert |
+| ihr | erinnert | erinnertet | habt erinnert |
+| sie/Sie | erinnern | erinnerten | haben erinnert |
+
+#### vermissen — to miss (someone) &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: vermisst
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | vermisse | vermisste | habe vermisst |
+| du | vermisst | vermisstest | hast vermisst |
+| er/sie/es | vermisst | vermisste | hat vermisst |
+| wir | vermissen | vermissten | haben vermisst |
+| ihr | vermisst | vermisstet | habt vermisst |
+| sie/Sie | vermissen | vermissten | haben vermisst |
+
+#### verbessern — to improve &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: verbessert
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | verbessere | verbesserte | habe verbessert |
+| du | verbesserst | verbessertest | hast verbessert |
+| er/sie/es | verbessert | verbesserte | hat verbessert |
+| wir | verbessern | verbesserten | haben verbessert |
+| ihr | verbessert | verbessertet | habt verbessert |
+| sie/Sie | verbessern | verbesserten | haben verbessert |
+
+#### beweisen — to prove &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: bewiesen
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | beweise | bewies | habe bewiesen |
+| du | beweist | bewiest | hast bewiesen |
+| er/sie/es | beweist | bewies | hat bewiesen |
+| wir | beweisen | bewiesen | haben bewiesen |
+| ihr | beweist | bewiest | habt bewiesen |
+| sie/Sie | beweisen | bewiesen | haben bewiesen |
