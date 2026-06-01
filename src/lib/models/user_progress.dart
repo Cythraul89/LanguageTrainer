@@ -26,7 +26,7 @@ class UserProgress {
     totalCorrect: 0,
     totalFirstCorrect: 0,
     sessionsCompleted: 0,
-    unlockedAchievements: const <String>{},
+    unlockedAchievements: <String>{},
   );
 
   factory UserProgress.fromEntry(UserProgressEntry e) => UserProgress(
