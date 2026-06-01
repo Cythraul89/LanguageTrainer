@@ -29,9 +29,24 @@ class AppPreferences extends Table {
   Set<Column<Object>> get primaryKey => {key};
 }
 
+// Singleton row (id = 1). All counters default to 0.
+class UserProgressEntries extends Table {
+  IntColumn get id => integer()();
+  IntColumn get totalXp => integer().withDefault(const Constant(0))();
+  IntColumn get totalCorrect => integer().withDefault(const Constant(0))();
+  IntColumn get totalFirstCorrect => integer().withDefault(const Constant(0))();
+  IntColumn get sessionsCompleted => integer().withDefault(const Constant(0))();
+  // Comma-separated unlocked achievement IDs, e.g. "first_correct,level_5".
+  TextColumn get unlockedAchievements =>
+      text().withDefault(const Constant(''))();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
 // ── Database ─────────────────────────────────────────────────────────────────
 
-@DriftDatabase(tables: [ReviewEntries, AppPreferences])
+@DriftDatabase(tables: [ReviewEntries, AppPreferences, UserProgressEntries])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -70,4 +85,31 @@ class AppDatabase extends _$AppDatabase {
       into(appPreferences).insertOnConflictUpdate(
         AppPreferencesCompanion(key: Value(key), value: Value(value)),
       );
+
+  // ── User progress ──────────────────────────────────────────────────────────
+
+  /// Returns the singleton progress row, creating it on first call.
+  Future<UserProgressEntry> getProgress() async {
+    final row = await (select(userProgressEntries)
+          ..where((t) => t.id.equals(1)))
+        .getSingleOrNull();
+    if (row != null) return row;
+    await into(userProgressEntries).insert(
+      const UserProgressEntriesCompanion(
+        id: Value(1),
+        totalXp: Value(0),
+        totalCorrect: Value(0),
+        totalFirstCorrect: Value(0),
+        sessionsCompleted: Value(0),
+        unlockedAchievements: Value(''),
+      ),
+    );
+    return (await (select(userProgressEntries)..where((t) => t.id.equals(1)))
+        .getSingleOrNull())!;
+  }
+
+  /// Partial update — only companion fields wrapped in Value() are written.
+  Future<void> updateProgress(UserProgressEntriesCompanion companion) =>
+      (update(userProgressEntries)..where((t) => t.id.equals(1)))
+          .write(companion);
 }
