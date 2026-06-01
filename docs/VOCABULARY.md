@@ -4,7 +4,7 @@ All words currently in the trainer, grouped by CEFR level. Please correct any er
 
 ---
 
-## Nouns (179 total)
+## Nouns (191 total)
 
 Article drill: choose **der / die / das**. Plural shown for reference only.
 
@@ -73,7 +73,7 @@ Article drill: choose **der / die / das**. Plural shown for reference only.
 | der | Arzt | Ärzte | doctor (male) |
 | das | Krankenhaus | Krankenhäuser | hospital |
 
-### A2 (59 nouns)
+### A2 (71 nouns)
 
 | Article | Word | Plural | English |
 |---------|------|--------|---------|
@@ -136,8 +136,19 @@ Article drill: choose **der / die / das**. Plural shown for reference only.
 | die | Luft | — | air |
 | das | Feuer | Feuer | fire |
 | das | Licht | Lichter | light |
+| die | Liebe | — | love |
+| der | Kuss | Küsse | kiss |
+| das | Herz | Herzen | heart |
+| das | Geschenk | Geschenke | gift / present |
+| der | Geburtstag | Geburtstage | birthday |
+| das | Abendessen | Abendessen | dinner |
+| das | Glück | — | happiness / luck |
+| der | Traum | Träume | dream |
+| die | Zukunft | — | future |
+| das | Gefühl | Gefühle | feeling |
+| die | Verabredung | Verabredungen | date / appointment |
 
-### B1 (60 nouns)
+### B1 (61 nouns)
 
 | Article | Word | Plural | English |
 |---------|------|--------|---------|
@@ -201,10 +212,11 @@ Article drill: choose **der / die / das**. Plural shown for reference only.
 | die | Minderheit | Minderheiten | minority |
 | die | Ursache | Ursachen | cause / origin |
 | die | Wirklichkeit | — | reality |
+| das | Vertrauen | — | trust |
 
 ---
 
-## Verbs (75 total)
+## Verbs (85 total)
 
 Conjugation drill: fill in the correct form for the given person and tense.  
 Perfekt = auxiliary (haben/sein) + Partizip II.
@@ -1043,3 +1055,117 @@ Perfekt = auxiliary (haben/sein) + Partizip II.
 | wir | beweisen | bewiesen | haben bewiesen |
 | ihr | beweist | bewiest | habt bewiesen |
 | sie/Sie | beweisen | bewiesen | haben bewiesen |
+
+---
+
+### Relationship vocabulary
+
+#### lieben — to love &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geliebt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | liebe | liebte | habe geliebt |
+| du | liebst | liebtest | hast geliebt |
+| er/sie/es | liebt | liebte | hat geliebt |
+| wir | lieben | liebten | haben geliebt |
+| ihr | liebt | liebtet | habt geliebt |
+| sie/Sie | lieben | liebten | haben geliebt |
+
+#### küssen — to kiss &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geküsst
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | küsse | küsste | habe geküsst |
+| du | küsst | küsstest | hast geküsst |
+| er/sie/es | küsst | küsste | hat geküsst |
+| wir | küssen | küssten | haben geküsst |
+| ihr | küsst | küsstet | habt geküsst |
+| sie/Sie | küssen | küssten | haben geküsst |
+
+#### umarmen — to hug &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: umarmt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | umarme | umarmte | habe umarmt |
+| du | umarmst | umarmtest | hast umarmt |
+| er/sie/es | umarmt | umarmte | hat umarmt |
+| wir | umarmen | umarmten | haben umarmt |
+| ihr | umarmt | umarmtet | habt umarmt |
+| sie/Sie | umarmen | umarmten | haben umarmt |
+
+#### lachen — to laugh &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gelacht
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | lache | lachte | habe gelacht |
+| du | lachst | lachtest | hast gelacht |
+| er/sie/es | lacht | lachte | hat gelacht |
+| wir | lachen | lachten | haben gelacht |
+| ihr | lacht | lachtet | habt gelacht |
+| sie/Sie | lachen | lachten | haben gelacht |
+
+#### weinen — to cry &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geweint
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | weine | weinte | habe geweint |
+| du | weinst | weintest | hast geweint |
+| er/sie/es | weint | weinte | hat geweint |
+| wir | weinen | weinten | haben geweint |
+| ihr | weint | weintet | habt geweint |
+| sie/Sie | weinen | weinten | haben geweint |
+
+#### fühlen — to feel &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gefühlt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | fühle | fühlte | habe gefühlt |
+| du | fühlst | fühltest | hast gefühlt |
+| er/sie/es | fühlt | fühlte | hat gefühlt |
+| wir | fühlen | fühlten | haben gefühlt |
+| ihr | fühlt | fühltet | habt gefühlt |
+| sie/Sie | fühlen | fühlten | haben gefühlt |
+
+#### wünschen — to wish &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: gewünscht
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | wünsche | wünschte | habe gewünscht |
+| du | wünschst | wünschtest | hast gewünscht |
+| er/sie/es | wünscht | wünschte | hat gewünscht |
+| wir | wünschen | wünschten | haben gewünscht |
+| ihr | wünscht | wünschtet | habt gewünscht |
+| sie/Sie | wünschen | wünschten | haben gewünscht |
+
+#### heiraten — to marry &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geheiratet
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | heirate | heiratete | habe geheiratet |
+| du | heiratest | heiratetest | hast geheiratet |
+| er/sie/es | heiratet | heiratete | hat geheiratet |
+| wir | heiraten | heirateten | haben geheiratet |
+| ihr | heiratet | heiratetet | habt geheiratet |
+| sie/Sie | heiraten | heirateten | haben geheiratet |
+
+#### vertrauen — to trust &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: vertraut
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | vertraue | vertraute | habe vertraut |
+| du | vertraust | vertrautest | hast vertraut |
+| er/sie/es | vertraut | vertraute | hat vertraut |
+| wir | vertrauen | vertrauten | haben vertraut |
+| ihr | vertraut | vertrautet | habt vertraut |
+| sie/Sie | vertrauen | vertrauten | haben vertraut |
+
+#### träumen — to dream &nbsp;·&nbsp; Aux: haben &nbsp;·&nbsp; P2: geträumt
+
+| Person | Präsens | Präteritum | Perfekt |
+|--------|---------|------------|---------|
+| ich | träume | träumte | habe geträumt |
+| du | träumst | träumtest | hast geträumt |
+| er/sie/es | träumt | träumte | hat geträumt |
+| wir | träumen | träumten | haben geträumt |
+| ihr | träumt | träumtet | habt geträumt |
+| sie/Sie | träumen | träumten | haben geträumt |

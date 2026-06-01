@@ -124,6 +124,20 @@ const kNouns = <NounEntry>[
   NounEntry(word: 'Feuer',     article: Article.das, plural: 'Feuer',        english: 'fire',           level: CefrLevel.a2),
   NounEntry(word: 'Licht',     article: Article.das, plural: 'Lichter',      english: 'light',          level: CefrLevel.a2),
 
+  // ── relationship vocabulary ──────────────────────────────────────────────────
+  NounEntry(word: 'Liebe',        article: Article.die, plural: '-',             english: 'love',             level: CefrLevel.a2),
+  NounEntry(word: 'Kuss',         article: Article.der, plural: 'Küsse',         english: 'kiss',             level: CefrLevel.a2),
+  NounEntry(word: 'Herz',         article: Article.das, plural: 'Herzen',        english: 'heart',            level: CefrLevel.a2),
+  NounEntry(word: 'Geschenk',     article: Article.das, plural: 'Geschenke',     english: 'gift / present',   level: CefrLevel.a2),
+  NounEntry(word: 'Geburtstag',   article: Article.der, plural: 'Geburtstage',   english: 'birthday',         level: CefrLevel.a2),
+  NounEntry(word: 'Abendessen',   article: Article.das, plural: 'Abendessen',    english: 'dinner',           level: CefrLevel.a2),
+  NounEntry(word: 'Glück',        article: Article.das, plural: '-',             english: 'happiness / luck', level: CefrLevel.a2),
+  NounEntry(word: 'Traum',        article: Article.der, plural: 'Träume',        english: 'dream',            level: CefrLevel.a2),
+  NounEntry(word: 'Zukunft',      article: Article.die, plural: '-',             english: 'future',           level: CefrLevel.a2),
+  NounEntry(word: 'Gefühl',       article: Article.das, plural: 'Gefühle',       english: 'feeling',          level: CefrLevel.a2),
+  NounEntry(word: 'Vertrauen',    article: Article.das, plural: '-',             english: 'trust',            level: CefrLevel.b1),
+  NounEntry(word: 'Verabredung',  article: Article.die, plural: 'Verabredungen', english: 'date / appointment', level: CefrLevel.a2),
+
   // ── B1 ──────────────────────────────────────────────────────────────────────
   NounEntry(word: 'Gesellschaft',  article: Article.die, plural: 'Gesellschaften',  english: 'society',          level: CefrLevel.b1),
   NounEntry(word: 'Unterschied',   article: Article.der, plural: 'Unterschiede',    english: 'difference',       level: CefrLevel.b1),

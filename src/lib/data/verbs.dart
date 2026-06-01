@@ -1057,4 +1057,146 @@ const kVerbs = <VerbEntry>[
     },
     partizip2: 'bewiesen',
   ),
+
+  // ── relationship vocabulary ───────────────────────────────────────────────
+  VerbEntry(
+    infinitive: 'lieben', english: 'to love', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'liebe',  GrammaticalPerson.du: 'liebst',
+      GrammaticalPerson.er: 'liebt',   GrammaticalPerson.wir: 'lieben',
+      GrammaticalPerson.ihr: 'liebt',  GrammaticalPerson.sie: 'lieben',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'liebte',   GrammaticalPerson.du: 'liebtest',
+      GrammaticalPerson.er: 'liebte',    GrammaticalPerson.wir: 'liebten',
+      GrammaticalPerson.ihr: 'liebtet',  GrammaticalPerson.sie: 'liebten',
+    },
+    partizip2: 'geliebt',
+  ),
+  VerbEntry(
+    infinitive: 'küssen', english: 'to kiss', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'küsse',  GrammaticalPerson.du: 'küsst',
+      GrammaticalPerson.er: 'küsst',   GrammaticalPerson.wir: 'küssen',
+      GrammaticalPerson.ihr: 'küsst',  GrammaticalPerson.sie: 'küssen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'küsste',   GrammaticalPerson.du: 'küsstest',
+      GrammaticalPerson.er: 'küsste',    GrammaticalPerson.wir: 'küssten',
+      GrammaticalPerson.ihr: 'küsstet',  GrammaticalPerson.sie: 'küssten',
+    },
+    partizip2: 'geküsst',
+  ),
+  VerbEntry(
+    infinitive: 'umarmen', english: 'to hug', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'umarme',  GrammaticalPerson.du: 'umarmst',
+      GrammaticalPerson.er: 'umarmt',   GrammaticalPerson.wir: 'umarmen',
+      GrammaticalPerson.ihr: 'umarmt',  GrammaticalPerson.sie: 'umarmen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'umarmte',   GrammaticalPerson.du: 'umarmtest',
+      GrammaticalPerson.er: 'umarmte',    GrammaticalPerson.wir: 'umarmten',
+      GrammaticalPerson.ihr: 'umarmtet',  GrammaticalPerson.sie: 'umarmten',
+    },
+    partizip2: 'umarmt',
+  ),
+  VerbEntry(
+    infinitive: 'lachen', english: 'to laugh', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'lache',  GrammaticalPerson.du: 'lachst',
+      GrammaticalPerson.er: 'lacht',   GrammaticalPerson.wir: 'lachen',
+      GrammaticalPerson.ihr: 'lacht',  GrammaticalPerson.sie: 'lachen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'lachte',   GrammaticalPerson.du: 'lachtest',
+      GrammaticalPerson.er: 'lachte',    GrammaticalPerson.wir: 'lachten',
+      GrammaticalPerson.ihr: 'lachtet',  GrammaticalPerson.sie: 'lachten',
+    },
+    partizip2: 'gelacht',
+  ),
+  VerbEntry(
+    infinitive: 'weinen', english: 'to cry', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'weine',  GrammaticalPerson.du: 'weinst',
+      GrammaticalPerson.er: 'weint',   GrammaticalPerson.wir: 'weinen',
+      GrammaticalPerson.ihr: 'weint',  GrammaticalPerson.sie: 'weinen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'weinte',   GrammaticalPerson.du: 'weintest',
+      GrammaticalPerson.er: 'weinte',    GrammaticalPerson.wir: 'weinten',
+      GrammaticalPerson.ihr: 'weintet',  GrammaticalPerson.sie: 'weinten',
+    },
+    partizip2: 'geweint',
+  ),
+  VerbEntry(
+    infinitive: 'fühlen', english: 'to feel', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'fühle',  GrammaticalPerson.du: 'fühlst',
+      GrammaticalPerson.er: 'fühlt',   GrammaticalPerson.wir: 'fühlen',
+      GrammaticalPerson.ihr: 'fühlt',  GrammaticalPerson.sie: 'fühlen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'fühlte',   GrammaticalPerson.du: 'fühltest',
+      GrammaticalPerson.er: 'fühlte',    GrammaticalPerson.wir: 'fühlten',
+      GrammaticalPerson.ihr: 'fühltet',  GrammaticalPerson.sie: 'fühlten',
+    },
+    partizip2: 'gefühlt',
+  ),
+  VerbEntry(
+    infinitive: 'wünschen', english: 'to wish', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'wünsche',  GrammaticalPerson.du: 'wünschst',
+      GrammaticalPerson.er: 'wünscht',   GrammaticalPerson.wir: 'wünschen',
+      GrammaticalPerson.ihr: 'wünscht',  GrammaticalPerson.sie: 'wünschen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'wünschte',   GrammaticalPerson.du: 'wünschtest',
+      GrammaticalPerson.er: 'wünschte',    GrammaticalPerson.wir: 'wünschten',
+      GrammaticalPerson.ihr: 'wünschtet',  GrammaticalPerson.sie: 'wünschten',
+    },
+    partizip2: 'gewünscht',
+  ),
+  VerbEntry(
+    infinitive: 'heiraten', english: 'to marry', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'heirate',  GrammaticalPerson.du: 'heiratest',
+      GrammaticalPerson.er: 'heiratet',  GrammaticalPerson.wir: 'heiraten',
+      GrammaticalPerson.ihr: 'heiratet', GrammaticalPerson.sie: 'heiraten',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'heiratete',   GrammaticalPerson.du: 'heiratetest',
+      GrammaticalPerson.er: 'heiratete',    GrammaticalPerson.wir: 'heirateten',
+      GrammaticalPerson.ihr: 'heiratetet',  GrammaticalPerson.sie: 'heirateten',
+    },
+    partizip2: 'geheiratet',
+  ),
+  VerbEntry(
+    infinitive: 'vertrauen', english: 'to trust', auxiliary: Auxiliary.haben, level: CefrLevel.b1,
+    praesens: {
+      GrammaticalPerson.ich: 'vertraue',  GrammaticalPerson.du: 'vertraust',
+      GrammaticalPerson.er: 'vertraut',   GrammaticalPerson.wir: 'vertrauen',
+      GrammaticalPerson.ihr: 'vertraut',  GrammaticalPerson.sie: 'vertrauen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'vertraute',   GrammaticalPerson.du: 'vertrautest',
+      GrammaticalPerson.er: 'vertraute',    GrammaticalPerson.wir: 'vertrauten',
+      GrammaticalPerson.ihr: 'vertrautet',  GrammaticalPerson.sie: 'vertrauten',
+    },
+    partizip2: 'vertraut',
+  ),
+  VerbEntry(
+    infinitive: 'träumen', english: 'to dream', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'träume',  GrammaticalPerson.du: 'träumst',
+      GrammaticalPerson.er: 'träumt',   GrammaticalPerson.wir: 'träumen',
+      GrammaticalPerson.ihr: 'träumt',  GrammaticalPerson.sie: 'träumen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'träumte',   GrammaticalPerson.du: 'träumtest',
+      GrammaticalPerson.er: 'träumte',    GrammaticalPerson.wir: 'träumten',
+      GrammaticalPerson.ihr: 'träumtet',  GrammaticalPerson.sie: 'träumten',
+    },
+    partizip2: 'geträumt',
+  ),
 ];
