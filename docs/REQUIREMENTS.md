@@ -206,33 +206,49 @@ CREATE TABLE review_cards (
 
 ## 8. Screens & Navigation
 
-```
-HomeScreen
-  ├── StatsScreen      (push)
-  └── QuizScreen       (push, receives list of due ReviewCards)
-```
+### 8.1 Shell (Adaptive)
 
-### 8.1 HomeScreen
+Mirrors StockManager's breakpoint strategy. Three persistent destinations:
 
-- Due card count: total, broken down by type (nouns / verbs).
-- "Start Review" button — disabled when 0 due.
-- "Stats" button.
-- No settings screen in v1.
+| Destination | Icon                        |
+|-------------|-----------------------------|
+| Home        | `Icons.home_outlined`       |
+| Stats       | `Icons.bar_chart_outlined`  |
+| Settings    | `Icons.settings_outlined`   |
 
-### 8.2 QuizScreen
+| Width        | Shell layout                         |
+|--------------|--------------------------------------|
+| < 600 px     | `BottomNavigationBar`                |
+| 600–1199 px  | `NavigationRail` compact             |
+| ≥ 1200 px    | `NavigationRail` extended (labels)   |
 
-- Linear progression through due cards (no branching).
-- Progress bar: completed / total.
-- Wrong answers are re-queued at the end of the current session (shown once
-  more) but the SM-2 state is written immediately on first answer.
-- "Quit" (back) button — confirms exit if cards remain.
+`QuizScreen` is pushed on top of the shell — it is not a tab destination.
 
-### 8.3 StatsScreen
+### 8.2 HomeScreen
 
-- Total cards in deck.
-- Cards due today / this week.
-- Per-type breakdown table (nouns, Präsens, Präteritum, Perfekt).
+- CEFR level `FilterChip` row — at least one chip must stay selected.
+- Due-count `Card`: per-type rows (Nouns, Präsens, Präteritum, Perfekt) + bold total.
+- "Start Review (N)" `FilledButton` — disabled when N = 0.
+
+### 8.3 QuizScreen
+
+- Linear progression through due cards.
+- `LinearProgressIndicator` below AppBar (completed / total).
+- Wrong answers are re-queued at the end of the session; SM-2 state is
+  written immediately on first answer.
+- Back button shows a quit-confirmation `AlertDialog` if cards remain.
+
+### 8.4 StatsScreen
+
+- Total deck size and total due.
+- Per-type breakdown (Nouns, Präsens, Präteritum, Perfekt): due / total.
 - No streak tracking in v1.
+
+### 8.5 SettingsScreen
+
+- CEFR level `FilterChip` row (canonical location; HomeScreen mirrors it).
+- Theme selector: System / Light / Dark — persisted in `AppPreferences`
+  (key `theme`). Follows StockManager's `AppTheme` enum pattern.
 
 ---
 
