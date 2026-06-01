@@ -9,6 +9,19 @@ state is stored locally with no network dependency.
 
 ---
 
+## 2. CEFR Level Selection
+
+Users select one or more CEFR levels (A1 – C2) from the Home screen. Only
+words tagged at a selected level appear in drills. The selection is persisted
+in the local database (`AppPreferences` table, key `selected_levels`) and
+defaults to all levels on first launch. At least one level must remain
+selected (the UI prevents deselecting all).
+
+Each `NounEntry` and `VerbEntry` carries a `CefrLevel` field. The word list
+in v1 covers A1–B1; B2–C2 fields are reserved for future expansion.
+
+---
+
 ## 2. Platforms
 
 | Platform       | Min version |

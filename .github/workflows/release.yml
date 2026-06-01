@@ -1,0 +1,292 @@
+name: Flutter Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+defaults:
+  run:
+    working-directory: src
+
+jobs:
+  build-android:
+    name: Release Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Generate Drift code
+        run: dart run build_runner build --delete-conflicting-outputs
+      - name: Scaffold Android platform
+        run: flutter create --platforms=android .
+      - name: Write release keystore and key.properties
+        if: ${{ env.KEYSTORE_B64 != '' }}
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 -d > android/release.keystore
+          cat > android/key.properties <<EOF
+          storePassword=$STORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=../release.keystore
+          EOF
+      - name: Patch build.gradle.kts (compileSdk 36, desugaring, signing)
+        shell: python3 {0}
+        run: |
+          import os
+
+          path = 'android/app/build.gradle.kts'
+          with open(path) as f:
+              content = f.read()
+
+          content = content.replace(
+              'compileSdk = flutter.compileSdkVersion',
+              'compileSdk = 36',
+              1,
+          )
+          content = content.replace(
+              'compileOptions {',
+              'compileOptions {\n        isCoreLibraryDesugaringEnabled = true',
+              1,
+          )
+
+          dep = '    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
+          if 'dependencies {}' in content:
+              content = content.replace('dependencies {}', 'dependencies {\n' + dep + '\n}', 1)
+          elif 'dependencies {' in content:
+              content = content.replace('dependencies {', 'dependencies {\n' + dep, 1)
+          else:
+              content = content.rstrip() + '\n\ndependencies {\n' + dep + '\n}\n'
+
+          with open(path, 'w') as f:
+              f.write(content)
+
+          kp = 'android/key.properties'
+          if os.path.exists(kp):
+              app_gradle = 'android/app/build.gradle.kts'
+              with open(app_gradle) as f:
+                  gradle = f.read()
+              nl = '\n'
+              signing_block = (
+                  'import java.util.Properties' + nl +
+                  'import java.io.FileInputStream' + nl + nl +
+                  'val keystoreProps = Properties().apply {' + nl +
+                  '    val f = rootProject.file("key.properties")' + nl +
+                  '    if (f.exists()) load(FileInputStream(f))' + nl +
+                  '}' + nl + nl
+              )
+              signing_config = (
+                  nl +
+                  '    signingConfigs {' + nl +
+                  '        create("release") {' + nl +
+                  '            keyAlias = keystoreProps["keyAlias"] as String' + nl +
+                  '            keyPassword = keystoreProps["keyPassword"] as String' + nl +
+                  '            storeFile = file(keystoreProps["storeFile"] as String)' + nl +
+                  '            storePassword = keystoreProps["storePassword"] as String' + nl +
+                  '        }' + nl +
+                  '    }' + nl
+              )
+              gradle = signing_block + gradle
+              gradle = gradle.replace(
+                  '    buildTypes {',
+                  signing_config + '    buildTypes {',
+                  1,
+              )
+              gradle = gradle.replace(
+                  'signingConfig = signingConfigs.getByName("debug")',
+                  'signingConfig = signingConfigs.getByName("release")',
+                  1,
+              )
+              with open(app_gradle, 'w') as f:
+                  f.write(gradle)
+      - name: Build release APK
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          flutter build apk --release \
+            --build-name="$VERSION" \
+            --build-number=${{ github.run_number }}
+          cp build/app/outputs/flutter-apk/app-release.apk \
+            "LanguageTrainer-${VERSION}-android.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: languagetrainer-android-apk
+          path: src/LanguageTrainer-*-android.apk
+          retention-days: 7
+
+  build-linux:
+    name: Release Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y clang cmake ninja-build libgtk-3-dev dpkg-dev
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Generate Drift code
+        run: dart run build_runner build --delete-conflicting-outputs
+      - name: Scaffold Linux platform
+        run: flutter create --platforms=linux .
+      - name: Build Linux
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          flutter build linux --release \
+            --build-name="$VERSION" \
+            --build-number=${{ github.run_number }}
+      - name: Package as .deb
+        run: |
+          BUNDLE=build/linux/x64/release/bundle
+          PKG=/tmp/language-trainer-pkg
+          VERSION="${GITHUB_REF_NAME#v}"
+          ARCH=amd64
+          install -dm755 "$PKG/DEBIAN"
+          install -dm755 "$PKG/usr/lib/language-trainer"
+          install -dm755 "$PKG/usr/bin"
+          install -dm755 "$PKG/usr/share/applications"
+          cp -r "$BUNDLE/." "$PKG/usr/lib/language-trainer/"
+          printf '#!/bin/sh\nexec /usr/lib/language-trainer/language_trainer "$@"\n' \
+            > "$PKG/usr/bin/language-trainer"
+          chmod 755 "$PKG/usr/bin/language-trainer"
+          printf '%s\n' \
+            '[Desktop Entry]' \
+            'Name=LanguageTrainer' \
+            'Comment=German vocabulary trainer with spaced repetition' \
+            'Exec=/usr/bin/language-trainer' \
+            'Terminal=false' \
+            'Type=Application' \
+            'Categories=Education;' \
+            > "$PKG/usr/share/applications/language-trainer.desktop"
+          INSTALLED_SIZE=$(du -sk "$PKG/usr" | cut -f1)
+          printf 'Package: language-trainer\nVersion: %s\nArchitecture: %s\nMaintainer: LanguageTrainer contributors\nInstalled-Size: %s\nDepends: libgtk-3-0\nSection: education\nPriority: optional\nDescription: German vocabulary trainer\n Ad-free personal German vocabulary trainer with spaced repetition (SM-2).\n' \
+            "$VERSION" "$ARCH" "$INSTALLED_SIZE" \
+            > "$PKG/DEBIAN/control"
+          dpkg-deb --root-owner-group --build "$PKG" \
+            "LanguageTrainer-${VERSION}-linux-amd64.deb"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: languagetrainer-linux-deb
+          path: src/LanguageTrainer-*-linux-amd64.deb
+          retention-days: 7
+
+  build-macos:
+    name: Release macOS
+    runs-on: macos-latest
+    env:
+      MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Generate Drift code
+        run: dart run build_runner build --delete-conflicting-outputs
+      - name: Scaffold macOS platform
+        run: flutter create --platforms=macos .
+      - name: Import signing certificate
+        if: env.MACOS_CERTIFICATE != ''
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+        run: |
+          echo "$MACOS_CERTIFICATE" | base64 --decode > certificate.p12
+          security create-keychain -p "" build.keychain
+          security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
+          security list-keychains -s build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+      - name: Build macOS
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          flutter build macos --release \
+            --build-name="$VERSION" \
+            --build-number=${{ github.run_number }}
+      - name: Ad-hoc re-sign (file entitlements, no sandbox)
+        working-directory: src/build/macos/Build/Products/Release
+        run: |
+          cat > /tmp/entitlements.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>com.apple.security.files.user-selected.read-write</key>
+            <true/>
+          </dict>
+          </plist>
+          EOF
+          codesign --deep --force --sign - \
+            --entitlements /tmp/entitlements.plist \
+            language_trainer.app
+      - name: Package macOS app
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ditto -c -k --sequesterRsrc --keepParent \
+            build/macos/Build/Products/Release/language_trainer.app \
+            "LanguageTrainer-${VERSION}-macos.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: languagetrainer-macos-zip
+          path: src/LanguageTrainer-*-macos.zip
+          retention-days: 7
+
+  sbom:
+    name: SBOM (CycloneDX)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Resolve dependencies
+        run: flutter pub get
+      - uses: anchore/sbom-action@v0
+        with:
+          path: ./src
+          format: cyclonedx-json
+          artifact-name: languagetrainer-sbom.cdx.json
+          output-file: languagetrainer-sbom.cdx.json
+          upload-release-assets: false
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-android, build-linux, build-macos, sbom]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          make_latest: true
+          generate_release_notes: true
+          files: artifacts/*
