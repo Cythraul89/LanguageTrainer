@@ -21,7 +21,7 @@ class UserProgress {
     required this.unlockedAchievements,
   });
 
-  static final initial = UserProgress(
+  static const initial = UserProgress(
     totalXp: 0,
     totalCorrect: 0,
     totalFirstCorrect: 0,

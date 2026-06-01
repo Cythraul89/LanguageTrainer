@@ -56,7 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 24),
               const Divider(),
-              ListTile(
+              const ListTile(
                 title: const Text('Theme'),
                 subtitle: const Text('Follows system setting'),
                 trailing: const Icon(Icons.brightness_auto_outlined),

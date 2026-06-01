@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:language_trainer/models/achievement.dart';
-import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/quiz_item.dart';
-import 'package:language_trainer/models/user_progress.dart';
 import 'package:language_trainer/models/verb.dart';
 import 'package:language_trainer/services/gamification_service.dart';
 import 'package:language_trainer/services/review_scheduler.dart';
@@ -119,7 +117,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
         if (await _confirmQuit() && context.mounted) {
           Navigator.pop(context);

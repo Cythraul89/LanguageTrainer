@@ -27,7 +27,6 @@ class ReviewScheduler {
     final levels = await getSelectedLevels();
     final saved = await _db.getAllReviewEntries();
     final savedMap = {for (final e in saved) e.id: e};
-    final now = DateTime.now();
     final due = <QuizItem>[];
 
     for (final noun in kNouns.where((n) => levels.contains(n.level))) {
@@ -66,7 +65,6 @@ class ReviewScheduler {
     final levels = await getSelectedLevels();
     final saved = await _db.getAllReviewEntries();
     final savedMap = {for (final e in saved) e.id: e};
-    final now = DateTime.now();
 
     final totals = <CardType, int>{for (final t in CardType.values) t: 0};
     final dues = <CardType, int>{for (final t in CardType.values) t: 0};
