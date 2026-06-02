@@ -71,6 +71,7 @@ class GamificationService {
       _consecutiveCorrect = 0;
     }
 
+    final newlyUnlocked = <Achievement>[];
     await _db.transaction(() async {
       final row = await _db.getProgress();
       await _db.updateProgress(UserProgressEntriesCompanion(
@@ -79,23 +80,24 @@ class GamificationService {
         totalFirstCorrect: Value(
             row.totalFirstCorrect + (isCorrect && isFirstAttempt ? 1 : 0)),
       ));
+      newlyUnlocked.addAll(await _checkAndUnlock());
     });
 
-    final newlyUnlocked = await _checkAndUnlock();
     _sessionUnlocked.addAll(newlyUnlocked);
     return AnswerReward(xpEarned: xp, unlocked: newlyUnlocked);
   }
 
   /// Call when the session queue is exhausted.
   Future<SessionSummary> completeSession() async {
+    final newlyUnlocked = <Achievement>[];
     await _db.transaction(() async {
       final row = await _db.getProgress();
       await _db.updateProgress(UserProgressEntriesCompanion(
         sessionsCompleted: Value(row.sessionsCompleted + 1),
       ));
+      newlyUnlocked.addAll(await _checkAndUnlock());
     });
 
-    final newlyUnlocked = await _checkAndUnlock();
     _sessionUnlocked.addAll(newlyUnlocked);
 
     final progress = await getProgress();

@@ -31,6 +31,7 @@ class _QuizScreenState extends State<QuizScreen> {
   bool _answered = false;
   bool _correct = false;
   bool _overridden = false;
+  bool _lastWasFirstAttempt = false;
 
   // Set once the queue is exhausted.
   Future<SessionSummary>? _summaryFuture;
@@ -48,6 +49,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Future<void> _onAnswer(bool correct) async {
     final firstAttempt = _isFirstAttempt;
+    _lastWasFirstAttempt = firstAttempt;
     _seenThisSession.add(_current.cardId);
 
     setState(() {
@@ -73,8 +75,8 @@ class _QuizScreenState extends State<QuizScreen> {
     });
     final newSm2 = Sm2Service.applyGrade(_current.sm2, 5);
     widget.scheduler.saveResult(_current.cardId, _current.cardType, newSm2);
-    widget.gamification.processAnswer(isCorrect: true, isFirstAttempt: false);
-    if (_queue.length > _index + 1 && _queue.last.cardId == _current.cardId) {
+    widget.gamification.processAnswer(isCorrect: true, isFirstAttempt: _lastWasFirstAttempt);
+    if (_queue.last.cardId == _current.cardId) {
       _queue.removeLast();
     }
   }
