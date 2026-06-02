@@ -34,7 +34,7 @@ class _AdaptiveShellState extends State<AdaptiveShell> {
       ),
       StatsScreen(scheduler: widget.services.scheduler),
       AchievementsScreen(gamification: widget.services.gamification),
-      SettingsScreen(scheduler: widget.services.scheduler),
+      SettingsScreen(scheduler: widget.services.scheduler, db: widget.services.db),
     ];
 
     final width = MediaQuery.sizeOf(context).width;
