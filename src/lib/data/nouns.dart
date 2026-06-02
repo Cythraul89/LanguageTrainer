@@ -199,4 +199,23 @@ const kNouns = <NounEntry>[
   NounEntry(word: 'Minderheit',    article: Article.die, plural: 'Minderheiten',    english: 'minority',         level: CefrLevel.b1),
   NounEntry(word: 'Ursache',       article: Article.die, plural: 'Ursachen',        english: 'cause / origin',   level: CefrLevel.b1),
   NounEntry(word: 'Wirklichkeit',  article: Article.die, plural: '-',               english: 'reality',          level: CefrLevel.b1),
+
+  // ── birthday vocabulary ───────────────────────────────────────────────────
+  NounEntry(word: 'Kuchen',        article: Article.der, plural: 'Kuchen',          english: 'cake',             level: CefrLevel.a1),
+  NounEntry(word: 'Torte',         article: Article.die, plural: 'Torten',          english: 'gateau / layer cake', level: CefrLevel.a2),
+  NounEntry(word: 'Kerze',         article: Article.die, plural: 'Kerzen',          english: 'candle',           level: CefrLevel.a2),
+  NounEntry(word: 'Feier',         article: Article.die, plural: 'Feiern',          english: 'celebration / party', level: CefrLevel.a2),
+  NounEntry(word: 'Einladung',     article: Article.die, plural: 'Einladungen',     english: 'invitation',       level: CefrLevel.a2),
+  NounEntry(word: 'Überraschung',  article: Article.die, plural: 'Überraschungen',  english: 'surprise',         level: CefrLevel.a2),
+
+  // ── travel vocabulary ─────────────────────────────────────────────────────
+  NounEntry(word: 'Koffer',        article: Article.der, plural: 'Koffer',          english: 'suitcase',         level: CefrLevel.a2),
+  NounEntry(word: 'Gepäck',        article: Article.das, plural: '-',               english: 'luggage',          level: CefrLevel.a2),
+  NounEntry(word: 'Reisepass',     article: Article.der, plural: 'Reisepässe',      english: 'passport',         level: CefrLevel.a2),
+  NounEntry(word: 'Flughafen',     article: Article.der, plural: 'Flughäfen',       english: 'airport',          level: CefrLevel.a2),
+  NounEntry(word: 'Fahrkarte',     article: Article.die, plural: 'Fahrkarten',      english: 'ticket',           level: CefrLevel.a2),
+  NounEntry(word: 'Abflug',        article: Article.der, plural: 'Abflüge',         english: 'departure (flight)', level: CefrLevel.b1),
+  NounEntry(word: 'Ankunft',       article: Article.die, plural: 'Ankünfte',        english: 'arrival',          level: CefrLevel.b1),
+  NounEntry(word: 'Unterkunft',    article: Article.die, plural: 'Unterkünfte',     english: 'accommodation',    level: CefrLevel.b1),
+  NounEntry(word: 'Ausland',       article: Article.das, plural: '-',               english: 'abroad / foreign country', level: CefrLevel.b1),
 ];

@@ -1199,4 +1199,120 @@ const kVerbs = <VerbEntry>[
     },
     partizip2: 'geträumt',
   ),
+
+  // ── birthday vocabulary ───────────────────────────────────────────────────
+  VerbEntry(
+    infinitive: 'feiern', english: 'to celebrate', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'feiere',  GrammaticalPerson.du: 'feierst',
+      GrammaticalPerson.er: 'feiert',   GrammaticalPerson.wir: 'feiern',
+      GrammaticalPerson.ihr: 'feiert',  GrammaticalPerson.sie: 'feiern',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'feierte',   GrammaticalPerson.du: 'feiertest',
+      GrammaticalPerson.er: 'feierte',    GrammaticalPerson.wir: 'feierten',
+      GrammaticalPerson.ihr: 'feiertet',  GrammaticalPerson.sie: 'feierten',
+    },
+    partizip2: 'gefeiert',
+  ),
+  VerbEntry(
+    infinitive: 'gratulieren', english: 'to congratulate', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'gratuliere',  GrammaticalPerson.du: 'gratulierst',
+      GrammaticalPerson.er: 'gratuliert',   GrammaticalPerson.wir: 'gratulieren',
+      GrammaticalPerson.ihr: 'gratuliert',  GrammaticalPerson.sie: 'gratulieren',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'gratulierte',   GrammaticalPerson.du: 'gratuliertest',
+      GrammaticalPerson.er: 'gratulierte',    GrammaticalPerson.wir: 'gratulierten',
+      GrammaticalPerson.ihr: 'gratuliertet',  GrammaticalPerson.sie: 'gratulierten',
+    },
+    partizip2: 'gratuliert',
+  ),
+  VerbEntry(
+    infinitive: 'schenken', english: 'to give as a gift', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'schenke',  GrammaticalPerson.du: 'schenkst',
+      GrammaticalPerson.er: 'schenkt',   GrammaticalPerson.wir: 'schenken',
+      GrammaticalPerson.ihr: 'schenkt',  GrammaticalPerson.sie: 'schenken',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'schenkte',   GrammaticalPerson.du: 'schenktest',
+      GrammaticalPerson.er: 'schenkte',    GrammaticalPerson.wir: 'schenkten',
+      GrammaticalPerson.ihr: 'schenktet',  GrammaticalPerson.sie: 'schenkten',
+    },
+    partizip2: 'geschenkt',
+  ),
+  VerbEntry(
+    infinitive: 'blasen', english: 'to blow', auxiliary: Auxiliary.haben, level: CefrLevel.b1,
+    praesens: {
+      GrammaticalPerson.ich: 'blase',  GrammaticalPerson.du: 'bläst',
+      GrammaticalPerson.er: 'bläst',   GrammaticalPerson.wir: 'blasen',
+      GrammaticalPerson.ihr: 'blast',  GrammaticalPerson.sie: 'blasen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'blies',   GrammaticalPerson.du: 'bliest',
+      GrammaticalPerson.er: 'blies',    GrammaticalPerson.wir: 'bliesen',
+      GrammaticalPerson.ihr: 'bliest',  GrammaticalPerson.sie: 'bliesen',
+    },
+    partizip2: 'geblasen',
+  ),
+
+  // ── travel vocabulary ─────────────────────────────────────────────────────
+  VerbEntry(
+    infinitive: 'buchen', english: 'to book', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'buche',  GrammaticalPerson.du: 'buchst',
+      GrammaticalPerson.er: 'bucht',   GrammaticalPerson.wir: 'buchen',
+      GrammaticalPerson.ihr: 'bucht',  GrammaticalPerson.sie: 'buchen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'buchte',   GrammaticalPerson.du: 'buchtest',
+      GrammaticalPerson.er: 'buchte',    GrammaticalPerson.wir: 'buchten',
+      GrammaticalPerson.ihr: 'buchtet',  GrammaticalPerson.sie: 'buchten',
+    },
+    partizip2: 'gebucht',
+  ),
+  VerbEntry(
+    infinitive: 'ankommen', english: 'to arrive', auxiliary: Auxiliary.sein, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'komme an',  GrammaticalPerson.du: 'kommst an',
+      GrammaticalPerson.er: 'kommt an',   GrammaticalPerson.wir: 'kommen an',
+      GrammaticalPerson.ihr: 'kommt an',  GrammaticalPerson.sie: 'kommen an',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'kam an',   GrammaticalPerson.du: 'kamst an',
+      GrammaticalPerson.er: 'kam an',    GrammaticalPerson.wir: 'kamen an',
+      GrammaticalPerson.ihr: 'kamt an',  GrammaticalPerson.sie: 'kamen an',
+    },
+    partizip2: 'angekommen',
+  ),
+  VerbEntry(
+    infinitive: 'abfahren', english: 'to depart / set off', auxiliary: Auxiliary.sein, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'fahre ab',  GrammaticalPerson.du: 'fährst ab',
+      GrammaticalPerson.er: 'fährt ab',   GrammaticalPerson.wir: 'fahren ab',
+      GrammaticalPerson.ihr: 'fahrt ab',  GrammaticalPerson.sie: 'fahren ab',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'fuhr ab',   GrammaticalPerson.du: 'fuhrst ab',
+      GrammaticalPerson.er: 'fuhr ab',    GrammaticalPerson.wir: 'fuhren ab',
+      GrammaticalPerson.ihr: 'fuhrt ab',  GrammaticalPerson.sie: 'fuhren ab',
+    },
+    partizip2: 'abgefahren',
+  ),
+  VerbEntry(
+    infinitive: 'packen', english: 'to pack', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'packe',  GrammaticalPerson.du: 'packst',
+      GrammaticalPerson.er: 'packt',   GrammaticalPerson.wir: 'packen',
+      GrammaticalPerson.ihr: 'packt',  GrammaticalPerson.sie: 'packen',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'packte',   GrammaticalPerson.du: 'packtest',
+      GrammaticalPerson.er: 'packte',    GrammaticalPerson.wir: 'packten',
+      GrammaticalPerson.ihr: 'packtet',  GrammaticalPerson.sie: 'packten',
+    },
+    partizip2: 'gepackt',
+  ),
 ];
