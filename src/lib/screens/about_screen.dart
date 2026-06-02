@@ -156,7 +156,7 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
               const SizedBox(height: 8),
               // ── Links ─────────────────────────────────────────────────────
-              _SectionHeader('Legal'),
+              const _SectionHeader('Legal'),
               ListTile(
                 leading: const Icon(Icons.balance_outlined),
                 title: const Text('Licence'),
@@ -175,7 +175,7 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
               const Divider(indent: 16, endIndent: 16),
               // ── Data ──────────────────────────────────────────────────────
-              _SectionHeader('Data'),
+              const _SectionHeader('Data'),
               ListTile(
                 leading: const Icon(Icons.download_outlined),
                 title: const Text('Export review log'),
