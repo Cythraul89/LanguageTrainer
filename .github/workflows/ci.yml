@@ -49,6 +49,10 @@ jobs:
     needs: analyze
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp dev version
+        run: |
+          BASE=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
+          sed -i "s/^version: .*/version: ${BASE}-dev+${{ github.run_number }}/" pubspec.yaml
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -155,12 +159,12 @@ jobs:
                   f.write(gradle)
       - name: Build debug APK
         run: |
-          BASE=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/+.*//')
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
           flutter build apk --debug \
-            --build-name="${BASE}-dev" \
+            --build-name="$VERSION" \
             --build-number=${{ github.run_number }}
           cp build/app/outputs/flutter-apk/app-debug.apk \
-            "LanguageTrainer-${BASE}-dev-android.apk"
+            "LanguageTrainer-${VERSION}-android.apk"
       - uses: actions/upload-artifact@v4
         with:
           name: languagetrainer-android-apk
@@ -174,6 +178,10 @@ jobs:
     needs: analyze
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp dev version
+        run: |
+          BASE=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
+          sed -i "s/^version: .*/version: ${BASE}-dev+${{ github.run_number }}/" pubspec.yaml
       - name: Install system dependencies (GTK, clang, cmake)
         run: |
           sudo apt-get update -q
@@ -190,14 +198,15 @@ jobs:
         run: flutter create --platforms=linux .
       - name: Build Linux release bundle
         run: |
-          BASE=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/+.*//')
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
           flutter build linux --release \
-            --build-name="${BASE}-dev" \
+            --build-name="$VERSION" \
             --build-number=${{ github.run_number }}
       - name: Package as .deb
         run: |
           BUNDLE=build/linux/x64/release/bundle
           PKG=/tmp/language-trainer-pkg
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
           ARCH=amd64
           install -dm755 "$PKG/DEBIAN"
           install -dm755 "$PKG/usr/lib/language-trainer"
@@ -216,14 +225,12 @@ jobs:
             'Type=Application' \
             'Categories=Education;' \
             > "$PKG/usr/share/applications/language-trainer.desktop"
-          BASE=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/+.*//')
-          DEB_VERSION="${BASE}~dev+${{ github.run_number }}"
           INSTALLED_SIZE=$(du -sk "$PKG/usr" | cut -f1)
           printf 'Package: language-trainer\nVersion: %s\nArchitecture: %s\nMaintainer: LanguageTrainer contributors\nInstalled-Size: %s\nDepends: libgtk-3-0\nSection: education\nPriority: optional\nDescription: German vocabulary trainer\n Ad-free personal German vocabulary trainer with spaced repetition (SM-2).\n' \
-            "$DEB_VERSION" "$ARCH" "$INSTALLED_SIZE" \
+            "$VERSION" "$ARCH" "$INSTALLED_SIZE" \
             > "$PKG/DEBIAN/control"
           dpkg-deb --root-owner-group --build "$PKG" \
-            "LanguageTrainer-${BASE}-dev-linux-amd64.deb"
+            "LanguageTrainer-${VERSION}-linux-amd64.deb"
       - uses: actions/upload-artifact@v4
         with:
           name: languagetrainer-linux-deb
@@ -239,6 +246,10 @@ jobs:
       MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp dev version
+        run: |
+          BASE=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
+          sed -i '' "s/^version: .*/version: ${BASE}-dev+${{ github.run_number }}/" pubspec.yaml
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -264,9 +275,9 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
       - name: Build macOS release app
         run: |
-          BASE=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/+.*//')
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
           flutter build macos --release \
-            --build-name="${BASE}-dev" \
+            --build-name="$VERSION" \
             --build-number=${{ github.run_number }}
       - name: Ad-hoc re-sign (file entitlements, no sandbox)
         working-directory: src/build/macos/Build/Products/Release
@@ -286,10 +297,10 @@ jobs:
             language_trainer.app
       - name: Package .app as zip
         run: |
-          BASE=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/+.*//')
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/^version: //;s/+.*//')
           ditto -c -k --sequesterRsrc --keepParent \
             build/macos/Build/Products/Release/language_trainer.app \
-            "LanguageTrainer-${BASE}-dev-macos.zip"
+            "LanguageTrainer-${VERSION}-macos.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: languagetrainer-macos-zip

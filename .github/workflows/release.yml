@@ -21,6 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i "s/^version: .*/version: ${VERSION}+${{ github.run_number }}/" pubspec.yaml
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -138,6 +142,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i "s/^version: .*/version: ${VERSION}+${{ github.run_number }}/" pubspec.yaml
       - name: Install Linux build dependencies
         run: |
           sudo apt-get update -q
@@ -200,6 +208,10 @@ jobs:
       MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i '' "s/^version: .*/version: ${VERSION}+${{ github.run_number }}/" pubspec.yaml
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
