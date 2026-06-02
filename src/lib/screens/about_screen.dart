@@ -35,7 +35,7 @@ class _AboutScreenState extends State<AboutScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           content: const Text(
-            'Created for Nkule Mabaso.\nSthandwa sami',
+            'Erstellt für Nkule Mabaso.\nIch liebe dich ❤️',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16),
           ),
