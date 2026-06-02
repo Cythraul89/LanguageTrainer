@@ -26,6 +26,33 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _refresh();
+    _maybShowBirthdayGreeting();
+  }
+
+  void _maybShowBirthdayGreeting() {
+    final now = DateTime.now();
+    if (now.month == 6 && now.day == 3) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('🎂 Alles Gute zum Geburtstag Nkule! ❤️'),
+            content: const Text(
+              'Ich wünsche dir einen wunderschönen Geburtstag! 🎉',
+              textAlign: TextAlign.center,
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              FilledButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Danke! 😊'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
   }
 
   void _refresh() => setState(() { _data = _load(); });
