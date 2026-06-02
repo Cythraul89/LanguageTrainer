@@ -9,7 +9,7 @@ import 'package:language_trainer/services/sm2.dart';
 
 const _kDefaultLevels = 'a1,a2,b1,b2,c1,c2';
 const _kLevelsKey = 'selected_levels';
-const _kDefaultCardTypes = 'noun,verbPraesens,verbPraeteritum,verbPerfekt';
+const _kDefaultCardTypes = 'noun,nounPlural,verbPraesens,verbPraeteritum,verbPerfekt';
 const _kCardTypesKey = 'selected_card_types';
 
 class ReviewScheduler {
@@ -40,11 +40,18 @@ class ReviewScheduler {
     final savedMap = {for (final e in saved) e.id: e};
     final due = <QuizItem>[];
 
-    if (cardTypes.contains(CardType.noun)) {
-      for (final noun in kNouns.where((n) => levels.contains(n.level))) {
+    for (final noun in kNouns.where((n) => levels.contains(n.level))) {
+      if (cardTypes.contains(CardType.noun)) {
         final sm2 = _sm2For(savedMap[noun.cardId]);
         if (Sm2Service.isDue(sm2)) {
           due.add(NounQuizItem(cardId: noun.cardId, sm2: sm2, entry: noun));
+        }
+      }
+      if (cardTypes.contains(CardType.nounPlural) && noun.hasPlural) {
+        final sm2 = _sm2For(savedMap[noun.pluralCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          due.add(NounPluralQuizItem(
+              cardId: noun.pluralCardId, sm2: sm2, entry: noun));
         }
       }
     }
@@ -85,11 +92,18 @@ class ReviewScheduler {
     final totals = <CardType, int>{for (final t in CardType.values) t: 0};
     final dues = <CardType, int>{for (final t in CardType.values) t: 0};
 
-    if (cardTypes.contains(CardType.noun)) {
-      for (final noun in kNouns.where((n) => levels.contains(n.level))) {
+    for (final noun in kNouns.where((n) => levels.contains(n.level))) {
+      if (cardTypes.contains(CardType.noun)) {
         totals[CardType.noun] = totals[CardType.noun]! + 1;
         final sm2 = _sm2For(savedMap[noun.cardId]);
         if (Sm2Service.isDue(sm2)) dues[CardType.noun] = dues[CardType.noun]! + 1;
+      }
+      if (cardTypes.contains(CardType.nounPlural) && noun.hasPlural) {
+        totals[CardType.nounPlural] = totals[CardType.nounPlural]! + 1;
+        final sm2 = _sm2For(savedMap[noun.pluralCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          dues[CardType.nounPlural] = dues[CardType.nounPlural]! + 1;
+        }
       }
     }
 
@@ -148,6 +162,7 @@ class ReviewScheduler {
 
   static CardType _parseCardType(String s) => switch (s.trim()) {
         'noun' => CardType.noun,
+        'nounPlural' => CardType.nounPlural,
         'verbPraesens' => CardType.verbPraesens,
         'verbPraeteritum' => CardType.verbPraeteritum,
         'verbPerfekt' => CardType.verbPerfekt,

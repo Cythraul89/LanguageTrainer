@@ -243,6 +243,7 @@ class _CategorySelector extends StatelessWidget {
 
   static const _labels = {
     CardType.noun: 'Nouns',
+    CardType.nounPlural: 'Plural',
     CardType.verbPraesens: 'Präsens',
     CardType.verbPraeteritum: 'Präteritum',
     CardType.verbPerfekt: 'Perfekt',
@@ -288,6 +289,7 @@ class _DueSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const rows = [
       ('Nouns', CardType.noun),
+      ('Plural', CardType.nounPlural),
       ('Präsens', CardType.verbPraesens),
       ('Präteritum', CardType.verbPraeteritum),
       ('Perfekt', CardType.verbPerfekt),

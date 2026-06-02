@@ -1,7 +1,7 @@
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/verb.dart';
 
-enum CardType { noun, verbPraesens, verbPraeteritum, verbPerfekt }
+enum CardType { noun, nounPlural, verbPraesens, verbPraeteritum, verbPerfekt }
 
 class Sm2State {
   final double easeFactor;
@@ -53,6 +53,16 @@ class NounQuizItem extends QuizItem {
     required super.sm2,
     required this.entry,
   }) : super(cardType: CardType.noun);
+}
+
+class NounPluralQuizItem extends QuizItem {
+  final NounEntry entry;
+
+  const NounPluralQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.nounPlural);
 }
 
 class VerbQuizItem extends QuizItem {

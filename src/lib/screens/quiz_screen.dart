@@ -150,7 +150,10 @@ class _QuizScreenState extends State<QuizScreen> {
                     correct: _correct,
                     correctAnswer: _correctAnswer(),
                     onOverride:
-                        _current is VerbQuizItem && !_correct && !_overridden
+                        (_current is VerbQuizItem ||
+                                _current is NounPluralQuizItem) &&
+                                !_correct &&
+                                !_overridden
                             ? _onOverride
                             : null,
                     onNext: _next,
@@ -175,6 +178,21 @@ class _QuizScreenState extends State<QuizScreen> {
                   textAlign: TextAlign.center),
               Text('(${n.plural})',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  textAlign: TextAlign.center),
+            ],
+          ),
+        NounPluralQuizItem(entry: final n) => Column(
+            children: [
+              Text('${n.article.name} ${n.word}',
+                  style: Theme.of(context).textTheme.displaySmall,
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 8),
+              Text(n.english,
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center),
+              Text('Plural?',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant),
                   textAlign: TextAlign.center),
             ],
@@ -205,6 +223,10 @@ class _QuizScreenState extends State<QuizScreen> {
         NounQuizItem(entry: final n) => ArticleButtons(
             onAnswer: (article) => _onAnswer(article == n.article),
           ),
+        NounPluralQuizItem(entry: final n) => ConjugationField(
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(n.plural)),
+          ),
         VerbQuizItem() => ConjugationField(
             onSubmit: (answer) {
               final v = _current as VerbQuizItem;
@@ -215,6 +237,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   String _correctAnswer() => switch (_current) {
         NounQuizItem(entry: final n) => '${n.article.name} ${n.word}',
+        NounPluralQuizItem(entry: final n) => n.plural,
         VerbQuizItem() => (_current as VerbQuizItem).correctAnswer,
       };
 

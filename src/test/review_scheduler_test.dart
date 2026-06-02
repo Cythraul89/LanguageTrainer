@@ -84,6 +84,22 @@ void main() {
       expect(items.every((i) => i is VerbQuizItem), isTrue);
     });
 
+    test('plural-only filter returns only NounPluralQuizItems', () async {
+      await scheduler.setSelectedCardTypes({CardType.nounPlural});
+      final items = await scheduler.getDueItems();
+      expect(items.every((i) => i is NounPluralQuizItem), isTrue);
+      expect(items, isNotEmpty);
+    });
+
+    test('plural items have non-empty correct answers', () async {
+      await scheduler.setSelectedCardTypes({CardType.nounPlural});
+      final items = await scheduler.getDueItems();
+      for (final item in items.cast<NounPluralQuizItem>()) {
+        expect(item.entry.plural, isNot('-'));
+        expect(item.entry.plural, isNotEmpty);
+      }
+    });
+
     test('praesens-only filter produces only verbPraesens cardType', () async {
       await scheduler.setSelectedCardTypes({CardType.verbPraesens});
       final items = await scheduler.getDueItems();

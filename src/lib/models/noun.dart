@@ -18,4 +18,6 @@ class NounEntry {
   });
 
   String get cardId => 'noun:$word';
+  String get pluralCardId => 'noun_plural:$word';
+  bool get hasPlural => plural != '-';
 }
