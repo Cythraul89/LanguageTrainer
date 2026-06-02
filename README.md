@@ -82,22 +82,22 @@ Set these four repository secrets to enable signed release APKs:
 
 ```
 src/lib/
-├── app.dart                  # AppServices container + MaterialApp
+├── app.dart                      # AppServices container + MaterialApp
 ├── main.dart
 ├── data/
-│   ├── nouns.dart            # static noun list
-│   └── verbs.dart            # static verb list with full conjugations
-├── models/                   # pure data classes
+│   ├── nouns.dart                # ~215 nouns A1–B1
+│   └── verbs.dart                # ~95 verbs A1–B1
+├── models/                       # pure data classes + sealed QuizItem
 ├── services/
-│   ├── database.dart         # Drift SQLite database
-│   ├── review_scheduler.dart # SM-2 scheduling + level/category filters
-│   ├── gamification_service.dart
-│   └── sm2.dart
-├── shell/                    # adaptive navigation shell
-└── screens/                  # Home · Quiz · Stats · Achievements · Settings
+│   ├── database.dart             # Drift SQLite (3 tables)
+│   ├── review_scheduler.dart     # SM-2 scheduling + level/category filters
+│   ├── gamification_service.dart # XP, levels, achievements
+│   └── sm2.dart                  # pure SM-2 algorithm
+├── shell/                        # adaptive navigation shell (mobile / desktop)
+└── screens/                      # Home · Quiz · Stats · Achievements · Settings · About
 ```
 
-Full architecture diagram and wireframes: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/WIREFRAMES.md`](docs/WIREFRAMES.md)
+Full docs: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) · [`docs/CLASS_DIAGRAM.md`](docs/CLASS_DIAGRAM.md) · [`docs/WIREFRAMES.md`](docs/WIREFRAMES.md)
 
 ## License
 
