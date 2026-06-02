@@ -19,11 +19,35 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   late Future<PackageInfo> _info;
+  int _taps = 0;
 
   @override
   void initState() {
     super.initState();
     _info = PackageInfo.fromPlatform();
+  }
+
+  void _onVersionTap() {
+    _taps++;
+    if (_taps >= 5) {
+      _taps = 0;
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: const Text(
+            'Created for Nkule Mabaso.\nSthandwa sami',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('❤️'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Future<void> _exportLog() async {
@@ -97,11 +121,20 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
               if (version.isNotEmpty) ...[
                 const SizedBox(height: 4),
-                Text(
-                  version,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: scheme.onSurfaceVariant),
+                Center(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _onVersionTap,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        version,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: scheme.onSurfaceVariant),
+                      ),
+                    ),
+                  ),
                 ),
               ],
               const SizedBox(height: 20),
