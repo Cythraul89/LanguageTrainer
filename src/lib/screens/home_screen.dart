@@ -63,17 +63,20 @@ class _HomeScreenState extends State<HomeScreen> {
       widget.scheduler.getSelectedLevels(),
       widget.scheduler.getSelectedCardTypes(),
       widget.gamification.getProgress(),
+      widget.scheduler.getDifficultCount(),
     ]);
-    final stats     = results[0] as Map<CardType, ({int total, int due})>;
-    final levels    = results[1] as Set<CefrLevel>;
-    final cardTypes = results[2] as Set<CardType>;
-    final progress  = results[3] as UserProgress;
+    final stats          = results[0] as Map<CardType, ({int total, int due})>;
+    final levels         = results[1] as Set<CefrLevel>;
+    final cardTypes      = results[2] as Set<CardType>;
+    final progress       = results[3] as UserProgress;
+    final difficultCount = results[4] as int;
     final totalDue  = stats.entries
         .where((e) => cardTypes.contains(e.key))
         .fold(0, (s, e) => s + e.value.due);
     return _HomeData(
         stats: stats, levels: levels, cardTypes: cardTypes,
-        progress: progress, totalDue: totalDue);
+        progress: progress, totalDue: totalDue,
+        difficultCount: difficultCount);
   }
 
   @override
@@ -134,6 +137,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   d.totalDue == 0
                       ? 'Nothing due'
                       : 'Start Review (${d.totalDue})',
+                ),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: d.difficultCount == 0
+                    ? null
+                    : () async {
+                        final items =
+                            await widget.scheduler.getDifficultItems();
+                        if (!context.mounted) return;
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => QuizScreen(
+                              items: items,
+                              scheduler: widget.scheduler,
+                              gamification: widget.gamification,
+                            ),
+                          ),
+                        );
+                        _refresh();
+                      },
+                icon: const Icon(Icons.psychology_outlined),
+                label: Text(
+                  d.difficultCount == 0
+                      ? 'No difficult words'
+                      : 'Difficult words (${d.difficultCount})',
                 ),
               ),
             ],
@@ -391,11 +421,13 @@ class _HomeData {
   final Set<CardType> cardTypes;
   final UserProgress progress;
   final int totalDue;
+  final int difficultCount;
   const _HomeData({
     required this.stats,
     required this.levels,
     required this.cardTypes,
     required this.progress,
     required this.totalDue,
+    required this.difficultCount,
   });
 }

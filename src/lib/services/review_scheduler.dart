@@ -45,7 +45,25 @@ class ReviewScheduler {
   Future<void> setSessionSize(int size) =>
       _db.setPreference(_kSessionSizeKey, size.toString());
 
-  Future<List<QuizItem>> getDueItems() async {
+  /// Cards the user has seen but is struggling with (easeFactor < 2.0).
+  /// Ignores the SM-2 due date — useful for targeted practice.
+  Future<List<QuizItem>> getDifficultItems() => _queryItems(
+        eligible: (sm2) => sm2.repetitions > 0 && sm2.easeFactor < 2.0,
+      );
+
+  Future<int> getDifficultCount() async {
+    final saved = await _db.getAllReviewEntries();
+    return saved
+        .where((e) => e.repetitions > 0 && e.easeFactor < 2.0)
+        .length;
+  }
+
+  Future<List<QuizItem>> getDueItems() =>
+      _queryItems(eligible: (sm2) => Sm2Service.isDue(sm2));
+
+  Future<List<QuizItem>> _queryItems({
+    required bool Function(Sm2State) eligible,
+  }) async {
     final levels = await getSelectedLevels();
     final cardTypes = await getSelectedCardTypes();
     final saved = await _db.getAllReviewEntries();
@@ -55,27 +73,27 @@ class ReviewScheduler {
     for (final noun in kNouns.where((n) => levels.contains(n.level))) {
       if (cardTypes.contains(CardType.noun)) {
         final sm2 = _sm2For(savedMap[noun.cardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(NounQuizItem(cardId: noun.cardId, sm2: sm2, entry: noun));
         }
       }
       if (cardTypes.contains(CardType.nounPlural) && noun.hasPlural) {
         final sm2 = _sm2For(savedMap[noun.pluralCardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(NounPluralQuizItem(
               cardId: noun.pluralCardId, sm2: sm2, entry: noun));
         }
       }
       if (cardTypes.contains(CardType.nounTranslation)) {
         final sm2 = _sm2For(savedMap[noun.translationCardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(NounTranslationQuizItem(
               cardId: noun.translationCardId, sm2: sm2, entry: noun));
         }
       }
       if (cardTypes.contains(CardType.nounReverse)) {
         final sm2 = _sm2For(savedMap[noun.reverseCardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(NounReverseQuizItem(
               cardId: noun.reverseCardId, sm2: sm2, entry: noun));
         }
@@ -85,7 +103,7 @@ class ReviewScheduler {
     for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
       if (cardTypes.contains(CardType.verbReverse)) {
         final sm2 = _sm2For(savedMap[verb.reverseCardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(VerbReverseQuizItem(
             cardId: verb.reverseCardId,
             sm2: sm2,
@@ -96,7 +114,7 @@ class ReviewScheduler {
       }
       if (cardTypes.contains(CardType.verbTranslation)) {
         final sm2 = _sm2For(savedMap[verb.translationCardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(VerbTranslationQuizItem(
             cardId: verb.translationCardId,
             sm2: sm2,
@@ -107,7 +125,7 @@ class ReviewScheduler {
       }
       if (cardTypes.contains(CardType.verbPartizipII)) {
         final sm2 = _sm2For(savedMap[verb.partizip2CardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(VerbPartizipIIQuizItem(
             cardId: verb.partizip2CardId,
             sm2: sm2,
@@ -119,7 +137,7 @@ class ReviewScheduler {
       }
       if (cardTypes.contains(CardType.verbAuxiliary)) {
         final sm2 = _sm2For(savedMap[verb.auxiliaryCardId]);
-        if (Sm2Service.isDue(sm2)) {
+        if (eligible(sm2)) {
           due.add(VerbAuxiliaryQuizItem(
             cardId: verb.auxiliaryCardId,
             sm2: sm2,
@@ -138,7 +156,7 @@ class ReviewScheduler {
           if (!cardTypes.contains(ct)) continue;
           final id = verb.cardId(person, tense);
           final sm2 = _sm2For(savedMap[id]);
-          if (Sm2Service.isDue(sm2)) {
+          if (eligible(sm2)) {
             due.add(VerbQuizItem(
               cardId: id,
               cardType: ct,
