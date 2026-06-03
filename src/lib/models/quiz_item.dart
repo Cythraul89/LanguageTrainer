@@ -5,12 +5,14 @@ enum CardType {
   noun,
   nounPlural,
   nounTranslation,
+  nounReverse,
   verbPraesens,
   verbPraeteritum,
   verbPerfekt,
   verbPartizipII,
   verbAuxiliary,
   verbTranslation,
+  verbReverse,
 }
 
 class Sm2State {
@@ -109,6 +111,28 @@ class VerbPartizipIIQuizItem extends QuizItem {
     required this.english,
     required this.partizip2,
   }) : super(cardType: CardType.verbPartizipII);
+}
+
+class NounReverseQuizItem extends QuizItem {
+  final NounEntry entry;
+
+  const NounReverseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.nounReverse);
+}
+
+class VerbReverseQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+
+  const VerbReverseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+  }) : super(cardType: CardType.verbReverse);
 }
 
 class VerbAuxiliaryQuizItem extends QuizItem {

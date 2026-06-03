@@ -245,12 +245,14 @@ class _CategorySelector extends StatelessWidget {
     CardType.noun: 'Artikel',
     CardType.nounPlural: 'Plural',
     CardType.nounTranslation: 'Übersetzung',
+    CardType.nounReverse: 'DE schreiben',
     CardType.verbPraesens: 'Präsens',
     CardType.verbPraeteritum: 'Präteritum',
     CardType.verbPerfekt: 'Perfekt',
     CardType.verbPartizipII: 'Partizip II',
     CardType.verbAuxiliary: 'Hilfsverb',
     CardType.verbTranslation: 'Bedeutung',
+    CardType.verbReverse: 'Verb schreiben',
   };
 
   @override
@@ -295,12 +297,14 @@ class _DueSummaryCard extends StatelessWidget {
       ('Artikel', CardType.noun),
       ('Plural', CardType.nounPlural),
       ('Übersetzung (N)', CardType.nounTranslation),
+      ('DE schreiben (N)', CardType.nounReverse),
       ('Präsens', CardType.verbPraesens),
       ('Präteritum', CardType.verbPraeteritum),
       ('Perfekt', CardType.verbPerfekt),
       ('Partizip II', CardType.verbPartizipII),
       ('Hilfsverb', CardType.verbAuxiliary),
       ('Bedeutung (V)', CardType.verbTranslation),
+      ('Verb schreiben', CardType.verbReverse),
     ];
     final totalDue = stats.entries
         .where((e) => selectedTypes.contains(e.key))

@@ -205,6 +205,16 @@ class _QuizScreenState extends State<QuizScreen> {
           hint: 'haben oder sein?',
           hintStyle: labelStyle,
         ),
+      NounReverseQuizItem(entry: final n) => _promptColumn(
+          headline: n.english,
+          hint: 'Wie heißt das Substantiv? (mit Artikel)',
+          hintStyle: labelStyle,
+        ),
+      VerbReverseQuizItem(english: final en) => _promptColumn(
+          headline: en,
+          hint: 'Wie heißt das Verb?',
+          hintStyle: labelStyle,
+        ),
       VerbQuizItem() => () {
           final v = _current as VerbQuizItem;
           return Column(
@@ -274,6 +284,18 @@ class _QuizScreenState extends State<QuizScreen> {
             onSubmit: (answer) =>
                 _onAnswer(_normalise(answer) == _normalise(p2)),
           ),
+        NounReverseQuizItem(entry: final n) => ConjugationField(
+            hintText: 'z. B. der Hund…',
+            onSubmit: (answer) {
+              final correct = '${n.article.name} ${n.word}';
+              _onAnswer(_normalise(answer) == _normalise(correct));
+            },
+          ),
+        VerbReverseQuizItem(infinitive: final inf) => ConjugationField(
+            hintText: 'Infinitiv eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(inf)),
+          ),
         VerbQuizItem() => ConjugationField(
             onSubmit: (answer) {
               final v = _current as VerbQuizItem;
@@ -289,6 +311,8 @@ class _QuizScreenState extends State<QuizScreen> {
         VerbTranslationQuizItem(english: final en) => en,
         VerbPartizipIIQuizItem(partizip2: final p2) => p2,
         VerbAuxiliaryQuizItem(auxiliary: final aux) => aux.name,
+        NounReverseQuizItem(entry: final n) => '${n.article.name} ${n.word}',
+        VerbReverseQuizItem(infinitive: final inf) => inf,
         VerbQuizItem() => (_current as VerbQuizItem).correctAnswer,
       };
 

@@ -20,5 +20,6 @@ class NounEntry {
   String get cardId => 'noun:$word';
   String get pluralCardId => 'noun_plural:$word';
   String get translationCardId => 'noun_translation:$word';
+  String get reverseCardId => 'noun_reverse:$word';
   bool get hasPlural => plural != '-';
 }

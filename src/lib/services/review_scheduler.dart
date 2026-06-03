@@ -10,7 +10,7 @@ import 'package:language_trainer/services/sm2.dart';
 const _kDefaultLevels = 'a1,a2,b1,b2,c1,c2';
 const _kLevelsKey = 'selected_levels';
 const _kDefaultCardTypes =
-    'noun,nounPlural,nounTranslation,verbPraesens,verbPraeteritum,verbPerfekt,verbPartizipII,verbAuxiliary,verbTranslation';
+    'noun,nounPlural,nounTranslation,nounReverse,verbPraesens,verbPraeteritum,verbPerfekt,verbPartizipII,verbAuxiliary,verbTranslation,verbReverse';
 const _kCardTypesKey = 'selected_card_types';
 const _kSessionSizeKey = 'session_size';
 const _kDefaultSessionSize = 10;
@@ -73,9 +73,27 @@ class ReviewScheduler {
               cardId: noun.translationCardId, sm2: sm2, entry: noun));
         }
       }
+      if (cardTypes.contains(CardType.nounReverse)) {
+        final sm2 = _sm2For(savedMap[noun.reverseCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          due.add(NounReverseQuizItem(
+              cardId: noun.reverseCardId, sm2: sm2, entry: noun));
+        }
+      }
     }
 
     for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
+      if (cardTypes.contains(CardType.verbReverse)) {
+        final sm2 = _sm2For(savedMap[verb.reverseCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          due.add(VerbReverseQuizItem(
+            cardId: verb.reverseCardId,
+            sm2: sm2,
+            infinitive: verb.infinitive,
+            english: verb.english,
+          ));
+        }
+      }
       if (cardTypes.contains(CardType.verbTranslation)) {
         final sm2 = _sm2For(savedMap[verb.translationCardId]);
         if (Sm2Service.isDue(sm2)) {
@@ -170,6 +188,13 @@ class ReviewScheduler {
           dues[CardType.nounTranslation] = dues[CardType.nounTranslation]! + 1;
         }
       }
+      if (cardTypes.contains(CardType.nounReverse)) {
+        totals[CardType.nounReverse] = totals[CardType.nounReverse]! + 1;
+        final sm2 = _sm2For(savedMap[noun.reverseCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          dues[CardType.nounReverse] = dues[CardType.nounReverse]! + 1;
+        }
+      }
     }
 
     for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
@@ -183,6 +208,7 @@ class ReviewScheduler {
       _countVerb(CardType.verbTranslation, verb.translationCardId);
       _countVerb(CardType.verbPartizipII, verb.partizip2CardId);
       _countVerb(CardType.verbAuxiliary, verb.auxiliaryCardId);
+      _countVerb(CardType.verbReverse, verb.reverseCardId);
     }
 
     for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
@@ -248,6 +274,8 @@ class ReviewScheduler {
         'verbPartizipII' => CardType.verbPartizipII,
         'verbAuxiliary' => CardType.verbAuxiliary,
         'verbTranslation' => CardType.verbTranslation,
+        'nounReverse' => CardType.nounReverse,
+        'verbReverse' => CardType.verbReverse,
         _ => CardType.noun,
       };
 

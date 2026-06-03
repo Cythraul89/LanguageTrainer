@@ -54,4 +54,5 @@ class VerbEntry {
   String get translationCardId => 'verb_translation:$infinitive';
   String get partizip2CardId => 'verb_partizip2:$infinitive';
   String get auxiliaryCardId => 'verb_auxiliary:$infinitive';
+  String get reverseCardId => 'verb_reverse:$infinitive';
 }
