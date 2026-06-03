@@ -1,7 +1,17 @@
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/verb.dart';
 
-enum CardType { noun, nounPlural, verbPraesens, verbPraeteritum, verbPerfekt }
+enum CardType {
+  noun,
+  nounPlural,
+  nounTranslation,
+  verbPraesens,
+  verbPraeteritum,
+  verbPerfekt,
+  verbPartizipII,
+  verbAuxiliary,
+  verbTranslation,
+}
 
 class Sm2State {
   final double easeFactor;
@@ -63,6 +73,56 @@ class NounPluralQuizItem extends QuizItem {
     required super.sm2,
     required this.entry,
   }) : super(cardType: CardType.nounPlural);
+}
+
+class NounTranslationQuizItem extends QuizItem {
+  final NounEntry entry;
+
+  const NounTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.nounTranslation);
+}
+
+class VerbTranslationQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+
+  const VerbTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+  }) : super(cardType: CardType.verbTranslation);
+}
+
+class VerbPartizipIIQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+  final String partizip2;
+
+  const VerbPartizipIIQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+    required this.partizip2,
+  }) : super(cardType: CardType.verbPartizipII);
+}
+
+class VerbAuxiliaryQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+  final Auxiliary auxiliary;
+
+  const VerbAuxiliaryQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+    required this.auxiliary,
+  }) : super(cardType: CardType.verbAuxiliary);
 }
 
 class VerbQuizItem extends QuizItem {

@@ -51,4 +51,7 @@ class VerbEntry {
 
   String cardId(GrammaticalPerson person, Tense tense) =>
       'verb:$infinitive:${person.name}:${tense.name}';
+  String get translationCardId => 'verb_translation:$infinitive';
+  String get partizip2CardId => 'verb_partizip2:$infinitive';
+  String get auxiliaryCardId => 'verb_auxiliary:$infinitive';
 }

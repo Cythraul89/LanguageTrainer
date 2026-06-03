@@ -6,6 +6,7 @@ import 'package:language_trainer/services/gamification_service.dart';
 import 'package:language_trainer/services/review_scheduler.dart';
 import 'package:language_trainer/services/sm2.dart';
 import 'package:language_trainer/widgets/article_buttons.dart';
+import 'package:language_trainer/widgets/auxiliary_buttons.dart';
 import 'package:language_trainer/widgets/conjugation_field.dart';
 import 'package:language_trainer/widgets/feedback_overlay.dart';
 
@@ -149,11 +150,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   FeedbackOverlay(
                     correct: _correct,
                     correctAnswer: _correctAnswer(),
-                    onOverride:
-                        (_current is VerbQuizItem ||
-                                _current is NounPluralQuizItem) &&
-                                !_correct &&
-                                !_overridden
+                    onOverride: _isTextInput(_current) && !_correct && !_overridden
                             ? _onOverride
                             : null,
                     onNext: _next,
@@ -166,66 +163,116 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
-  Widget _buildPrompt() => switch (_current) {
-        NounQuizItem(entry: final n) => Column(
+  Widget _buildPrompt() {
+    final labelStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant);
+    final subStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant);
+    return switch (_current) {
+      NounQuizItem(entry: final n) => _promptColumn(
+          headline: n.word,
+          sub: n.english,
+          hint: '(${n.plural})',
+          hintStyle: subStyle,
+        ),
+      NounPluralQuizItem(entry: final n) => _promptColumn(
+          headline: '${n.article.name} ${n.word}',
+          sub: n.english,
+          hint: 'Plural?',
+          hintStyle: labelStyle,
+        ),
+      NounTranslationQuizItem(entry: final n) => _promptColumn(
+          headline: '${n.article.name} ${n.word}',
+          hint: 'Was bedeutet dieses Wort?',
+          hintStyle: labelStyle,
+        ),
+      VerbTranslationQuizItem(infinitive: final inf) => _promptColumn(
+          headline: inf,
+          hint: 'Was bedeutet dieses Verb?',
+          hintStyle: labelStyle,
+        ),
+      VerbPartizipIIQuizItem(infinitive: final inf, english: final en) =>
+        _promptColumn(
+          headline: inf,
+          sub: en,
+          hint: 'Partizip II?',
+          hintStyle: labelStyle,
+        ),
+      VerbAuxiliaryQuizItem(infinitive: final inf, english: final en) =>
+        _promptColumn(
+          headline: inf,
+          sub: en,
+          hint: 'haben oder sein?',
+          hintStyle: labelStyle,
+        ),
+      VerbQuizItem() => () {
+          final v = _current as VerbQuizItem;
+          return Column(
             children: [
-              Text(n.word,
-                  style: Theme.of(context).textTheme.displaySmall,
+              Text('${_personLabel(v.person)} ___ (${v.infinitive})',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 4),
+              Text(_tenseLabel(v.tense), style: labelStyle,
                   textAlign: TextAlign.center),
               const SizedBox(height: 8),
-              Text(n.english,
+              Text(v.english,
                   style: Theme.of(context).textTheme.titleMedium,
                   textAlign: TextAlign.center),
-              Text('(${n.plural})',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  textAlign: TextAlign.center),
             ],
-          ),
-        NounPluralQuizItem(entry: final n) => Column(
-            children: [
-              Text('${n.article.name} ${n.word}',
-                  style: Theme.of(context).textTheme.displaySmall,
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 8),
-              Text(n.english,
-                  style: Theme.of(context).textTheme.titleMedium,
-                  textAlign: TextAlign.center),
-              Text('Plural?',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  textAlign: TextAlign.center),
-            ],
-          ),
-        VerbQuizItem() => () {
-            final v = _current as VerbQuizItem;
-            return Column(
-              children: [
-                Text('${_personLabel(v.person)} ___ (${v.infinitive})',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 4),
-                Text(_tenseLabel(v.tense),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color:
-                            Theme.of(context).colorScheme.onSurfaceVariant),
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 8),
-                Text(v.english,
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.center),
-              ],
-            );
-          }(),
-      };
+          );
+        }(),
+    };
+  }
+
+  Widget _promptColumn({
+    required String headline,
+    String? sub,
+    String? hint,
+    TextStyle? hintStyle,
+  }) =>
+      Column(
+        children: [
+          Text(headline,
+              style: Theme.of(context).textTheme.displaySmall,
+              textAlign: TextAlign.center),
+          if (sub != null) ...[
+            const SizedBox(height: 8),
+            Text(sub,
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center),
+          ],
+          if (hint != null) ...[
+            const SizedBox(height: 4),
+            Text(hint, style: hintStyle, textAlign: TextAlign.center),
+          ],
+        ],
+      );
 
   Widget _buildAnswerWidget() => switch (_current) {
         NounQuizItem(entry: final n) => ArticleButtons(
             onAnswer: (article) => _onAnswer(article == n.article),
           ),
+        VerbAuxiliaryQuizItem(auxiliary: final aux) => AuxiliaryButtons(
+            onAnswer: (picked) => _onAnswer(picked == aux),
+          ),
         NounPluralQuizItem(entry: final n) => ConjugationField(
+            hintText: 'Plural eingeben…',
             onSubmit: (answer) =>
                 _onAnswer(_normalise(answer) == _normalise(n.plural)),
+          ),
+        NounTranslationQuizItem(entry: final n) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) => _onAnswer(_acceptsTranslation(answer, n.english)),
+          ),
+        VerbTranslationQuizItem(english: final en) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) => _onAnswer(_acceptsTranslation(answer, en)),
+          ),
+        VerbPartizipIIQuizItem(partizip2: final p2) => ConjugationField(
+            hintText: 'Partizip II eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(p2)),
           ),
         VerbQuizItem() => ConjugationField(
             onSubmit: (answer) {
@@ -238,8 +285,22 @@ class _QuizScreenState extends State<QuizScreen> {
   String _correctAnswer() => switch (_current) {
         NounQuizItem(entry: final n) => '${n.article.name} ${n.word}',
         NounPluralQuizItem(entry: final n) => n.plural,
+        NounTranslationQuizItem(entry: final n) => n.english,
+        VerbTranslationQuizItem(english: final en) => en,
+        VerbPartizipIIQuizItem(partizip2: final p2) => p2,
+        VerbAuxiliaryQuizItem(auxiliary: final aux) => aux.name,
         VerbQuizItem() => (_current as VerbQuizItem).correctAnswer,
       };
+
+  // Whether the current card uses free-text input (override available).
+  static bool _isTextInput(QuizItem item) => item is! NounQuizItem && item is! VerbAuxiliaryQuizItem;
+
+  // Accept any slash-separated variant; strip leading "to " for verb translations.
+  static bool _acceptsTranslation(String answer, String expected) {
+    String norm(String s) => s.trim().toLowerCase().replaceFirst(RegExp(r'^to '), '');
+    final a = norm(answer);
+    return expected.split(RegExp(r'\s*/\s*')).any((v) => norm(v) == a);
+  }
 
   static String _normalise(String s) =>
       s.trim().toLowerCase().replaceAll('ss', 'ß');

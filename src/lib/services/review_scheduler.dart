@@ -9,7 +9,8 @@ import 'package:language_trainer/services/sm2.dart';
 
 const _kDefaultLevels = 'a1,a2,b1,b2,c1,c2';
 const _kLevelsKey = 'selected_levels';
-const _kDefaultCardTypes = 'noun,nounPlural,verbPraesens,verbPraeteritum,verbPerfekt';
+const _kDefaultCardTypes =
+    'noun,nounPlural,nounTranslation,verbPraesens,verbPraeteritum,verbPerfekt,verbPartizipII,verbAuxiliary,verbTranslation';
 const _kCardTypesKey = 'selected_card_types';
 
 class ReviewScheduler {
@@ -52,6 +53,51 @@ class ReviewScheduler {
         if (Sm2Service.isDue(sm2)) {
           due.add(NounPluralQuizItem(
               cardId: noun.pluralCardId, sm2: sm2, entry: noun));
+        }
+      }
+      if (cardTypes.contains(CardType.nounTranslation)) {
+        final sm2 = _sm2For(savedMap[noun.translationCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          due.add(NounTranslationQuizItem(
+              cardId: noun.translationCardId, sm2: sm2, entry: noun));
+        }
+      }
+    }
+
+    for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
+      if (cardTypes.contains(CardType.verbTranslation)) {
+        final sm2 = _sm2For(savedMap[verb.translationCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          due.add(VerbTranslationQuizItem(
+            cardId: verb.translationCardId,
+            sm2: sm2,
+            infinitive: verb.infinitive,
+            english: verb.english,
+          ));
+        }
+      }
+      if (cardTypes.contains(CardType.verbPartizipII)) {
+        final sm2 = _sm2For(savedMap[verb.partizip2CardId]);
+        if (Sm2Service.isDue(sm2)) {
+          due.add(VerbPartizipIIQuizItem(
+            cardId: verb.partizip2CardId,
+            sm2: sm2,
+            infinitive: verb.infinitive,
+            english: verb.english,
+            partizip2: verb.partizip2,
+          ));
+        }
+      }
+      if (cardTypes.contains(CardType.verbAuxiliary)) {
+        final sm2 = _sm2For(savedMap[verb.auxiliaryCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          due.add(VerbAuxiliaryQuizItem(
+            cardId: verb.auxiliaryCardId,
+            sm2: sm2,
+            infinitive: verb.infinitive,
+            english: verb.english,
+            auxiliary: verb.auxiliary,
+          ));
         }
       }
     }
@@ -105,6 +151,26 @@ class ReviewScheduler {
           dues[CardType.nounPlural] = dues[CardType.nounPlural]! + 1;
         }
       }
+      if (cardTypes.contains(CardType.nounTranslation)) {
+        totals[CardType.nounTranslation] = totals[CardType.nounTranslation]! + 1;
+        final sm2 = _sm2For(savedMap[noun.translationCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          dues[CardType.nounTranslation] = dues[CardType.nounTranslation]! + 1;
+        }
+      }
+    }
+
+    for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
+      void _countVerb(CardType ct, String id) {
+        if (!cardTypes.contains(ct)) return;
+        totals[ct] = totals[ct]! + 1;
+        final sm2 = _sm2For(savedMap[id]);
+        if (Sm2Service.isDue(sm2)) dues[ct] = dues[ct]! + 1;
+      }
+
+      _countVerb(CardType.verbTranslation, verb.translationCardId);
+      _countVerb(CardType.verbPartizipII, verb.partizip2CardId);
+      _countVerb(CardType.verbAuxiliary, verb.auxiliaryCardId);
     }
 
     for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
@@ -163,9 +229,13 @@ class ReviewScheduler {
   static CardType _parseCardType(String s) => switch (s.trim()) {
         'noun' => CardType.noun,
         'nounPlural' => CardType.nounPlural,
+        'nounTranslation' => CardType.nounTranslation,
         'verbPraesens' => CardType.verbPraesens,
         'verbPraeteritum' => CardType.verbPraeteritum,
         'verbPerfekt' => CardType.verbPerfekt,
+        'verbPartizipII' => CardType.verbPartizipII,
+        'verbAuxiliary' => CardType.verbAuxiliary,
+        'verbTranslation' => CardType.verbTranslation,
         _ => CardType.noun,
       };
 
