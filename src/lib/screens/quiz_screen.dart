@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:language_trainer/models/achievement.dart';
 import 'package:language_trainer/models/quiz_item.dart';
@@ -347,52 +348,87 @@ class _QuizScreenState extends State<QuizScreen> {
 
 // ── Session complete screen ───────────────────────────────────────────────────
 
-class _SessionCompleteScreen extends StatelessWidget {
+class _SessionCompleteScreen extends StatefulWidget {
   const _SessionCompleteScreen({required this.summaryFuture});
   final Future<SessionSummary> summaryFuture;
+
+  @override
+  State<_SessionCompleteScreen> createState() => _SessionCompleteScreenState();
+}
+
+class _SessionCompleteScreenState extends State<_SessionCompleteScreen> {
+  late final ConfettiController _confetti;
+
+  @override
+  void initState() {
+    super.initState();
+    _confetti = ConfettiController(duration: const Duration(seconds: 3));
+    widget.summaryFuture.then((s) {
+      if (s.leveledUp && mounted) _confetti.play();
+    });
+  }
+
+  @override
+  void dispose() {
+    _confetti.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Session Complete')),
-      body: FutureBuilder<SessionSummary>(
-        future: summaryFuture,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final s = snapshot.data!;
-          return ListView(
-            padding: const EdgeInsets.all(24),
-            children: [
-              const Icon(Icons.check_circle_outline,
-                  size: 72, color: Colors.green),
-              const SizedBox(height: 16),
-              Text('Session complete!',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 8),
-              Text('+${s.sessionXp} XP earned',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary),
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 24),
-              _XpSummaryCard(summary: s),
-              if (s.unlocked.isNotEmpty) ...[
-                const SizedBox(height: 24),
-                Text('Achievements unlocked!',
-                    style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                ...s.unlocked.map((a) => _AchievementUnlockedTile(a: a)),
-              ],
-              const SizedBox(height: 32),
-              FilledButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Back to Home'),
-              ),
-            ],
-          );
-        },
+      body: Stack(
+        children: [
+          FutureBuilder<SessionSummary>(
+            future: widget.summaryFuture,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final s = snapshot.data!;
+              return ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
+                  const Icon(Icons.check_circle_outline,
+                      size: 72, color: Colors.green),
+                  const SizedBox(height: 16),
+                  Text('Session complete!',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 8),
+                  Text('+${s.sessionXp} XP earned',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 24),
+                  _XpSummaryCard(summary: s),
+                  if (s.unlocked.isNotEmpty) ...[
+                    const SizedBox(height: 24),
+                    Text('Achievements unlocked!',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    ...s.unlocked.map((a) => _AchievementUnlockedTile(a: a)),
+                  ],
+                  const SizedBox(height: 32),
+                  FilledButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Back to Home'),
+                  ),
+                ],
+              );
+            },
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confetti,
+              blastDirectionality: BlastDirectionality.explosive,
+              numberOfParticles: 40,
+              gravity: 0.2,
+            ),
+          ),
+        ],
       ),
     );
   }
