@@ -33,7 +33,7 @@ void main() {
       for (final item in items) {
         expect(
           item,
-          anyOf(
+          anyOf([
             isA<NounQuizItem>(),
             isA<NounPluralQuizItem>(),
             isA<NounTranslationQuizItem>(),
@@ -44,7 +44,7 @@ void main() {
             isA<VerbAuxiliaryQuizItem>(),
             isA<VerbReverseQuizItem>(),
             isA<AdjTranslationQuizItem>(),
-          ),
+          ]),
         );
       }
     });
