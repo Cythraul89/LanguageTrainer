@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:language_trainer/data/adjectives.dart';
 import 'package:language_trainer/data/nouns.dart';
 import 'package:language_trainer/data/verbs.dart';
-import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/verb.dart';
 
@@ -151,8 +150,8 @@ class _VerbDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final persons = GrammaticalPerson.values;
-    final labels = ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
+    const persons = GrammaticalPerson.values;
+    const labels = ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(1.2),

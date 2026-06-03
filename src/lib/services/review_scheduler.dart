@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 import 'package:language_trainer/data/adjectives.dart';
 import 'package:language_trainer/data/nouns.dart';
 import 'package:language_trainer/data/verbs.dart';
-import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/quiz_item.dart';
 import 'package:language_trainer/models/verb.dart';
@@ -242,17 +241,17 @@ class ReviewScheduler {
     }
 
     for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
-      void _countVerb(CardType ct, String id) {
+      void countVerb(CardType ct, String id) {
         if (!cardTypes.contains(ct)) return;
         totals[ct] = totals[ct]! + 1;
         final sm2 = _sm2For(savedMap[id]);
         if (Sm2Service.isDue(sm2)) dues[ct] = dues[ct]! + 1;
       }
 
-      _countVerb(CardType.verbTranslation, verb.translationCardId);
-      _countVerb(CardType.verbPartizipII, verb.partizip2CardId);
-      _countVerb(CardType.verbAuxiliary, verb.auxiliaryCardId);
-      _countVerb(CardType.verbReverse, verb.reverseCardId);
+      countVerb(CardType.verbTranslation, verb.translationCardId);
+      countVerb(CardType.verbPartizipII, verb.partizip2CardId);
+      countVerb(CardType.verbAuxiliary, verb.auxiliaryCardId);
+      countVerb(CardType.verbReverse, verb.reverseCardId);
     }
 
     for (final verb in kVerbs.where((v) => levels.contains(v.level))) {
@@ -268,16 +267,16 @@ class ReviewScheduler {
     }
 
     for (final adj in kAdjectives.where((a) => levels.contains(a.level))) {
-      void _countAdj(CardType ct, String id) {
+      void countAdj(CardType ct, String id) {
         if (!cardTypes.contains(ct)) return;
         totals[ct] = totals[ct]! + 1;
         final sm2 = _sm2For(savedMap[id]);
         if (Sm2Service.isDue(sm2)) dues[ct] = dues[ct]! + 1;
       }
 
-      _countAdj(CardType.adjTranslation, adj.translationCardId);
-      _countAdj(CardType.adjComparative, adj.comparativeCardId);
-      _countAdj(CardType.adjSuperlative, adj.superlativeCardId);
+      countAdj(CardType.adjTranslation, adj.translationCardId);
+      countAdj(CardType.adjComparative, adj.comparativeCardId);
+      countAdj(CardType.adjSuperlative, adj.superlativeCardId);
     }
 
     return {

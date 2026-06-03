@@ -1,7 +1,6 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:language_trainer/models/achievement.dart';
-import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/quiz_item.dart';
 import 'package:language_trainer/models/verb.dart';
 import 'package:language_trainer/services/gamification_service.dart';
