@@ -20,7 +20,6 @@ const kAdjectives = <AdjectiveEntry>[
   AdjectiveEntry(word: 'leicht',    english: 'easy / light',  comparative: 'leichter',     superlative: 'am leichtesten',   level: CefrLevel.a1),
   AdjectiveEntry(word: 'schwer',    english: 'heavy / hard',  comparative: 'schwerer',     superlative: 'am schwersten',    level: CefrLevel.a1),
   AdjectiveEntry(word: 'richtig',   english: 'correct',       comparative: 'richtiger',    superlative: 'am richtigsten',   level: CefrLevel.a1),
-  AdjectiveEntry(word: 'falsch',    english: 'wrong',         comparative: 'falscher',     superlative: 'am falschesten',   level: CefrLevel.a1),
   AdjectiveEntry(word: 'lang',      english: 'long',          comparative: 'länger',       superlative: 'am längsten',      level: CefrLevel.a1),
   AdjectiveEntry(word: 'kurz',      english: 'short',         comparative: 'kürzer',       superlative: 'am kürzesten',     level: CefrLevel.a1),
 
@@ -44,10 +43,7 @@ const kAdjectives = <AdjectiveEntry>[
   // ── B1 ──────────────────────────────────────────────────────────────────────
   AdjectiveEntry(word: 'gefährlich', english: 'dangerous',    comparative: 'gefährlicher', superlative: 'am gefährlichsten', level: CefrLevel.b1),
   AdjectiveEntry(word: 'sicher',    english: 'safe / certain', comparative: 'sicherer',    superlative: 'am sichersten',    level: CefrLevel.b1),
-  AdjectiveEntry(word: 'möglich',   english: 'possible',      comparative: 'möglicher',    superlative: 'am möglichsten',   level: CefrLevel.b1),
   AdjectiveEntry(word: 'nötig',     english: 'necessary',     comparative: 'nötiger',      superlative: 'am nötigsten',     level: CefrLevel.b1),
-  AdjectiveEntry(word: 'besonders', english: 'special',       comparative: 'besonderer',   superlative: 'am besondersten',  level: CefrLevel.b1),
-  AdjectiveEntry(word: 'genug',     english: 'enough',        comparative: 'mehr',         superlative: 'am meisten',       level: CefrLevel.b1),
   AdjectiveEntry(word: 'fertig',    english: 'ready / done',  comparative: 'fertiger',     superlative: 'am fertigsten',    level: CefrLevel.b1),
   AdjectiveEntry(word: 'offen',     english: 'open',          comparative: 'offener',      superlative: 'am offensten',     level: CefrLevel.b1),
   AdjectiveEntry(word: 'geschlossen', english: 'closed',      comparative: 'geschlossener', superlative: 'am geschlossensten', level: CefrLevel.b1),
