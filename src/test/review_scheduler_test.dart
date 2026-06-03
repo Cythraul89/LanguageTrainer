@@ -28,10 +28,24 @@ void main() {
       expect(items, isNotEmpty);
     });
 
-    test('returns only NounQuizItems and VerbQuizItems', () async {
+    test('returns only recognised QuizItem subtypes', () async {
       final items = await scheduler.getDueItems();
       for (final item in items) {
-        expect(item, anyOf(isA<NounQuizItem>(), isA<VerbQuizItem>()));
+        expect(
+          item,
+          anyOf(
+            isA<NounQuizItem>(),
+            isA<NounPluralQuizItem>(),
+            isA<NounTranslationQuizItem>(),
+            isA<NounReverseQuizItem>(),
+            isA<VerbQuizItem>(),
+            isA<VerbTranslationQuizItem>(),
+            isA<VerbPartizipIIQuizItem>(),
+            isA<VerbAuxiliaryQuizItem>(),
+            isA<VerbReverseQuizItem>(),
+            isA<AdjTranslationQuizItem>(),
+          ),
+        );
       }
     });
 
@@ -139,6 +153,8 @@ void main() {
     });
 
     test('saved card with past nextReview is still due', () async {
+      // Use a large session size so the card is not truncated from results.
+      await scheduler.setSessionSize(500);
       final items = await scheduler.getDueItems();
       final first = items.first;
 
@@ -158,9 +174,12 @@ void main() {
   // ── getStats ─────────────────────────────────────────────────────────────────
 
   group('getStats', () {
-    test('all CardTypes have entries with default settings', () async {
+    test('all default-enabled CardTypes have entries', () async {
+      // adjComparative and adjSuperlative are opt-in (not in default set).
+      const optIn = {CardType.adjComparative, CardType.adjSuperlative};
       final stats = await scheduler.getStats();
       for (final ct in CardType.values) {
+        if (optIn.contains(ct)) continue;
         expect(stats[ct]!.total, greaterThan(0),
             reason: '$ct should have cards');
       }
