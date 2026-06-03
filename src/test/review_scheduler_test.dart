@@ -62,15 +62,16 @@ void main() {
 
   group('getDueItems — CEFR level filter', () {
     test('selecting only a1 returns fewer items than all levels', () async {
-      await scheduler.setSessionSize(500);
-
+      // Use getStats (no session cap) so the comparison is not truncated.
       await scheduler.setSelectedLevels({CefrLevel.a1});
-      final a1Items = await scheduler.getDueItems();
+      final a1Stats = await scheduler.getStats();
+      final a1Total = a1Stats.values.fold(0, (s, v) => s + v.total);
 
       await scheduler.setSelectedLevels(CefrLevel.values.toSet());
-      final allItems = await scheduler.getDueItems();
+      final allStats = await scheduler.getStats();
+      final allTotal = allStats.values.fold(0, (s, v) => s + v.total);
 
-      expect(a1Items.length, lessThan(allItems.length));
+      expect(a1Total, lessThan(allTotal));
     });
 
     test('no items returned if no levels match any vocabulary', () async {
@@ -156,7 +157,7 @@ void main() {
 
     test('saved card with past nextReview is still due', () async {
       // Use a large session size so the card is not truncated from results.
-      await scheduler.setSessionSize(500);
+      await scheduler.setSessionSize(50000);
       final items = await scheduler.getDueItems();
       final first = items.first;
 
@@ -204,6 +205,7 @@ void main() {
     test('due decreases after a card is marked learned', () async {
       final nounStatsBefore = (await scheduler.getStats())[CardType.noun]!;
 
+      await scheduler.setSessionSize(50000);
       final items = await scheduler.getDueItems();
       final noun = items.whereType<NounQuizItem>().first;
       var sm2 = Sm2State.initial;
