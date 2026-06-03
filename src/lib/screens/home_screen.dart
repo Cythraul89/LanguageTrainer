@@ -3,6 +3,7 @@ import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/quiz_item.dart';
 import 'package:language_trainer/models/user_progress.dart';
 import 'package:language_trainer/screens/quiz_screen.dart';
+import 'package:language_trainer/screens/vocab_browser_screen.dart';
 import 'package:language_trainer/services/gamification_service.dart';
 import 'package:language_trainer/services/review_scheduler.dart';
 
@@ -165,6 +166,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? 'No difficult words'
                       : 'Difficult words (${d.difficultCount})',
                 ),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const VocabBrowserScreen(),
+                  ),
+                ),
+                icon: const Icon(Icons.menu_book_outlined),
+                label: const Text('Browse vocabulary'),
               ),
             ],
           );
