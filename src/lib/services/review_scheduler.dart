@@ -12,6 +12,8 @@ const _kLevelsKey = 'selected_levels';
 const _kDefaultCardTypes =
     'noun,nounPlural,nounTranslation,verbPraesens,verbPraeteritum,verbPerfekt,verbPartizipII,verbAuxiliary,verbTranslation';
 const _kCardTypesKey = 'selected_card_types';
+const _kSessionSizeKey = 'session_size';
+const _kDefaultSessionSize = 10;
 
 class ReviewScheduler {
   ReviewScheduler(this._db);
@@ -33,6 +35,15 @@ class ReviewScheduler {
 
   Future<void> setSelectedCardTypes(Set<CardType> types) =>
       _db.setPreference(_kCardTypesKey, types.map((t) => t.name).join(','));
+
+  Future<int> getSessionSize() async {
+    final raw = await _db.getPreference(_kSessionSizeKey);
+    if (raw == null) return _kDefaultSessionSize;
+    return int.tryParse(raw) ?? _kDefaultSessionSize;
+  }
+
+  Future<void> setSessionSize(int size) =>
+      _db.setPreference(_kSessionSizeKey, size.toString());
 
   Future<List<QuizItem>> getDueItems() async {
     final levels = await getSelectedLevels();
@@ -126,7 +137,8 @@ class ReviewScheduler {
     }
 
     due.shuffle();
-    return due;
+    final limit = await getSessionSize();
+    return due.length > limit ? due.sublist(0, limit) : due;
   }
 
   Future<Map<CardType, ({int total, int due})>> getStats() async {

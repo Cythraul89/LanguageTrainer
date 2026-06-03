@@ -14,58 +14,103 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late Future<Set<CefrLevel>> _levels;
+  late Future<_SettingsData> _data;
 
   @override
   void initState() {
     super.initState();
-    _levels = widget.scheduler.getSelectedLevels();
+    _reload();
+  }
+
+  void _reload() => setState(() { _data = _load(); });
+
+  Future<_SettingsData> _load() async {
+    final results = await Future.wait([
+      widget.scheduler.getSelectedLevels(),
+      widget.scheduler.getSessionSize(),
+    ]);
+    return _SettingsData(
+      levels: results[0] as Set<CefrLevel>,
+      sessionSize: results[1] as int,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: FutureBuilder<Set<CefrLevel>>(
-        future: _levels,
+      body: FutureBuilder<_SettingsData>(
+        future: _data,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
-          final selected = snapshot.data!;
+          final d = snapshot.data!;
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
+              // ── Practice level ───────────────────────────────────────────
               Text('Practice level',
                   style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 children: CefrLevel.values.map((level) {
-                  final active = selected.contains(level);
+                  final active = d.levels.contains(level);
                   return FilterChip(
                     label: Text(level.name.toUpperCase()),
                     selected: active,
                     onSelected: (on) async {
-                      if (!on && selected.length == 1) return;
-                      final next = Set<CefrLevel>.from(selected);
+                      if (!on && d.levels.length == 1) return;
+                      final next = Set<CefrLevel>.from(d.levels);
                       on ? next.add(level) : next.remove(level);
                       await widget.scheduler.setSelectedLevels(next);
-                      setState(
-                          () => _levels = widget.scheduler.getSelectedLevels());
+                      _reload();
                     },
                   );
                 }).toList(),
               ),
               const SizedBox(height: 24),
               const Divider(),
+              // ── Session size ─────────────────────────────────────────────
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('Cards per session',
+                        style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                  Text(
+                    '${d.sessionSize}',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+              Slider(
+                value: d.sessionSize.toDouble(),
+                min: 5,
+                max: 50,
+                divisions: 9,
+                label: '${d.sessionSize}',
+                onChanged: (v) async {
+                  await widget.scheduler.setSessionSize(v.round());
+                  _reload();
+                },
+              ),
+              const SizedBox(height: 8),
+              const Divider(),
+              // ── Theme ────────────────────────────────────────────────────
               const ListTile(
                 title: Text('Theme'),
                 subtitle: Text('Follows system setting'),
                 trailing: Icon(Icons.brightness_auto_outlined),
-                enabled: false, // theme toggle planned for a future release
+                enabled: false,
               ),
               const Divider(),
+              // ── About ────────────────────────────────────────────────────
               ListTile(
                 leading: const Icon(Icons.info_outline),
                 title: const Text('About'),
@@ -84,4 +129,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+}
+
+class _SettingsData {
+  final Set<CefrLevel> levels;
+  final int sessionSize;
+  const _SettingsData({required this.levels, required this.sessionSize});
 }
