@@ -62,6 +62,8 @@ void main() {
 
   group('getDueItems — CEFR level filter', () {
     test('selecting only a1 returns fewer items than all levels', () async {
+      await scheduler.setSessionSize(500);
+
       await scheduler.setSelectedLevels({CefrLevel.a1});
       final a1Items = await scheduler.getDueItems();
 
