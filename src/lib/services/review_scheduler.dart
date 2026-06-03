@@ -182,6 +182,20 @@ class ReviewScheduler {
               cardId: adj.translationCardId, sm2: sm2, entry: adj));
         }
       }
+      if (cardTypes.contains(CardType.adjComparative)) {
+        final sm2 = _sm2For(savedMap[adj.comparativeCardId]);
+        if (eligible(sm2)) {
+          due.add(AdjComparativeQuizItem(
+              cardId: adj.comparativeCardId, sm2: sm2, entry: adj));
+        }
+      }
+      if (cardTypes.contains(CardType.adjSuperlative)) {
+        final sm2 = _sm2For(savedMap[adj.superlativeCardId]);
+        if (eligible(sm2)) {
+          due.add(AdjSuperlativeQuizItem(
+              cardId: adj.superlativeCardId, sm2: sm2, entry: adj));
+        }
+      }
     }
 
     due.shuffle();
@@ -262,6 +276,8 @@ class ReviewScheduler {
       }
 
       _countAdj(CardType.adjTranslation, adj.translationCardId);
+      _countAdj(CardType.adjComparative, adj.comparativeCardId);
+      _countAdj(CardType.adjSuperlative, adj.superlativeCardId);
     }
 
     return {
