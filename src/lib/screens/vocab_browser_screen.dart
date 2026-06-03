@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:language_trainer/data/adjectives.dart';
 import 'package:language_trainer/data/nouns.dart';
 import 'package:language_trainer/data/verbs.dart';
+import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/verb.dart';
 
@@ -19,7 +21,7 @@ class _VocabBrowserScreenState extends State<VocabBrowserScreen>
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 2, vsync: this);
+    _tabs = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -35,7 +37,7 @@ class _VocabBrowserScreenState extends State<VocabBrowserScreen>
         title: const Text('Vocabulary'),
         bottom: TabBar(
           controller: _tabs,
-          tabs: const [Tab(text: 'Nouns'), Tab(text: 'Verbs')],
+          tabs: const [Tab(text: 'Nouns'), Tab(text: 'Verbs'), Tab(text: 'Adjectives')],
         ),
       ),
       body: Column(
@@ -58,6 +60,7 @@ class _VocabBrowserScreenState extends State<VocabBrowserScreen>
               children: [
                 _NounList(query: _query),
                 _VerbList(query: _query),
+                _AdjList(query: _query),
               ],
             ),
           ),
@@ -196,6 +199,38 @@ class _VerbDetails extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         child: Text(text),
       );
+}
+
+class _AdjList extends StatelessWidget {
+  const _AdjList({required this.query});
+  final String query;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = query.isEmpty
+        ? kAdjectives
+        : kAdjectives.where((a) =>
+            a.word.toLowerCase().contains(query) ||
+            a.english.toLowerCase().contains(query)).toList();
+
+    if (items.isEmpty) {
+      return const Center(child: Text('No results'));
+    }
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, i) {
+        final a = items[i];
+        return ListTile(
+          title: Text(a.word),
+          subtitle: Text(a.english),
+          trailing: Text(
+            '${a.comparative} · ${a.superlative}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        );
+      },
+    );
+  }
 }
 
 class _ArticleChip extends StatelessWidget {

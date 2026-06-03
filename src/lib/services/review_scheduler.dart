@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
+import 'package:language_trainer/data/adjectives.dart';
 import 'package:language_trainer/data/nouns.dart';
 import 'package:language_trainer/data/verbs.dart';
+import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/quiz_item.dart';
 import 'package:language_trainer/models/verb.dart';
@@ -10,7 +12,7 @@ import 'package:language_trainer/services/sm2.dart';
 const _kDefaultLevels = 'a1,a2,b1,b2,c1,c2';
 const _kLevelsKey = 'selected_levels';
 const _kDefaultCardTypes =
-    'noun,nounPlural,nounTranslation,nounReverse,verbPraesens,verbPraeteritum,verbPerfekt,verbPartizipII,verbAuxiliary,verbTranslation,verbReverse';
+    'noun,nounPlural,nounTranslation,nounReverse,verbPraesens,verbPraeteritum,verbPerfekt,verbPartizipII,verbAuxiliary,verbTranslation,verbReverse,adjTranslation';
 const _kCardTypesKey = 'selected_card_types';
 const _kSessionSizeKey = 'session_size';
 const _kDefaultSessionSize = 10;
@@ -172,6 +174,16 @@ class ReviewScheduler {
       }
     }
 
+    for (final adj in kAdjectives.where((a) => levels.contains(a.level))) {
+      if (cardTypes.contains(CardType.adjTranslation)) {
+        final sm2 = _sm2For(savedMap[adj.translationCardId]);
+        if (eligible(sm2)) {
+          due.add(AdjTranslationQuizItem(
+              cardId: adj.translationCardId, sm2: sm2, entry: adj));
+        }
+      }
+    }
+
     due.shuffle();
     final limit = await getSessionSize();
     return due.length > limit ? due.sublist(0, limit) : due;
@@ -241,6 +253,17 @@ class ReviewScheduler {
       }
     }
 
+    for (final adj in kAdjectives.where((a) => levels.contains(a.level))) {
+      void _countAdj(CardType ct, String id) {
+        if (!cardTypes.contains(ct)) return;
+        totals[ct] = totals[ct]! + 1;
+        final sm2 = _sm2For(savedMap[id]);
+        if (Sm2Service.isDue(sm2)) dues[ct] = dues[ct]! + 1;
+      }
+
+      _countAdj(CardType.adjTranslation, adj.translationCardId);
+    }
+
     return {
       for (final t in CardType.values)
         t: (total: totals[t]!, due: dues[t]!),
@@ -294,6 +317,9 @@ class ReviewScheduler {
         'verbTranslation' => CardType.verbTranslation,
         'nounReverse' => CardType.nounReverse,
         'verbReverse' => CardType.verbReverse,
+        'adjTranslation' => CardType.adjTranslation,
+        'adjComparative' => CardType.adjComparative,
+        'adjSuperlative' => CardType.adjSuperlative,
         _ => CardType.noun,
       };
 

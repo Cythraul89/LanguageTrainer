@@ -1,3 +1,4 @@
+import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/verb.dart';
 
@@ -13,6 +14,9 @@ enum CardType {
   verbAuxiliary,
   verbTranslation,
   verbReverse,
+  adjTranslation,
+  adjComparative,
+  adjSuperlative,
 }
 
 class Sm2State {
@@ -147,6 +151,36 @@ class VerbAuxiliaryQuizItem extends QuizItem {
     required this.english,
     required this.auxiliary,
   }) : super(cardType: CardType.verbAuxiliary);
+}
+
+class AdjTranslationQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjTranslation);
+}
+
+class AdjComparativeQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjComparativeQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjComparative);
+}
+
+class AdjSuperlativeQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjSuperlativeQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjSuperlative);
 }
 
 class VerbQuizItem extends QuizItem {

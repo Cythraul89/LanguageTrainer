@@ -1,6 +1,7 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:language_trainer/models/achievement.dart';
+import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/quiz_item.dart';
 import 'package:language_trainer/models/verb.dart';
 import 'package:language_trainer/services/gamification_service.dart';
@@ -216,6 +217,23 @@ class _QuizScreenState extends State<QuizScreen> {
           hint: 'Wie heißt das Verb?',
           hintStyle: labelStyle,
         ),
+      AdjTranslationQuizItem(entry: final a) => _promptColumn(
+          headline: a.word,
+          hint: 'Was bedeutet dieses Adjektiv?',
+          hintStyle: labelStyle,
+        ),
+      AdjComparativeQuizItem(entry: final a) => _promptColumn(
+          headline: a.word,
+          sub: a.english,
+          hint: 'Komparativ?',
+          hintStyle: labelStyle,
+        ),
+      AdjSuperlativeQuizItem(entry: final a) => _promptColumn(
+          headline: a.word,
+          sub: a.english,
+          hint: 'Superlativ?',
+          hintStyle: labelStyle,
+        ),
       VerbQuizItem() => () {
           final v = _current as VerbQuizItem;
           return Column(
@@ -297,6 +315,21 @@ class _QuizScreenState extends State<QuizScreen> {
             onSubmit: (answer) =>
                 _onAnswer(_normalise(answer) == _normalise(inf)),
           ),
+        AdjTranslationQuizItem(entry: final a) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) =>
+                _onAnswer(_acceptsTranslation(answer, a.english)),
+          ),
+        AdjComparativeQuizItem(entry: final a) => ConjugationField(
+            hintText: 'Komparativ eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(a.comparative)),
+          ),
+        AdjSuperlativeQuizItem(entry: final a) => ConjugationField(
+            hintText: 'Superlativ eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(a.superlative)),
+          ),
         VerbQuizItem() => ConjugationField(
             onSubmit: (answer) {
               final v = _current as VerbQuizItem;
@@ -314,6 +347,9 @@ class _QuizScreenState extends State<QuizScreen> {
         VerbAuxiliaryQuizItem(auxiliary: final aux) => aux.name,
         NounReverseQuizItem(entry: final n) => '${n.article.name} ${n.word}',
         VerbReverseQuizItem(infinitive: final inf) => inf,
+        AdjTranslationQuizItem(entry: final a) => a.english,
+        AdjComparativeQuizItem(entry: final a) => a.comparative,
+        AdjSuperlativeQuizItem(entry: final a) => a.superlative,
         VerbQuizItem() => (_current as VerbQuizItem).correctAnswer,
       };
 

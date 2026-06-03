@@ -295,6 +295,7 @@ class _CategorySelector extends StatelessWidget {
     CardType.verbAuxiliary: 'Hilfsverb',
     CardType.verbTranslation: 'Bedeutung',
     CardType.verbReverse: 'Verb schreiben',
+    CardType.adjTranslation: 'Adj. Bedeutung',
   };
 
   @override
@@ -347,6 +348,7 @@ class _DueSummaryCard extends StatelessWidget {
       ('Hilfsverb', CardType.verbAuxiliary),
       ('Bedeutung (V)', CardType.verbTranslation),
       ('Verb schreiben', CardType.verbReverse),
+      ('Adj. Bedeutung', CardType.adjTranslation),
     ];
     final totalDue = stats.entries
         .where((e) => selectedTypes.contains(e.key))
