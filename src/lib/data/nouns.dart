@@ -91,7 +91,6 @@ const kNouns = <NounEntry>[
   NounEntry(word: 'Sohn',      article: Article.der, plural: 'Söhne',        english: 'son',            level: CefrLevel.a2),
   NounEntry(word: 'Tochter',   article: Article.die, plural: 'Töchter',      english: 'daughter',       level: CefrLevel.a2),
   NounEntry(word: 'Wohnung',   article: Article.die, plural: 'Wohnungen',    english: 'flat / apartment', level: CefrLevel.a2),
-  NounEntry(word: 'Kühlschrank', article: Article.der, plural: 'Kühlschränke', english: 'refrigerator', level: CefrLevel.a2),
   NounEntry(word: 'Zeitung',   article: Article.die, plural: 'Zeitungen',    english: 'newspaper',      level: CefrLevel.a2),
   NounEntry(word: 'Brief',     article: Article.der, plural: 'Briefe',       english: 'letter',         level: CefrLevel.a2),
   NounEntry(word: 'Reise',     article: Article.die, plural: 'Reisen',       english: 'journey / trip', level: CefrLevel.a2),
@@ -99,7 +98,6 @@ const kNouns = <NounEntry>[
   NounEntry(word: 'Restaurant', article: Article.das, plural: 'Restaurants', english: 'restaurant',     level: CefrLevel.a2),
   NounEntry(word: 'Preis',     article: Article.der, plural: 'Preise',       english: 'price',          level: CefrLevel.a2),
   NounEntry(word: 'Einkauf',   article: Article.der, plural: 'Einkäufe',     english: 'shopping',       level: CefrLevel.a2),
-  NounEntry(word: 'Farbe',     article: Article.die, plural: 'Farben',       english: 'colour',         level: CefrLevel.a2),
   NounEntry(word: 'Sport',     article: Article.der, plural: '-',            english: 'sport',          level: CefrLevel.a2),
   NounEntry(word: 'Film',      article: Article.der, plural: 'Filme',        english: 'film / movie',   level: CefrLevel.a2),
   NounEntry(word: 'Foto',      article: Article.das, plural: 'Fotos',        english: 'photo',          level: CefrLevel.a2),
@@ -160,7 +158,7 @@ const kNouns = <NounEntry>[
   NounEntry(word: 'Zusammenhang',  article: Article.der, plural: 'Zusammenhänge',   english: 'context / connection',   level: CefrLevel.b1),
   NounEntry(word: 'Verantwortung', article: Article.die, plural: '-',               english: 'responsibility',   level: CefrLevel.b1),
   NounEntry(word: 'Erfahrung',     article: Article.die, plural: 'Erfahrungen',     english: 'experience',       level: CefrLevel.b1),
-  NounEntry(word: 'Kenntnisse',    article: Article.die, plural: 'Kenntnisse',      english: 'knowledge / skills', level: CefrLevel.b1),
+  NounEntry(word: 'Kenntnisse',    article: Article.die, plural: 'Kenntnisse',      english: 'knowledge / expertise', level: CefrLevel.b1),
   NounEntry(word: 'Interesse',     article: Article.das, plural: 'Interessen',      english: 'interest',         level: CefrLevel.b1),
   NounEntry(word: 'Wirkung',       article: Article.die, plural: 'Wirkungen',       english: 'effect',           level: CefrLevel.b1),
   NounEntry(word: 'Einfluss',      article: Article.der, plural: 'Einflüsse',       english: 'influence',        level: CefrLevel.b1),
@@ -198,7 +196,7 @@ const kNouns = <NounEntry>[
   NounEntry(word: 'Mehrheit',      article: Article.die, plural: 'Mehrheiten',      english: 'majority',         level: CefrLevel.b1),
   NounEntry(word: 'Minderheit',    article: Article.die, plural: 'Minderheiten',    english: 'minority',         level: CefrLevel.b1),
   NounEntry(word: 'Ursache',       article: Article.die, plural: 'Ursachen',        english: 'cause / origin',   level: CefrLevel.b1),
-  NounEntry(word: 'Wirklichkeit',  article: Article.die, plural: '-',               english: 'reality',          level: CefrLevel.b1),
+  NounEntry(word: 'Wirklichkeit',  article: Article.die, plural: 'Wirklichkeiten',  english: 'reality',          level: CefrLevel.b1),
 
   // ── birthday vocabulary ───────────────────────────────────────────────────
   NounEntry(word: 'Kuchen',        article: Article.der, plural: 'Kuchen',          english: 'cake',             level: CefrLevel.a1),
