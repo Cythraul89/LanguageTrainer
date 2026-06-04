@@ -307,6 +307,28 @@ jobs:
           path: src/LanguageTrainer-*-macos.zip
           retention-days: 14
 
+  # ── Vocabulary PDF ────────────────────────────────────────────────────────────
+  vocab-pdf:
+    name: Vocabulary PDF
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install fpdf2
+        run: pip install fpdf2
+      - name: Generate vocabulary PDF
+        run: python tools/gen_vocab_pdf.py vocabulary.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: languagetrainer-vocabulary-pdf
+          path: vocabulary.pdf
+          retention-days: 90
+
   # ── SBOM ──────────────────────────────────────────────────────────────────────
   sbom:
     name: SBOM (CycloneDX)
