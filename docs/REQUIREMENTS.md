@@ -133,10 +133,10 @@ schema changes; existing cards keep their SM-2 state when new words are added.
 
 | Category   | Count | Deck cards generated                                   |
 |------------|------:|-------------------------------------------------------:|
-| Nouns      | ~215  | up to ~860 (noun + plural + translation + reverse)     |
-| Verbs      | ~95   | up to ~1 900 (6 persons × 3 tenses + 4 extra types)   |
-| Adjectives | ~54   | up to ~162 (translation + comparative + superlative)   |
-| **Total**  |       | **up to ~2 922** (depending on active CardTypes)       |
+| Nouns      |  204  | up to ~816 (noun + plural + translation + reverse)      |
+| Verbs      |   93  | up to ~2 046 (6 persons × 3 tenses + 4 extra types)    |
+| Adjectives |   49  | up to ~147 (translation + comparative + superlative)   |
+| **Total**  |       | **up to ~3 009** (depending on active CardTypes)       |
 
 Thematic groups: everyday objects, family, food, travel, birthday,
 relationships, abstract B1 concepts.
@@ -145,10 +145,10 @@ CEFR coverage:
 
 | Level | Nouns | Verbs | Adjectives |
 |-------|------:|------:|-----------:|
-| A1    | ~60   | ~30   | ~20        |
-| A2    | ~71   | ~45   | ~15        |
-| B1    | ~61   | ~20   | ~10        |
-| B2    | —     | —     | ~9         |
+| A1    |    61 |    30 |         19 |
+| A2    |    78 |    46 |         15 |
+| B1    |    65 |    17 |          7 |
+| B2    |     0 |     0 |          8 |
 | C1–C2 | reserved for future expansion              |
 
 ---
@@ -451,10 +451,18 @@ the shell — not tab destinations.
 
 ## 15. CI / CD
 
-| Trigger           | Jobs                                                       |
-|-------------------|------------------------------------------------------------|
-| Push to branch    | `flutter analyze --fatal-infos`, `flutter test`, debug builds (Android APK, Linux .deb, macOS .zip), SBOM |
-| Push tag `v*.*.*` | Release builds, GitHub Release created with all artifacts  |
+| Trigger           | Jobs                                                                                                             |
+|-------------------|------------------------------------------------------------------------------------------------------------------|
+| Push to branch    | `flutter analyze --fatal-infos`, `flutter test`, debug builds (Android APK, Linux .deb, macOS .zip), SBOM, vocabulary PDF |
+| Push tag `v*.*.*` | Release builds, GitHub Release created with all artifacts                                                        |
+
+#### Vocabulary PDF
+
+`tools/gen_vocab_pdf.py` is a standalone Python script (requires `fpdf2`) that
+parses the Dart data source files and generates a formatted A4 PDF with noun,
+verb, and adjective tables grouped by CEFR level. The CI `vocab-pdf` job runs it
+on every push and uploads `vocabulary.pdf` as a 90-day artifact — no Flutter
+SDK required.
 
 Version stamp:
 
