@@ -101,7 +101,7 @@ class VocabPDF(FPDF):
     def header(self):
         self.set_font("Helvetica", "B", 9)
         self.set_text_color(*BODY_TXT)
-        self.cell(0, 6, "LanguageTrainer — Vocabulary Reference", align="C",
+        self.cell(0, 6, "LanguageTrainer - Vocabulary Reference", align="C",
                   new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.ln(1)
 
@@ -152,7 +152,7 @@ def render_nouns(pdf, nouns_by_level):
         pdf.set_text_color(*BODY_TXT)
         pdf.table_header(cols)
         for i, (article, word, plural, english) in enumerate(rows):
-            plural_disp = "—" if plural == "-" else plural
+            plural_disp = "-" if plural == "-" else plural
             pdf.table_row([
                 (article, 12), (word, 38), (plural_disp, 38), (english, 102),
             ], odd=(i % 2 == 0))
