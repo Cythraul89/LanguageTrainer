@@ -1,12 +1,13 @@
 # LanguageTrainer — Screen Wireframes
 
-Design language mirrors StockManager:
+Design language:
 - Seed colour `Colors.indigo`, Material 3, `useMaterial3: true`
 - Light / dark follows system setting
 - `Card(clipBehavior: Clip.antiAlias)` for grouped content
 - 16 px outer padding, 8 px intra-section spacing
 - `titleMedium` for section headers, `bodySmall` / `onSurfaceVariant` for metadata
-- `FilledButton` for primary actions, `FilledButton.tonal` for answer choices
+- `FilledButton` for primary actions, `OutlinedButton` for secondary actions
+- `FilledButton.tonal` for answer choices (article/auxiliary buttons)
 
 ---
 
@@ -20,36 +21,20 @@ Design language mirrors StockManager:
  │            [screen content]          │
  │                                      │
  ├──────────────────────────────────────┤
- │   🏠          📊          ⚙         │
- │   Home       Stats     Settings      │
+ │  🏠      📊      🏆       ⚙         │
+ │  Home   Stats  Achieve  Settings     │
  └──────────────────────────────────────┘
 ```
 
-### Tablet / Desktop  (width 600–1199 px) — NavigationRail compact
+### Tablet / Desktop  (width ≥ 600 px) — NavigationRail
 
 ```
  ┌────┬─────────────────────────────────┐
  │ 🏠 │                                 │
- │    │                                 │
- │ 📊 │      [screen content]           │
- │    │                                 │
+ │ 📊 │                                 │
+ │ 🏆 │      [screen content]           │
  │ ⚙  │                                 │
  └────┴─────────────────────────────────┘
-```
-
-### Wide Desktop  (width ≥ 1200 px) — NavigationRail extended
-
-```
- ┌──────────────┬──────────────────────────────────────────────┐
- │  Language    │                                              │
- │  Trainer     │                                              │
- │              │                                              │
- │ 🏠  Home     │             [screen content]                 │
- │              │                                              │
- │ 📊  Stats    │                                              │
- │              │                                              │
- │ ⚙   Settings│                                              │
- └──────────────┴──────────────────────────────────────────────┘
 ```
 
 ---
@@ -58,62 +43,78 @@ Design language mirrors StockManager:
 
 ```
  ┌──────────────────────────────────────┐
- │  Language Trainer              ☀/🌙  │  ← AppBar (indigo, theme toggle)
+ │  Language Trainer                    │  ← AppBar
  ├──────────────────────────────────────┤
+ │                                      │
+ │  Level 7            420 / 500 XP     │  ← XP card (Card)
+ │  ███████████████░░░░░░░░░░░░         │    LinearProgressIndicator
+ │  312 correct answers total           │    bodySmall / onSurfaceVariant
  │                                      │
  │  Practice level                      │  ← titleMedium
  │  ┌────┐ ┌────┐ ┌────┐ ┌────┐        │
  │  │ A1 │ │ A2 │ │ B1 │  B2           │  ← FilterChip row
  │  └────┘ └────┘ └────┘               │    selected = filled indigo
- │  C1     C2                           │    deselected = outline
+ │  C1     C2                           │
  │                                      │
- │  ┌──────────────────────────────┐    │
- │  │  Due today                   │    │  ← Card (Clip.antiAlias)
- │  │──────────────────────────────│    │    titleMedium header
- │  │  Nouns               12 / 20 │    │
- │  │  Präsens             45 / 60 │    │  ← bodyMedium rows
- │  │  Präteritum          45 / 60 │    │    right: primary colour
- │  │  Perfekt             45 / 60 │    │
+ │  Practice category                   │  ← titleMedium
+ │  ┌────────┐ ┌───────┐ ┌──────────┐  │
+ │  │Artikel │ │Plural │ │Übersetzg.│  │  ← FilterChip row (14 types)
+ │  └────────┘ └───────┘ └──────────┘  │
+ │  …                                   │
+ │                                      │
+ │  ┌──────────────────────────────┐    │  ← Due today Card
+ │  │  Due today                   │    │
  │  │──────────────────────────────│    │
- │  │  Total              147 / 200│    │  ← bold total row
+ │  │  Artikel             12 / 20 │    │
+ │  │  Plural              10 / 18 │    │
+ │  │  Übersetzung (N)      8 / 20 │    │
+ │  │  DE schreiben (N)     6 / 20 │    │
+ │  │  Präsens             45 / 60 │    │
+ │  │  …                           │    │
+ │  │──────────────────────────────│    │
+ │  │  Total               95 / 178│    │  ← bold
  │  └──────────────────────────────┘    │
  │                                      │
  │  ████████████████████████████████    │
- │  ▶  Start Review  (147 cards)        │  ← FilledButton (disabled = 0 due)
+ │  ▶  Start Review (95)                │  ← FilledButton (disabled if 0)
  │                                      │
- ├──────────────────────────────────────┤
- │   🏠          📊          ⚙         │  ← BottomNavigationBar (mobile only)
+ │  ╔════════════════════════════════╗  │
+ │  ║  Difficult words (7)           ║  │  ← OutlinedButton (disabled if 0)
+ │  ╚════════════════════════════════╝  │
+ │                                      │
+ │  ╔════════════════════════════════╗  │
+ │  ║  Browse vocabulary             ║  │  ← OutlinedButton (always enabled)
+ │  ╚════════════════════════════════╝  │
+ │                                      │
  └──────────────────────────────────────┘
 ```
 
 **Interaction notes**
-- FilterChip tap toggles a level; at least one must remain selected
-  (chip tap is ignored if it would deselect the last active chip).
-- Due counts update immediately after level change.
-- "Start Review" is `disabled` when `totalDue == 0`.
+- Level FilterChip: at least one must remain selected.
+- Category FilterChip: at least one must remain selected.
+- Due counts update immediately after any filter change.
+- "Difficult words" shows cards with easeFactor < 2.0 (seen but struggling),
+  regardless of SM-2 due date.
 
 ---
 
-## QuizScreen — Noun (article selection)
+## QuizScreen — Noun article selection
+
+### Unanswered
 
 ```
  ┌──────────────────────────────────────┐
- │ ←   3 / 45                           │  ← AppBar: back (confirms quit) + progress
- │ ████▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │  ← LinearProgressIndicator (indigo)
+ │ ←   3 / 45                           │  ← AppBar (back = quit confirm)
+ │ ████▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │  ← LinearProgressIndicator
  ├──────────────────────────────────────┤
  │                                      │
- │                                      │
- │                                      │
- │               Hund                   │  ← displaySmall  (word)
- │                                      │
- │               dog                    │  ← titleMedium   (english)
- │              (Hunde)                 │  ← bodySmall / onSurfaceVariant (plural)
- │                                      │
+ │               Hund                   │  ← displaySmall
+ │               dog                    │  ← titleMedium
+ │              (Hunde)                 │  ← bodySmall / onSurfaceVariant
  │                                      │
  │  ┌──────┐    ┌──────┐    ┌──────┐   │
  │  │ der  │    │ die  │    │ das  │   │  ← FilledButton.tonal × 3
- │  └──────┘    └──────┘    └──────┘   │    equal width, large text
- │                                      │
+ │  └──────┘    └──────┘    └──────┘   │
  │                                      │
  └──────────────────────────────────────┘
 ```
@@ -121,51 +122,43 @@ Design language mirrors StockManager:
 ### After correct answer
 
 ```
- ┌──────────────────────────────────────┐
- │ ←   3 / 45                           │
- │ ████▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │
- ├──────────────────────────────────────┤
- │               Hund                   │
- │               dog                    │
- │              (Hunde)                 │
- │                                      │
  │  ┌────────────────────────────────┐  │
  │  │ ✓  Correct!                   │  │  ← green tinted Card
- │  └────────────────────────────────┘  │    border: green
- │                                      │
+ │  └────────────────────────────────┘  │
  │  ████████████████████████████████    │
  │             Next →                   │  ← FilledButton
- │                                      │
- └──────────────────────────────────────┘
 ```
 
 ### After wrong answer
 
 ```
- ┌──────────────────────────────────────┐
- │ ←   3 / 45                           │
- │ ████▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │
- ├──────────────────────────────────────┤
- │               Hund                   │
- │               dog                    │
- │              (Hunde)                 │
- │                                      │
  │  ┌────────────────────────────────┐  │
  │  │ ✗  Incorrect                  │  │  ← red tinted Card
- │  │    Answer: der Hund           │  │    border: red
+ │  │    Answer: der Hund           │  │
  │  └────────────────────────────────┘  │
- │                                      │
  │  ████████████████████████████████    │
  │             Next →                   │
- │                                      │
- └──────────────────────────────────────┘
 ```
 
 ---
 
-## QuizScreen — Verb (free-text conjugation)
+## QuizScreen — Auxiliary selection
 
-### Unanswered
+```
+ │               gehen                  │  ← displaySmall
+ │           to go / travel             │  ← titleMedium
+ │         haben oder sein?             │  ← labelLarge / onSurfaceVariant
+ │                                      │
+ │      ┌────────┐    ┌────────┐        │
+ │      │ haben  │    │  sein  │        │  ← FilledButton.tonal × 2
+ │      └────────┘    └────────┘        │
+```
+
+---
+
+## QuizScreen — Free-text (conjugation / translation / reverse)
+
+### Unanswered (verb conjugation example)
 
 ```
  ┌──────────────────────────────────────┐
@@ -173,16 +166,13 @@ Design language mirrors StockManager:
  │ ████████████░░░░░░░░░░░░░░░░░░░░░░░ │
  ├──────────────────────────────────────┤
  │                                      │
- │                                      │
- │    er/sie/es  ___  (gehen)           │  ← headlineMedium (prompt)
- │                                      │
- │             Perfekt                  │  ← labelLarge / onSurfaceVariant (tense)
- │                                      │
- │           to go / travel             │  ← titleMedium (english)
+ │    er/sie/es  ___  (gehen)           │  ← headlineMedium
+ │             Perfekt                  │  ← labelLarge / onSurfaceVariant
+ │           to go / travel             │  ← titleMedium
  │                                      │
  │  ┌──────────────────────────┐ ┌────┐ │
- │  │  ist gegangen            │ │Check│ │  ← TextField + FilledButton
- │  └──────────────────────────┘ └────┘ │    keyboard auto-opens
+ │  │  ist gegangen            │ │ ✓  │ │  ← TextField + FilledButton
+ │  └──────────────────────────┘ └────┘ │
  │                                      │
  └──────────────────────────────────────┘
 ```
@@ -190,65 +180,101 @@ Design language mirrors StockManager:
 ### After wrong answer (with override option)
 
 ```
- ┌──────────────────────────────────────┐
- │ ←  12 / 45                           │
- │ ████████████░░░░░░░░░░░░░░░░░░░░░░░ │
- ├──────────────────────────────────────┤
- │    er/sie/es  ___  (gehen)           │
- │             Perfekt                  │
- │           to go / travel             │
- │                                      │
  │  ┌────────────────────────────────┐  │
  │  │ ✗  Incorrect                  │  │
  │  │    Answer: ist gegangen       │  │
  │  └────────────────────────────────┘  │
  │                                      │
- │    Mark as correct (typo / keyboard) │  ← TextButton (subtle, below card)
+ │  [ Mark as correct (typo/keyboard) ] │  ← TextButton (text-input cards only)
  │                                      │
  │  ████████████████████████████████    │
  │             Next →                   │
- │                                      │
- └──────────────────────────────────────┘
 ```
 
-### Session complete
+---
+
+## QuizScreen — Session complete
 
 ```
  ┌──────────────────────────────────────┐
- │  Done                                │
+ │  Session Complete                    │  ← AppBar
  ├──────────────────────────────────────┤
+ │         🎉 (confetti if level-up)    │  ← ConfettiWidget overlay
  │                                      │
+ │               ✓                      │  ← green check icon (72 px)
+ │         Session complete!            │  ← headlineSmall
+ │          +120 XP earned              │  ← titleMedium / primary
  │                                      │
- │               ✓                      │  ← large green check icon (72 px)
+ │  ┌──────────────────────────────┐    │
+ │  │  Level 8    [Level up! 7→8]  │    │  ← XP summary Card
+ │  │  520 / 600 XP                │    │    Chip shown only if leveledUp
+ │  │  ███████████████░░░░░░░      │    │
+ │  └──────────────────────────────┘    │
  │                                      │
- │          Session complete!           │  ← titleLarge
+ │  Achievements unlocked!              │  ← only if any unlocked
+ │  ┌──────────────────────────────┐    │
+ │  │  🏆  100 correct answers!    │    │  ← primaryContainer Card
+ │  │      Answered 100 correctly  │    │
+ │  └──────────────────────────────┘    │
  │                                      │
+ │  ████████████████████████████████    │
+ │         Back to Home                 │  ← FilledButton
  │                                      │
  └──────────────────────────────────────┘
 ```
 
 ---
 
-## StatsScreen
+## VocabBrowserScreen
 
 ```
  ┌──────────────────────────────────────┐
- │ ←  Statistics                        │  ← AppBar
+ │ ←  Vocabulary                        │  ← AppBar with TabBar
+ │   Nouns    Verbs    Adjectives        │
  ├──────────────────────────────────────┤
+ │  ┌────────────────────────────────┐  │
+ │  │ 🔍  Search…                   │  │  ← shared TextField (all tabs)
+ │  └────────────────────────────────┘  │
  │                                      │
- │  Total deck size             200     │  ← bodyLarge + primary colour value
- │  Due now                     147     │
- │                                      │
- │  ────────────────────────────────    │  ← Divider
- │                                      │
- │  Nouns                  12 due / 20  │
- │  Verbs — Präsens        45 due / 60  │
- │  Verbs — Präteritum     45 due / 60  │
- │  Verbs — Perfekt        45 due / 60  │
- │                                      │
- ├──────────────────────────────────────┤
- │   🏠          📊          ⚙         │
+ │  ● Hund                              │  ← ListTile (Nouns tab)
+ │    dog                    pl: Hunde  │    leading: article chip (colour-coded)
+ │                                      │    trailing: plural
+ │  ● Frau                              │
+ │    woman                 pl: Frauen  │
+ │  …                                   │
  └──────────────────────────────────────┘
+```
+
+### Article chips (Nouns tab)
+
+| Article | Colour  |
+|---------|---------|
+| der     | Blue `#1565C0` |
+| die     | Red  `#C62828` |
+| das     | Green `#2E7D32` |
+
+### Verbs tab — expanded
+
+```
+ │  gehen                          ist   │  ← ExpansionTile (auxiliary chip)
+ │  to go / travel                  ▲   │    tapping expands conjugation table
+ │  ┌───────────────────────────────┐   │
+ │  │        Präsens  Präteritum  Perfekt│
+ │  │  ich   gehe     ging        bin gegangen│
+ │  │  du    gehst    gingst      bist gegangen│
+ │  │  er    geht     ging        ist gegangen│
+ │  │  wir   gehen    gingen      sind gegangen│
+ │  │  ihr   geht     gingt       seid gegangen│
+ │  │  sie   gehen    gingen      sind gegangen│
+ │  │  Part.II  gegangen                │
+ │  └───────────────────────────────┘   │
+```
+
+### Adjectives tab
+
+```
+ │  groß                                │  ← ListTile
+ │  big / tall     größer · am größten  │    trailing: comparative · superlative
 ```
 
 ---
@@ -262,30 +288,47 @@ Design language mirrors StockManager:
  │                                      │
  │  Practice level                      │  ← titleMedium
  │  ┌────┐ ┌────┐ ┌────┐               │
- │  │ A1 │ │ A2 │ │ B1 │ B2  C1  C2   │  ← FilterChip row (same as HomeScreen)
+ │  │ A1 │ │ A2 │ │ B1 │ B2  C1  C2   │  ← FilterChip row
  │  └────┘ └────┘ └────┘               │
  │                                      │
  │  ────────────────────────────────    │
  │                                      │
- │  Theme                       System  │  ← ListTile with trailing dropdown
- │                         Light │ Dark │    (System / Light / Dark)
+ │  Session size                 10     │  ← titleMedium + current value
+ │  5 ──●──────────────────────── 50    │  ← Slider (5–50, steps of 5)
  │                                      │
- ├──────────────────────────────────────┤
- │   🏠          📊          ⚙         │
+ │  ────────────────────────────────    │
+ │                                      │
+ │  About                         >     │  ← ListTile (navigates to AboutScreen)
+ │                                      │
  └──────────────────────────────────────┘
 ```
 
-**Notes:**
-- Level selector on both HomeScreen (quick access) and SettingsScreen (canonical).
-  Both widgets share the same `ReviewScheduler.setSelectedLevels()` call.
-- Theme dropdown writes to `AppPreferences` (key `theme`, values `system`/`light`/`dark`).
-  Follows the same pattern as StockManager's `AppTheme` enum.
+---
+
+## AboutScreen
+
+```
+ ┌──────────────────────────────────────┐
+ │ ←  About                             │  ← AppBar
+ ├──────────────────────────────────────┤
+ │                                      │
+ │        [App Icon]                    │
+ │       Language Trainer               │  ← titleLarge
+ │       Version 1.0.0+7                │  ← bodyMedium (tap 7× for easter egg)
+ │                                      │
+ │  Legal                               │  ← section header
+ │  Open Source Licence          GPL-3  │  ← ListTile → url_launcher
+ │  Source Code                  GitHub │  ← ListTile → url_launcher
+ │                                      │
+ │  Data                                │
+ │  Export review log                   │  ← ListTile → share_plus JSON export
+ │                                      │
+ └──────────────────────────────────────┘
+```
 
 ---
 
 ## Quit Confirmation Dialog
-
-Shown when user presses back during an active quiz session:
 
 ```
  ┌──────────────────────────────────────┐
@@ -301,15 +344,16 @@ Shown when user presses back during an active quiz session:
 
 ## Colour Reference (Material 3 — indigo seed)
 
-| Role                  | Usage                                         |
-|-----------------------|-----------------------------------------------|
-| `primary`             | AppBar, filled buttons, progress bar, chips   |
-| `onPrimary`           | Text/icons on primary backgrounds             |
-| `primaryContainer`    | Tonal button fills, selected chip background  |
-| `surface`             | Card backgrounds                              |
-| `onSurfaceVariant`    | Plural hints, tense labels, metadata text     |
-| `error` / `errorContainer` | Wrong-answer feedback card              |
-| green (custom)        | Correct-answer feedback card                  |
+| Role                       | Usage                                          |
+|----------------------------|------------------------------------------------|
+| `primary`                  | AppBar, filled buttons, progress bar, chips    |
+| `onPrimary`                | Text/icons on primary backgrounds              |
+| `primaryContainer`         | Tonal button fills, achievement cards          |
+| `surface`                  | Card backgrounds                               |
+| `onSurfaceVariant`         | Plural hints, tense labels, metadata text      |
+| `error` / `errorContainer` | Wrong-answer feedback card                     |
+| green (custom)             | Correct-answer feedback card                   |
+| `#1565C0` / `#C62828` / `#2E7D32` | Article chips (der/die/das)         |
 
 Dark theme uses the same seed with `Brightness.dark` — no additional
 colour overrides needed.

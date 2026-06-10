@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:language_trainer/models/achievement.dart';
 import 'package:language_trainer/models/quiz_item.dart';
@@ -6,6 +7,8 @@ import 'package:language_trainer/services/gamification_service.dart';
 import 'package:language_trainer/services/review_scheduler.dart';
 import 'package:language_trainer/services/sm2.dart';
 import 'package:language_trainer/widgets/article_buttons.dart';
+import 'package:language_trainer/widgets/auxiliary_buttons.dart';
+import 'package:language_trainer/widgets/case_buttons.dart';
 import 'package:language_trainer/widgets/conjugation_field.dart';
 import 'package:language_trainer/widgets/feedback_overlay.dart';
 
@@ -40,7 +43,6 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
     _queue = List.of(widget.items);
-    widget.gamification.startSession();
   }
 
   QuizItem get _current => _queue[_index];
@@ -68,17 +70,21 @@ class _QuizScreenState extends State<QuizScreen> {
     if (!correct) _queue.add(_current);
   }
 
-  void _onOverride() {
+  Future<void> _onOverride() async {
     setState(() {
       _overridden = true;
       _correct = true;
     });
-    final newSm2 = Sm2Service.applyGrade(_current.sm2, 5);
-    widget.scheduler.saveResult(_current.cardId, _current.cardType, newSm2);
-    widget.gamification.processAnswer(isCorrect: true, isFirstAttempt: _lastWasFirstAttempt);
+    // Remove from re-queue before awaiting DB writes so a quick "Next" tap
+    // cannot advance past the card before the queue is corrected.
     if (_queue.last.cardId == _current.cardId) {
       _queue.removeLast();
     }
+    // Intentionally re-grades from the pre-wrong sm2: override means
+    // "I knew it despite the typo", so the interval is based on a correct answer.
+    final newSm2 = Sm2Service.applyGrade(_current.sm2, 5);
+    await widget.scheduler.saveResult(_current.cardId, _current.cardType, newSm2);
+    await widget.gamification.processAnswer(isCorrect: true, isFirstAttempt: _lastWasFirstAttempt);
   }
 
   void _next() {
@@ -149,9 +155,8 @@ class _QuizScreenState extends State<QuizScreen> {
                   FeedbackOverlay(
                     correct: _correct,
                     correctAnswer: _correctAnswer(),
-                    onOverride:
-                        _current is VerbQuizItem && !_correct && !_overridden
-                            ? _onOverride
+                    onOverride: _isTextInput(_current) && !_correct && !_overridden
+                            ? () { _onOverride(); }
                             : null,
                     onNext: _next,
                   ),
@@ -163,47 +168,212 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
-  Widget _buildPrompt() => switch (_current) {
-        NounQuizItem(entry: final n) => Column(
+  Widget _buildPrompt() {
+    final labelStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant);
+    final subStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant);
+    return switch (_current) {
+      NounQuizItem(entry: final n) => _promptColumn(
+          headline: n.word,
+          sub: n.english,
+          hint: '(${n.plural})',
+          hintStyle: subStyle,
+        ),
+      NounPluralQuizItem(entry: final n) => _promptColumn(
+          headline: '${n.article.name} ${n.word}',
+          sub: n.english,
+          hint: 'Plural?',
+          hintStyle: labelStyle,
+        ),
+      NounTranslationQuizItem(entry: final n) => _promptColumn(
+          headline: '${n.article.name} ${n.word}',
+          hint: 'Was bedeutet dieses Wort?',
+          hintStyle: labelStyle,
+        ),
+      VerbTranslationQuizItem(infinitive: final inf) => _promptColumn(
+          headline: inf,
+          hint: 'Was bedeutet dieses Verb?',
+          hintStyle: labelStyle,
+        ),
+      VerbPartizipIIQuizItem(infinitive: final inf, english: final en) =>
+        _promptColumn(
+          headline: inf,
+          sub: en,
+          hint: 'Partizip II?',
+          hintStyle: labelStyle,
+        ),
+      VerbAuxiliaryQuizItem(infinitive: final inf, english: final en) =>
+        _promptColumn(
+          headline: inf,
+          sub: en,
+          hint: 'haben oder sein?',
+          hintStyle: labelStyle,
+        ),
+      NounReverseQuizItem(entry: final n) => _promptColumn(
+          headline: n.english,
+          hint: 'Wie heißt das Substantiv? (mit Artikel)',
+          hintStyle: labelStyle,
+        ),
+      VerbReverseQuizItem(english: final en) => _promptColumn(
+          headline: en,
+          hint: 'Wie heißt das Verb?',
+          hintStyle: labelStyle,
+        ),
+      AdjTranslationQuizItem(entry: final a) => _promptColumn(
+          headline: a.word,
+          hint: 'Was bedeutet dieses Adjektiv?',
+          hintStyle: labelStyle,
+        ),
+      AdjComparativeQuizItem(entry: final a) => _promptColumn(
+          headline: a.word,
+          sub: a.english,
+          hint: 'Komparativ?',
+          hintStyle: labelStyle,
+        ),
+      AdjSuperlativeQuizItem(entry: final a) => _promptColumn(
+          headline: a.word,
+          sub: a.english,
+          hint: 'Superlativ?',
+          hintStyle: labelStyle,
+        ),
+      AdjReverseQuizItem(entry: final a) => _promptColumn(
+          headline: a.english,
+          hint: 'Wie heißt das Adjektiv?',
+          hintStyle: labelStyle,
+        ),
+      VerbSeparableQuizItem(infinitive: final inf, english: final en) =>
+        _promptColumn(
+          headline: inf,
+          sub: en,
+          hint: 'Was ist das trennbare Praefix?',
+          hintStyle: labelStyle,
+        ),
+      PrepTranslationQuizItem(entry: final p) => _promptColumn(
+          headline: p.word,
+          hint: 'Was bedeutet diese Praeposition?',
+          hintStyle: labelStyle,
+        ),
+      PrepCaseQuizItem(entry: final p) => _promptColumn(
+          headline: p.word,
+          sub: p.english,
+          hint: 'Welchen Kasus regiert diese Praeposition?',
+          hintStyle: labelStyle,
+        ),
+      VerbQuizItem() => () {
+          final v = _current as VerbQuizItem;
+          return Column(
             children: [
-              Text(n.word,
-                  style: Theme.of(context).textTheme.displaySmall,
+              Text('${_personLabel(v.person)} ___ (${v.infinitive})',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 4),
+              Text(_tenseLabel(v.tense), style: labelStyle,
                   textAlign: TextAlign.center),
               const SizedBox(height: 8),
-              Text(n.english,
+              Text(v.english,
                   style: Theme.of(context).textTheme.titleMedium,
                   textAlign: TextAlign.center),
-              Text('(${n.plural})',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  textAlign: TextAlign.center),
             ],
-          ),
-        VerbQuizItem() => () {
-            final v = _current as VerbQuizItem;
-            return Column(
-              children: [
-                Text('${_personLabel(v.person)} ___ (${v.infinitive})',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 4),
-                Text(_tenseLabel(v.tense),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color:
-                            Theme.of(context).colorScheme.onSurfaceVariant),
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 8),
-                Text(v.english,
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.center),
-              ],
-            );
-          }(),
-      };
+          );
+        }(),
+    };
+  }
+
+  Widget _promptColumn({
+    required String headline,
+    String? sub,
+    String? hint,
+    TextStyle? hintStyle,
+  }) =>
+      Column(
+        children: [
+          Text(headline,
+              style: Theme.of(context).textTheme.displaySmall,
+              textAlign: TextAlign.center),
+          if (sub != null) ...[
+            const SizedBox(height: 8),
+            Text(sub,
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center),
+          ],
+          if (hint != null) ...[
+            const SizedBox(height: 4),
+            Text(hint, style: hintStyle, textAlign: TextAlign.center),
+          ],
+        ],
+      );
 
   Widget _buildAnswerWidget() => switch (_current) {
         NounQuizItem(entry: final n) => ArticleButtons(
             onAnswer: (article) => _onAnswer(article == n.article),
+          ),
+        VerbAuxiliaryQuizItem(auxiliary: final aux) => AuxiliaryButtons(
+            onAnswer: (picked) => _onAnswer(picked == aux),
+          ),
+        NounPluralQuizItem(entry: final n) => ConjugationField(
+            hintText: 'Plural eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(n.plural)),
+          ),
+        NounTranslationQuizItem(entry: final n) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) => _onAnswer(_acceptsTranslation(answer, n.english)),
+          ),
+        VerbTranslationQuizItem(english: final en) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) => _onAnswer(_acceptsTranslation(answer, en)),
+          ),
+        VerbPartizipIIQuizItem(partizip2: final p2) => ConjugationField(
+            hintText: 'Partizip II eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(p2)),
+          ),
+        NounReverseQuizItem(entry: final n) => ConjugationField(
+            hintText: 'z. B. der Hund…',
+            onSubmit: (answer) {
+              final correct = '${n.article.name} ${n.word}';
+              _onAnswer(_normalise(answer) == _normalise(correct));
+            },
+          ),
+        VerbReverseQuizItem(infinitive: final inf) => ConjugationField(
+            hintText: 'Infinitiv eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(inf)),
+          ),
+        AdjTranslationQuizItem(entry: final a) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) =>
+                _onAnswer(_acceptsTranslation(answer, a.english)),
+          ),
+        AdjComparativeQuizItem(entry: final a) => ConjugationField(
+            hintText: 'Komparativ eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(a.comparative)),
+          ),
+        AdjSuperlativeQuizItem(entry: final a) => ConjugationField(
+            hintText: 'Superlativ eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(a.superlative)),
+          ),
+        AdjReverseQuizItem(entry: final a) => ConjugationField(
+            hintText: 'Adjektiv eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(a.word)),
+          ),
+        VerbSeparableQuizItem(prefix: final p) => ConjugationField(
+            hintText: 'Praefix eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(p)),
+          ),
+        PrepTranslationQuizItem(entry: final p) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) =>
+                _onAnswer(_acceptsTranslation(answer, p.english)),
+          ),
+        PrepCaseQuizItem(entry: final p) => CaseButtons(
+            onAnswer: (picked) =>
+                _onAnswer(p.cases.contains(picked)),
           ),
         VerbQuizItem() => ConjugationField(
             onSubmit: (answer) {
@@ -215,8 +385,33 @@ class _QuizScreenState extends State<QuizScreen> {
 
   String _correctAnswer() => switch (_current) {
         NounQuizItem(entry: final n) => '${n.article.name} ${n.word}',
+        NounPluralQuizItem(entry: final n) => n.plural,
+        NounTranslationQuizItem(entry: final n) => n.english,
+        VerbTranslationQuizItem(english: final en) => en,
+        VerbPartizipIIQuizItem(partizip2: final p2) => p2,
+        VerbAuxiliaryQuizItem(auxiliary: final aux) => aux.name,
+        NounReverseQuizItem(entry: final n) => '${n.article.name} ${n.word}',
+        VerbReverseQuizItem(infinitive: final inf) => inf,
+        AdjTranslationQuizItem(entry: final a) => a.english,
+        AdjComparativeQuizItem(entry: final a) => a.comparative,
+        AdjSuperlativeQuizItem(entry: final a) => a.superlative,
+        AdjReverseQuizItem(entry: final a) => a.word,
+        VerbSeparableQuizItem(prefix: final p) => p,
+        PrepTranslationQuizItem(entry: final p) => p.english,
+        PrepCaseQuizItem(entry: final p) => p.casesDisplay,
         VerbQuizItem() => (_current as VerbQuizItem).correctAnswer,
       };
+
+  // Whether the current card uses free-text input (override available).
+  static bool _isTextInput(QuizItem item) =>
+      item is! NounQuizItem && item is! VerbAuxiliaryQuizItem && item is! PrepCaseQuizItem;
+
+  // Accept any slash-separated variant; strip leading "to " for verb translations.
+  static bool _acceptsTranslation(String answer, String expected) {
+    String norm(String s) => s.trim().toLowerCase().replaceFirst(RegExp(r'^to '), '');
+    final a = norm(answer);
+    return expected.split(RegExp(r'\s*/\s*')).any((v) => norm(v) == a);
+  }
 
   static String _normalise(String s) =>
       s.trim().toLowerCase().replaceAll('ss', 'ß');
@@ -239,52 +434,87 @@ class _QuizScreenState extends State<QuizScreen> {
 
 // ── Session complete screen ───────────────────────────────────────────────────
 
-class _SessionCompleteScreen extends StatelessWidget {
+class _SessionCompleteScreen extends StatefulWidget {
   const _SessionCompleteScreen({required this.summaryFuture});
   final Future<SessionSummary> summaryFuture;
+
+  @override
+  State<_SessionCompleteScreen> createState() => _SessionCompleteScreenState();
+}
+
+class _SessionCompleteScreenState extends State<_SessionCompleteScreen> {
+  late final ConfettiController _confetti;
+
+  @override
+  void initState() {
+    super.initState();
+    _confetti = ConfettiController(duration: const Duration(seconds: 3));
+    widget.summaryFuture.then((s) {
+      if (s.leveledUp && mounted) _confetti.play();
+    });
+  }
+
+  @override
+  void dispose() {
+    _confetti.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Session Complete')),
-      body: FutureBuilder<SessionSummary>(
-        future: summaryFuture,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final s = snapshot.data!;
-          return ListView(
-            padding: const EdgeInsets.all(24),
-            children: [
-              const Icon(Icons.check_circle_outline,
-                  size: 72, color: Colors.green),
-              const SizedBox(height: 16),
-              Text('Session complete!',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 8),
-              Text('+${s.sessionXp} XP earned',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary),
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 24),
-              _XpSummaryCard(summary: s),
-              if (s.unlocked.isNotEmpty) ...[
-                const SizedBox(height: 24),
-                Text('Achievements unlocked!',
-                    style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                ...s.unlocked.map((a) => _AchievementUnlockedTile(a: a)),
-              ],
-              const SizedBox(height: 32),
-              FilledButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Back to Home'),
-              ),
-            ],
-          );
-        },
+      body: Stack(
+        children: [
+          FutureBuilder<SessionSummary>(
+            future: widget.summaryFuture,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final s = snapshot.data!;
+              return ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
+                  const Icon(Icons.check_circle_outline,
+                      size: 72, color: Colors.green),
+                  const SizedBox(height: 16),
+                  Text('Session complete!',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 8),
+                  Text('+${s.sessionXp} XP earned',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 24),
+                  _XpSummaryCard(summary: s),
+                  if (s.unlocked.isNotEmpty) ...[
+                    const SizedBox(height: 24),
+                    Text('Achievements unlocked!',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    ...s.unlocked.map((a) => _AchievementUnlockedTile(a: a)),
+                  ],
+                  const SizedBox(height: 32),
+                  FilledButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Back to Home'),
+                  ),
+                ],
+              );
+            },
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confetti,
+              blastDirectionality: BlastDirectionality.explosive,
+              numberOfParticles: 40,
+              gravity: 0.2,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,7 +1,28 @@
+import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/noun.dart';
+import 'package:language_trainer/models/preposition.dart';
 import 'package:language_trainer/models/verb.dart';
 
-enum CardType { noun, verbPraesens, verbPraeteritum, verbPerfekt }
+enum CardType {
+  noun,
+  nounPlural,
+  nounTranslation,
+  nounReverse,
+  verbPraesens,
+  verbPraeteritum,
+  verbPerfekt,
+  verbPartizipII,
+  verbAuxiliary,
+  verbTranslation,
+  verbReverse,
+  adjTranslation,
+  adjComparative,
+  adjSuperlative,
+  adjReverse,
+  verbSeparable,
+  prepTranslation,
+  prepCase,
+}
 
 class Sm2State {
   final double easeFactor;
@@ -55,6 +76,118 @@ class NounQuizItem extends QuizItem {
   }) : super(cardType: CardType.noun);
 }
 
+class NounPluralQuizItem extends QuizItem {
+  final NounEntry entry;
+
+  const NounPluralQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.nounPlural);
+}
+
+class NounTranslationQuizItem extends QuizItem {
+  final NounEntry entry;
+
+  const NounTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.nounTranslation);
+}
+
+class VerbTranslationQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+
+  const VerbTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+  }) : super(cardType: CardType.verbTranslation);
+}
+
+class VerbPartizipIIQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+  final String partizip2;
+
+  const VerbPartizipIIQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+    required this.partizip2,
+  }) : super(cardType: CardType.verbPartizipII);
+}
+
+class NounReverseQuizItem extends QuizItem {
+  final NounEntry entry;
+
+  const NounReverseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.nounReverse);
+}
+
+class VerbReverseQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+
+  const VerbReverseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+  }) : super(cardType: CardType.verbReverse);
+}
+
+class VerbAuxiliaryQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+  final Auxiliary auxiliary;
+
+  const VerbAuxiliaryQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+    required this.auxiliary,
+  }) : super(cardType: CardType.verbAuxiliary);
+}
+
+class AdjTranslationQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjTranslation);
+}
+
+class AdjComparativeQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjComparativeQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjComparative);
+}
+
+class AdjSuperlativeQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjSuperlativeQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjSuperlative);
+}
+
 class VerbQuizItem extends QuizItem {
   final String infinitive;
   final String english;
@@ -72,4 +205,48 @@ class VerbQuizItem extends QuizItem {
     required this.tense,
     required this.correctAnswer,
   });
+}
+
+class AdjReverseQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjReverseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjReverse);
+}
+
+class VerbSeparableQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+  final String prefix;
+
+  const VerbSeparableQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+    required this.prefix,
+  }) : super(cardType: CardType.verbSeparable);
+}
+
+class PrepTranslationQuizItem extends QuizItem {
+  final PrepositionEntry entry;
+
+  const PrepTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.prepTranslation);
+}
+
+class PrepCaseQuizItem extends QuizItem {
+  final PrepositionEntry entry;
+
+  const PrepCaseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.prepCase);
 }

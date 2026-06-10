@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ConjugationField extends StatefulWidget {
-  const ConjugationField({super.key, required this.onSubmit});
+  const ConjugationField({super.key, required this.onSubmit, this.hintText});
   final void Function(String) onSubmit;
+  final String? hintText;
 
   @override
   State<ConjugationField> createState() => _ConjugationFieldState();
@@ -42,9 +43,9 @@ class _ConjugationFieldState extends State<ConjugationField> {
             focusNode: _focus,
             onSubmitted: (_) => _submit(),
             textInputAction: TextInputAction.done,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Type the conjugated form…',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: widget.hintText ?? 'Type the conjugated form…',
             ),
           ),
         ),

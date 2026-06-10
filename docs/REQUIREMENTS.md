@@ -2,10 +2,11 @@
 
 ## 1. Purpose
 
-Personal, ad-free Flutter app for drilling German vocabulary. Two exercise
-types: noun gender (der/die/das) and verb conjugation across three tenses.
-Repetitions are scheduled with the SM-2 spaced-repetition algorithm; all
-state is stored locally with no network dependency.
+Personal, ad-free Flutter app for drilling German vocabulary using spaced
+repetition. Supports noun gender, noun plural, noun/verb/adjective/preposition translation,
+EN→DE reverse, verb conjugation (three tenses), auxiliary selection,
+Partizip II, adjective comparative/superlative, separable-verb prefix, and preposition case quizzes. All state is
+stored locally with no network dependency.
 
 ---
 
@@ -27,7 +28,7 @@ state is stored locally with no network dependency.
 NounEntry {
   word:    String    // nominative singular, e.g. "Hund"
   article: Article   // der | die | das
-  plural:  String    // nominative plural, e.g. "Hunde"
+  plural:  String    // nominative plural or '-' (uncountable)
   english: String    // English gloss, e.g. "dog"
   level:   CefrLevel // a1 | a2 | b1 | b2 | c1 | c2
 }
@@ -44,6 +45,7 @@ VerbEntry {
   praesens:     Map<GrammaticalPerson, String>
   praeteritum:  Map<GrammaticalPerson, String>
   partizip2:    String               // past participle, e.g. "gemacht"
+  prefix:       String?              // separable prefix, e.g. "ein" for einladen; null if not separable
 }
 ```
 
@@ -53,15 +55,68 @@ Perfekt is derived at runtime: auxiliary conjugated in Präsens + Partizip II.
 GrammaticalPerson enum: ich | du | er | wir | ihr | sie
 ```
 
-### 3.3 Review Card
+Derived:
+  isSeparable: bool     // prefix != null
+  separableCardId: String
+
+### 3.3 Adjective
+
+```
+AdjectiveEntry {
+  word:        String    // base form, e.g. "groß"
+  english:     String    // English gloss, e.g. "big / tall"
+  comparative: String    // e.g. "größer"
+  superlative: String    // e.g. "am größten"
+  level:       CefrLevel
+}
+```
+
+Only gradable adjectives are included — ungradable adjectives (möglich,
+genug, etc.) are excluded from the dataset.
+
+Derived:
+  reverseCardId: String
+
+### 3.4 Preposition
+
+```
+PrepositionEntry {
+  word:    String        // e.g. "durch"
+  english: String        // e.g. "through"
+  cases:   List<String>  // one or more of: Akkusativ | Dativ | Genitiv
+                         // two-way preps have two entries: ['Dativ', 'Akkusativ']
+  level:   CefrLevel
+}
+```
+
+Derived:
+  casesDisplay: String   // cases.join(' / ')
+
+### 3.5 Review Card
 
 One card per (item, quiz-type) pair:
 
 ```
 QuizItem (sealed)
-  NounQuizItem { cardId, cardType, sm2, entry: NounEntry }
-  VerbQuizItem { cardId, cardType, sm2, infinitive, person, tense,
-                 correctAnswer, english }
+  NounQuizItem            { cardId, cardType=noun, sm2, entry: NounEntry }
+  NounPluralQuizItem      { cardId, cardType=nounPlural, sm2, entry: NounEntry }
+  NounTranslationQuizItem { cardId, cardType=nounTranslation, sm2, entry: NounEntry }
+  NounReverseQuizItem     { cardId, cardType=nounReverse, sm2, entry: NounEntry }
+  VerbQuizItem            { cardId, cardType, sm2, infinitive, person, tense,
+                            correctAnswer, english }
+  VerbTranslationQuizItem { cardId, cardType=verbTranslation, sm2, infinitive, english }
+  VerbPartizipIIQuizItem  { cardId, cardType=verbPartizipII, sm2, infinitive,
+                            english, partizip2 }
+  VerbAuxiliaryQuizItem   { cardId, cardType=verbAuxiliary, sm2, infinitive,
+                            english, auxiliary }
+  VerbReverseQuizItem     { cardId, cardType=verbReverse, sm2, infinitive, english }
+  AdjTranslationQuizItem  { cardId, cardType=adjTranslation, sm2, entry: AdjectiveEntry }
+  AdjComparativeQuizItem  { cardId, cardType=adjComparative, sm2, entry: AdjectiveEntry }
+  AdjSuperlativeQuizItem  { cardId, cardType=adjSuperlative, sm2, entry: AdjectiveEntry }
+  AdjReverseQuizItem      { cardId, cardType=adjReverse, sm2, entry: AdjectiveEntry }
+  VerbSeparableQuizItem   { cardId, cardType=verbSeparable, sm2, infinitive, english, prefix }
+  PrepTranslationQuizItem { cardId, cardType=prepTranslation, sm2, entry: PrepositionEntry }
+  PrepCaseQuizItem        { cardId, cardType=prepCase, sm2, entry: PrepositionEntry }
 
 Sm2State {
   easeFactor:  double    // ≥ 1.3, default 2.5
@@ -70,20 +125,36 @@ Sm2State {
   nextReview:   DateTime
 }
 
-CardType enum: noun | verbPraesens | verbPraeteritum | verbPerfekt
+CardType enum:
+  noun | nounPlural | nounTranslation | nounReverse |
+  verbPraesens | verbPraeteritum | verbPerfekt |
+  verbPartizipII | verbAuxiliary | verbTranslation | verbReverse |
+  adjTranslation | adjComparative | adjSuperlative | adjReverse |
+  verbSeparable | prepTranslation | prepCase
 ```
 
-### 3.4 Card ID Scheme
+### 3.6 Card ID Scheme
 
 ```
 noun:<Word>                         // e.g. "noun:Hund"
+noun_plural:<Word>                  // e.g. "noun_plural:Hund"
+noun_translation:<Word>             // e.g. "noun_translation:Hund"
+noun_reverse:<Word>                 // e.g. "noun_reverse:Hund"
 verb:<infinitive>:<person>:<tense>  // e.g. "verb:machen:ich:praesens"
+verb_translation:<infinitive>       // e.g. "verb_translation:machen"
+verb_partizip2:<infinitive>         // e.g. "verb_partizip2:machen"
+verb_auxiliary:<infinitive>         // e.g. "verb_auxiliary:machen"
+verb_reverse:<infinitive>           // e.g. "verb_reverse:machen"
+adj_translation:<word>              // e.g. "adj_translation:groß"
+adj_comparative:<word>              // e.g. "adj_comparative:groß"
+adj_superlative:<word>              // e.g. "adj_superlative:groß"
+adj_reverse:<word>                  // e.g. "adj_reverse:groß"
+verb_separable:<infinitive>         // e.g. "verb_separable:einladen"
+prep_translation:<word>             // e.g. "prep_translation:durch"
+prep_case:<word>                    // e.g. "prep_case:durch"
 ```
 
 Card IDs are stable — renaming a word/infinitive would orphan its SM-2 state.
-
-Tense token values: `praesens` | `praeteritum` | `perfekt`
-Person token values: `ich` | `du` | `er` | `wir` | `ihr` | `sie`
 
 ---
 
@@ -92,32 +163,35 @@ Person token values: `ich` | `du` | `er` | `wir` | `ihr` | `sie`
 Curated, hardcoded in Dart source (`lib/data/`). Can be expanded without
 schema changes; existing cards keep their SM-2 state when new words are added.
 
-| Category | Count  | Deck cards generated |
-|----------|-------:|---------------------:|
-| Nouns    | ~215   | ~215 (1 per noun)    |
-| Verbs    | ~95    | ~1 710 (6 persons × 3 tenses × ~95) |
-| **Total**|        | **~1 925**           |
+| Category      | Count | Deck cards generated                                            |
+|---------------|------:|----------------------------------------------------------------:|
+| Nouns         |  204  | up to 816 (noun + plural + translation + reverse)               |
+| Verbs         |  101  | up to 2 236 (6 persons × 3 tenses + 4 extra + 14 separable)    |
+| Adjectives    |   49  | up to 196 (translation + comparative + superlative + reverse)  |
+| Prepositions  |   29  | up to 58 (translation + case)                                   |
+| **Total**     |       | **up to ~3 306** (depending on active CardTypes)               |
 
-Thematic groups: everyday objects, family, food, travel, birthday, relationships.
-Full word list: [`VOCABULARY.md`](VOCABULARY.md)
+Thematic groups: everyday objects, family, food, travel, birthday,
+relationships, abstract B1 concepts.
 
 CEFR coverage:
 
-| Level | Nouns | Verbs |
-|-------|------:|------:|
-| A1    | ~60   | ~30   |
-| A2    | ~71   | ~45   |
-| B1    | ~61   | ~20   |
-| B2–C2 | reserved for future expansion |
+| Level | Nouns | Verbs | Adjectives | Prepositions |
+|-------|------:|------:|-----------:|-------------:|
+| A1    |    61 |    31 |         19 |           15 |
+| A2    |    78 |    51 |         15 |           10 |
+| B1    |    65 |    19 |          7 |            4 |
+| B2    |     0 |     0 |          8 |            0 |
+| C1–C2 | reserved for future expansion                          |
 
 ---
 
 ## 5. CEFR Level Filter
 
-Users select one or more CEFR levels (A1 – C2) from the Home screen. Only
+Users select one or more CEFR levels (A1–C2) from the Home screen. Only
 words tagged at a selected level appear in drills. The selection is persisted
-in `AppPreferences` (key `selected_levels`) and defaults to all levels on first
-launch. At least one level must remain selected (the UI prevents deselecting all).
+in `AppPreferences` (key `selected_levels`) and defaults to all levels on
+first launch. At least one level must remain selected.
 
 ---
 
@@ -125,22 +199,50 @@ launch. At least one level must remain selected (the UI prevents deselecting all
 
 Users select one or more card categories from the Home screen:
 
-| Category    | CardType          |
-|-------------|-------------------|
-| Nouns       | `noun`            |
-| Präsens     | `verbPraesens`    |
-| Präteritum  | `verbPraeteritum` |
-| Perfekt     | `verbPerfekt`     |
+| German label      | CardType           | Default |
+|-------------------|--------------------|---------|
+| Artikel           | `noun`             | ✓       |
+| Plural            | `nounPlural`       | ✓       |
+| Übersetzung       | `nounTranslation`  | ✓       |
+| DE schreiben      | `nounReverse`      | ✓       |
+| Präsens           | `verbPraesens`     | ✓       |
+| Präteritum        | `verbPraeteritum`  | ✓       |
+| Perfekt           | `verbPerfekt`      | ✓       |
+| Partizip II       | `verbPartizipII`   | ✓       |
+| Hilfsverb         | `verbAuxiliary`    | ✓       |
+| Bedeutung         | `verbTranslation`  | ✓       |
+| Verb schreiben    | `verbReverse`      | ✓       |
+| Adj. Bedeutung    | `adjTranslation`   | ✓       |
+| Komparativ        | `adjComparative`   | ✗       |
+| Superlativ        | `adjSuperlative`   | ✗       |
+| Trennbar          | `verbSeparable`    | ✗       |
+| Adj. DE schreiben | `adjReverse`       | ✗       |
+| Präp. Bedeutung   | `prepTranslation`  | ✗       |
+| Kasus             | `prepCase`         | ✗       |
 
-Selection is persisted in `AppPreferences` (key `selected_card_types`) and
-defaults to all four types. At least one must remain selected.
+Selection is persisted in `AppPreferences` (key `selected_card_types`).
+At least one must remain selected.
 
-The filter is applied in both `getDueItems()` (quiz) and `getStats()` (stats
-screen) so the due-count summary always reflects the active filter.
+The filter is applied in both `_queryItems()` (quiz) and `getStats()`
+(stats screen) so the due-count summary always reflects the active filter.
+
+The Home screen groups the filter chips into four sections: Substantive, Verben, Adjektive, Präpositionen.
 
 ---
 
-## 7. Spaced Repetition — SM-2
+## 7. Session Size
+
+Users set the maximum number of cards per quiz session in Settings.
+
+- Default: 10
+- Range: 5 – 50 (slider, steps of 5)
+- Persisted in `AppPreferences` (key `session_size`)
+
+Cards are shuffled then truncated to the session size limit.
+
+---
+
+## 8. Spaced Repetition — SM-2
 
 Standard SM-2 as published by Wozniak (1990). Grading is binary:
 
@@ -169,19 +271,118 @@ nextReview = now() + interval days
 ```
 
 New cards (no persisted state) are treated as due immediately.
-Due cards are presented in randomised order each session.
+Due cards are presented in randomised order, then truncated to session size.
 
-Wrong answers: re-queued at the end of the current session. SM-2 state is
-written immediately on the first answer so a crash loses at most one card.
+Wrong answers are re-queued at the end of the current session. SM-2 state
+is written immediately on the first answer.
 
-Override: if the user marks a wrong answer as correct (e.g. keyboard layout
-issue), the card is re-graded 5 and removed from the re-queue.
+Override: if the user marks a wrong answer as correct (typo / keyboard
+layout issue), the card is re-graded 5 and removed from the re-queue.
 
 ---
 
-## 8. Gamification
+## 9. Quiz Modes
 
-### 8.1 XP and Levels
+### 9.1 Noun Article Quiz (`noun`)
+- **Prompt**: German word + English gloss + plural shown as hint.
+- **Answer**: Three tappable buttons — `der`, `die`, `das`.
+
+### 9.2 Noun Plural Quiz (`nounPlural`)
+- **Prompt**: `der/die/das <Word>` + English gloss.
+- **Answer**: Free-text input. Normalised (case-insensitive, `ss` ↔ `ß`).
+- Only generated for nouns where `plural ≠ '-'`.
+
+### 9.3 Noun Translation Quiz (`nounTranslation`)
+- **Prompt**: `der/die/das <Word>`.
+- **Answer**: Free-text English translation. Slash-separated variants accepted.
+
+### 9.4 Noun Reverse Quiz (`nounReverse`)
+- **Prompt**: English word.
+- **Answer**: Free-text German noun with article, e.g. `der Hund`.
+
+### 9.5 Verb Conjugation Quiz (`verbPraesens` / `verbPraeteritum` / `verbPerfekt`)
+- **Prompt**: `<person> ___ (<infinitive>)` + tense label + English gloss.
+- **Answer**: Free-text conjugated form. Normalised.
+- Perfekt answer is the full string, e.g. `bin gegangen`.
+
+### 9.6 Verb Partizip II Quiz (`verbPartizipII`)
+- **Prompt**: Infinitive + English gloss.
+- **Answer**: Free-text Partizip II form.
+
+### 9.7 Auxiliary Quiz (`verbAuxiliary`)
+- **Prompt**: Infinitive + English gloss.
+- **Answer**: Two tappable buttons — `haben`, `sein`.
+
+### 9.8 Verb Translation Quiz (`verbTranslation`)
+- **Prompt**: German infinitive.
+- **Answer**: Free-text English translation. Slash-separated variants accepted;
+  leading `to ` stripped before comparison.
+
+### 9.9 Verb Reverse Quiz (`verbReverse`)
+- **Prompt**: English infinitive gloss.
+- **Answer**: Free-text German infinitive.
+
+### 9.10 Adjective Translation Quiz (`adjTranslation`)
+- **Prompt**: German adjective.
+- **Answer**: Free-text English translation. Slash-separated variants accepted.
+
+### 9.11 Adjective Comparative Quiz (`adjComparative`)
+- **Prompt**: German adjective + English gloss.
+- **Answer**: Free-text comparative form, e.g. `größer`.
+
+### 9.12 Adjective Superlative Quiz (`adjSuperlative`)
+- **Prompt**: German adjective + English gloss.
+- **Answer**: Free-text superlative form including `am`, e.g. `am größten`.
+
+### 9.13 Adjective Reverse Quiz (`adjReverse`)
+- **Prompt**: English adjective.
+- **Answer**: Free-text German adjective base form.
+
+### 9.14 Separable Verb Prefix Quiz (`verbSeparable`)
+- **Prompt**: German infinitive + English gloss.
+- **Answer**: Free-text separable prefix, e.g. `ein` for `einladen`.
+- Only generated for verbs flagged with a prefix in the data.
+
+### 9.15 Preposition Translation Quiz (`prepTranslation`)
+- **Prompt**: German preposition.
+- **Answer**: Free-text English translation. Slash-separated variants accepted.
+
+### 9.16 Preposition Case Quiz (`prepCase`)
+- **Prompt**: German preposition + English gloss.
+- **Answer**: Three tappable buttons — `Akkusativ`, `Dativ`, `Genitiv`.
+- Two-way (Wechselpräpositionen) prepositions accept either `Dativ` or `Akkusativ`.
+- Correct answer shown on failure: `cases.join(' / ')`, e.g. `Dativ / Akkusativ`.
+
+---
+
+## 10. Difficult Words Session
+
+Cards with `easeFactor < 2.0` and at least one repetition are flagged as
+"difficult". The Home screen shows a count and an "Difficult words (N)"
+button that launches a quiz restricted to those cards, ignoring the SM-2
+due date.
+
+---
+
+## 11. Vocabulary Browser
+
+A searchable read-only reference screen accessible from the Home screen.
+Four tabs: Nouns / Verbs / Adjectives / Prepositions.
+
+- **Nouns tab**: article chip (colour-coded der=blue/die=red/das=green),
+  word, English gloss, plural.
+- **Verbs tab**: infinitive, English gloss, auxiliary chip, expandable
+  conjugation table (Präsens / Präteritum / Perfekt for all 6 persons
+  plus Partizip II row).
+- **Adjectives tab**: base form, English gloss, comparative, superlative.
+- **Prepositions tab**: preposition, English gloss, case(s) (Akkusativ / Dativ / Genitiv or two-way).
+- Live search filters all four tabs simultaneously.
+
+---
+
+## 12. Gamification
+
+### 12.1 XP and Levels
 
 | Event                           | XP     |
 |---------------------------------|--------|
@@ -191,11 +392,7 @@ issue), the card is re-graded 5 and removed from the re-queue.
 
 Level formula: `level = floor((1 + sqrt(1 + 8·totalXp / 100)) / 2)`
 
-### 8.2 Achievements
-
-Achievements are unlocked once and displayed on the Achievements screen.
-Achievement checks run atomically inside the DB transaction that updates stats
-to prevent double-unlock.
+### 12.2 Achievements
 
 | Achievement             | Condition                      |
 |-------------------------|--------------------------------|
@@ -210,33 +407,17 @@ to prevent double-unlock.
 | 10 in a row             | consecutiveCorrect ≥ 10        |
 | Complete first session  | sessionsCompleted ≥ 1          |
 
----
+Achievement checks run atomically inside the DB transaction that updates
+stats to prevent double-unlock.
 
-## 9. Quiz Modes
+### 12.3 Confetti
 
-### 9.1 Noun Article Quiz
-
-- **Prompt**: German word + English gloss.
-- **Answer**: Three tappable buttons — `der`, `die`, `das`.
-- **Feedback**: Immediate colour feedback; correct answer shown if wrong.
-- **Grade**: correct → 5, wrong → 0.
-
-### 9.2 Verb Conjugation Quiz (Präsens / Präteritum)
-
-- **Prompt**: `___ (infinitive)` with person label and English gloss.
-- **Answer**: Free-text input field; auto-focused on card load.
-- **Normalisation**: Case-insensitive, trimmed. Accept `ss` ↔ `ß`.
-- **Feedback**: Show correct conjugation.
-- **Grade**: exact match (after normalisation) → 5, otherwise → 0.
-- **Override**: User can mark as correct before advancing (typo / keyboard).
-
-### 9.3 Verb Conjugation Quiz (Perfekt)
-
-Same as §9.2. Expected answer is the full Perfekt string, e.g. `bin gegangen`.
+When a quiz session results in a level-up, a confetti burst plays on the
+Session Complete screen.
 
 ---
 
-## 10. Persistence
+## 13. Persistence
 
 - **Engine**: SQLite via the `drift` package (code-generated ORM).
 - **Tables**: `review_entries`, `app_preferences`, `user_progress`.
@@ -256,16 +437,16 @@ Schema version 1 — no migrations in v1.
 
 ---
 
-## 11. Screens & Navigation
+## 14. Screens & Navigation
 
-### 11.1 Shell (Adaptive)
+### 14.1 Shell (Adaptive)
 
-Four persistent tab destinations, shell layout depends on screen width:
+Four persistent tab destinations:
 
-| Width       | Shell layout                         |
-|-------------|--------------------------------------|
-| < 600 px    | `BottomNavigationBar`                |
-| ≥ 600 px    | `NavigationRail`                     |
+| Width       | Shell layout            |
+|-------------|-------------------------|
+| < 600 px    | `BottomNavigationBar`   |
+| ≥ 600 px    | `NavigationRail`        |
 
 | Tab | Destination  |
 |-----|--------------|
@@ -274,71 +455,89 @@ Four persistent tab destinations, shell layout depends on screen width:
 | 2   | Achievements |
 | 3   | Settings     |
 
-`QuizScreen` and `AboutScreen` are pushed on top of the shell — not tab destinations.
+`QuizScreen`, `VocabBrowserScreen`, and `AboutScreen` are pushed on top of
+the shell — not tab destinations.
 
-### 11.2 HomeScreen
+### 14.2 HomeScreen
 
-- CEFR level `FilterChip` row — at least one chip must stay selected.
-- CardType `FilterChip` row — at least one must stay selected.
-- Due-count card: per-type rows (Nouns / Präsens / Präteritum / Perfekt) with total;
-  unselected rows are dimmed.
+- CEFR level `FilterChip` row.
+- CardType `FilterChip` row (18 types). CardType filter chips are grouped into four labelled sections: Substantive, Verben, Adjektive, Präpositionen.
+- Due-count card: per-type rows with total; unselected rows dimmed.
 - "Start Review (N)" `FilledButton` — disabled when N = 0.
-- Birthday greeting: on June 3rd the app shows an `AlertDialog`
-  "Alles Gute zum Geburtstag Nkule." on first load.
+- "Difficult words (N)" `OutlinedButton` — disabled when no difficult cards.
+- "Browse vocabulary" `OutlinedButton` — always enabled.
+- Birthday greeting: on June 3rd shows an `AlertDialog`.
 
-### 11.3 QuizScreen
+### 14.3 QuizScreen
 
-- Linear progression through due cards (shuffled).
+- Linear progression through shuffled due/difficult cards.
 - `LinearProgressIndicator` below AppBar.
-- Wrong answers re-queued at end; SM-2 written immediately on first answer.
-- Session summary on completion: XP earned, level progress, newly unlocked achievements.
-- Back button shows a quit-confirmation `AlertDialog` if cards remain.
+- Wrong answers re-queued at end; SM-2 written immediately.
+- Override button on free-text cards (marks wrong answer as correct).
+- Session summary on completion: XP earned, level progress, unlocked
+  achievements, confetti if level-up.
+- Back button shows quit-confirmation `AlertDialog`.
 
-### 11.4 StatsScreen
+### 14.4 StatsScreen
 
 - Total deck size and total due.
-- Per-type breakdown (Nouns / Präsens / Präteritum / Perfekt): due / total.
+- Per-type breakdown.
 
-### 11.5 AchievementsScreen
+### 14.5 AchievementsScreen
 
 - Grid of achievement badges (emoji + title + description).
-- Locked achievements shown as greyed-out.
+- Locked achievements shown greyed-out.
 
-### 11.6 SettingsScreen
+### 14.6 SettingsScreen
 
-- CEFR level `FilterChip` row (mirrors HomeScreen).
+- CEFR level `FilterChip` row.
+- Session size slider (5–50, default 10).
 - Link to AboutScreen.
-- Theme entry (disabled; follows system setting — toggle planned for future).
 
-### 11.7 AboutScreen
+### 14.7 AboutScreen
 
 - App icon, name, and version (from `package_info_plus`).
-- Short description.
-- Legal section: licence link (GPL-3.0), source code link (GitHub).
-- Data section: "Export review log" — exports SM-2 progress as JSON via `share_plus`.
+- Legal section: licence link, source code link.
+- Data section: "Export review log" via `share_plus`.
+- Easter egg: 7-tap on version row shows a message.
+
+### 14.8 VocabBrowserScreen
+
+- Tabs: Nouns / Verbs / Adjectives / Prepositions.
+- Shared live search bar at top.
 
 ---
 
-## 12. CI / CD
+## 15. CI / CD
 
-| Trigger         | Jobs                                                       |
-|-----------------|------------------------------------------------------------|
-| Push to branch  | `flutter analyze --fatal-infos`, `flutter test`, debug builds (Android APK, Linux .deb, macOS .zip), SBOM |
-| Push tag `v*.*.*` | Release builds, GitHub Release created with all artifacts |
+| Trigger           | Jobs                                                                                                             |
+|-------------------|------------------------------------------------------------------------------------------------------------------|
+| Push to branch    | `flutter analyze --fatal-infos`, `flutter test`, debug builds (Android APK, Linux .deb, macOS .zip), SBOM, vocabulary PDF |
+| Push tag `v*.*.*` | Release builds, GitHub Release created with all artifacts                                                        |
 
-Version is stamped into `pubspec.yaml` before each build:
-- Dev builds: `{base}-dev+{run_number}`
-- Release builds: `{tag}+{run_number}`
+#### Vocabulary PDF
+
+`tools/gen_vocab_pdf.py` is a standalone Python script (requires `fpdf2`) that
+parses the Dart data source files and generates a formatted A4 PDF with noun,
+verb, and adjective tables grouped by CEFR level. The CI `vocab-pdf` job runs it
+on every push and uploads `vocabulary.pdf` as a 90-day artifact — no Flutter
+SDK required.
+
+Version stamp:
+
+| Workflow      | Format                         | Example        |
+|---------------|--------------------------------|----------------|
+| `ci.yml`      | `{base}-dev+{run_number}`      | `0.1.0-dev+42` |
+| `release.yml` | `{tag_version}+{run_number}`   | `1.0.0+7`      |
 
 ### Android release signing
 
-Four repository secrets enable signed release APKs:
-`ANDROID_RELEASE_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`,
-`ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`.
+Four repository secrets: `ANDROID_RELEASE_KEYSTORE_B64`,
+`ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`.
 
 ---
 
-## 13. Out of Scope (v1)
+## 16. Out of Scope (v1)
 
 - Wiktionary / network data import
 - User-defined word lists
@@ -346,5 +545,5 @@ Four repository secrets enable signed release APKs:
 - Light / dark theme toggle (follows system automatically)
 - Accounts, sync, or cloud backup
 - Push notifications for daily reminders
-- Preterite/subjunctive moods beyond the three tenses
+- Case/gender inflection drills (adjective endings)
 - Sentence / grammar exercises

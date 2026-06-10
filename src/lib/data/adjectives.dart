@@ -1,0 +1,61 @@
+import 'package:language_trainer/models/adjective.dart';
+import 'package:language_trainer/models/noun.dart';
+
+const kAdjectives = <AdjectiveEntry>[
+  // ── A1 ──────────────────────────────────────────────────────────────────────
+  AdjectiveEntry(word: 'groß',      english: 'big / tall',    comparative: 'größer',       superlative: 'am größten',       level: CefrLevel.a1),
+  AdjectiveEntry(word: 'klein',     english: 'small',         comparative: 'kleiner',      superlative: 'am kleinsten',     level: CefrLevel.a1),
+  AdjectiveEntry(word: 'gut',       english: 'good',          comparative: 'besser',       superlative: 'am besten',        level: CefrLevel.a1),
+  AdjectiveEntry(word: 'schlecht',  english: 'bad',           comparative: 'schlechter',   superlative: 'am schlechtesten', level: CefrLevel.a1),
+  AdjectiveEntry(word: 'neu',       english: 'new',           comparative: 'neuer',        superlative: 'am neuesten',      level: CefrLevel.a1),
+  AdjectiveEntry(word: 'alt',       english: 'old',           comparative: 'älter',        superlative: 'am ältesten',      level: CefrLevel.a1),
+  AdjectiveEntry(word: 'jung',      english: 'young',         comparative: 'jünger',       superlative: 'am jüngsten',      level: CefrLevel.a1),
+  AdjectiveEntry(word: 'schön',     english: 'beautiful',     comparative: 'schöner',      superlative: 'am schönsten',     level: CefrLevel.a1),
+  AdjectiveEntry(word: 'heiß',      english: 'hot',           comparative: 'heißer',       superlative: 'am heißesten',     level: CefrLevel.a1),
+  AdjectiveEntry(word: 'kalt',      english: 'cold',          comparative: 'kälter',       superlative: 'am kältesten',     level: CefrLevel.a1),
+  AdjectiveEntry(word: 'schnell',   english: 'fast',          comparative: 'schneller',    superlative: 'am schnellsten',   level: CefrLevel.a1),
+  AdjectiveEntry(word: 'langsam',   english: 'slow',          comparative: 'langsamer',    superlative: 'am langsamsten',   level: CefrLevel.a1),
+  AdjectiveEntry(word: 'billig',    english: 'cheap',         comparative: 'billiger',     superlative: 'am billigsten',    level: CefrLevel.a1),
+  AdjectiveEntry(word: 'teuer',     english: 'expensive',     comparative: 'teurer',       superlative: 'am teuersten',     level: CefrLevel.a1),
+  AdjectiveEntry(word: 'leicht',    english: 'easy / light',  comparative: 'leichter',     superlative: 'am leichtesten',   level: CefrLevel.a1),
+  AdjectiveEntry(word: 'schwer',    english: 'heavy / hard',  comparative: 'schwerer',     superlative: 'am schwersten',    level: CefrLevel.a1),
+  AdjectiveEntry(word: 'richtig',   english: 'correct',       comparative: 'richtiger',    superlative: 'am richtigsten',   level: CefrLevel.a1),
+  AdjectiveEntry(word: 'lang',      english: 'long',          comparative: 'länger',       superlative: 'am längsten',      level: CefrLevel.a1),
+  AdjectiveEntry(word: 'kurz',      english: 'short',         comparative: 'kürzer',       superlative: 'am kürzesten',     level: CefrLevel.a1),
+
+  // ── A2 ──────────────────────────────────────────────────────────────────────
+  AdjectiveEntry(word: 'wichtig',   english: 'important',     comparative: 'wichtiger',    superlative: 'am wichtigsten',   level: CefrLevel.a2),
+  AdjectiveEntry(word: 'interessant', english: 'interesting', comparative: 'interessanter', superlative: 'am interessantesten', level: CefrLevel.a2),
+  AdjectiveEntry(word: 'langweilig', english: 'boring',       comparative: 'langweiliger', superlative: 'am langweiligsten', level: CefrLevel.a2),
+  AdjectiveEntry(word: 'einfach',   english: 'simple',        comparative: 'einfacher',    superlative: 'am einfachsten',   level: CefrLevel.a2),
+  AdjectiveEntry(word: 'schwierig', english: 'difficult',     comparative: 'schwieriger',  superlative: 'am schwierigsten', level: CefrLevel.a2),
+  AdjectiveEntry(word: 'laut',      english: 'loud',          comparative: 'lauter',       superlative: 'am lautesten',     level: CefrLevel.a2),
+  AdjectiveEntry(word: 'leise',     english: 'quiet',         comparative: 'leiser',       superlative: 'am leisesten',     level: CefrLevel.a2),
+  AdjectiveEntry(word: 'sauber',    english: 'clean',         comparative: 'sauberer',     superlative: 'am saubersten',    level: CefrLevel.a2),
+  AdjectiveEntry(word: 'schmutzig', english: 'dirty',         comparative: 'schmutziger',  superlative: 'am schmutzigsten', level: CefrLevel.a2),
+  AdjectiveEntry(word: 'müde',      english: 'tired',         comparative: 'müder',        superlative: 'am müdesten',      level: CefrLevel.a2),
+  AdjectiveEntry(word: 'glücklich', english: 'happy',         comparative: 'glücklicher',  superlative: 'am glücklichsten', level: CefrLevel.a2),
+  AdjectiveEntry(word: 'traurig',   english: 'sad',           comparative: 'trauriger',    superlative: 'am traurigsten',   level: CefrLevel.a2),
+  AdjectiveEntry(word: 'lustig',    english: 'funny',         comparative: 'lustiger',     superlative: 'am lustigsten',    level: CefrLevel.a2),
+  AdjectiveEntry(word: 'nett',      english: 'nice / kind',   comparative: 'netter',       superlative: 'am nettesten',     level: CefrLevel.a2),
+  AdjectiveEntry(word: 'freundlich', english: 'friendly',     comparative: 'freundlicher', superlative: 'am freundlichsten', level: CefrLevel.a2),
+
+  // ── B1 ──────────────────────────────────────────────────────────────────────
+  AdjectiveEntry(word: 'gefährlich', english: 'dangerous',    comparative: 'gefährlicher', superlative: 'am gefährlichsten', level: CefrLevel.b1),
+  AdjectiveEntry(word: 'sicher',    english: 'safe / certain', comparative: 'sicherer',    superlative: 'am sichersten',    level: CefrLevel.b1),
+  AdjectiveEntry(word: 'nötig',     english: 'necessary',     comparative: 'nötiger',      superlative: 'am nötigsten',     level: CefrLevel.b1),
+  AdjectiveEntry(word: 'fertig',    english: 'ready / done',  comparative: 'fertiger',     superlative: 'am fertigsten',    level: CefrLevel.b1),
+  AdjectiveEntry(word: 'offen',     english: 'open',          comparative: 'offener',      superlative: 'am offensten',     level: CefrLevel.b1),
+  AdjectiveEntry(word: 'geschlossen', english: 'closed',      comparative: 'geschlossener', superlative: 'am geschlossensten', level: CefrLevel.b1),
+  AdjectiveEntry(word: 'stolz',     english: 'proud',         comparative: 'stolzer',      superlative: 'am stolzesten',    level: CefrLevel.b1),
+
+  // ── B2 ──────────────────────────────────────────────────────────────────────
+  AdjectiveEntry(word: 'ehrlich',   english: 'honest',        comparative: 'ehrlicher',    superlative: 'am ehrlichsten',   level: CefrLevel.b2),
+  AdjectiveEntry(word: 'zuverlässig', english: 'reliable',    comparative: 'zuverlässiger', superlative: 'am zuverlässigsten', level: CefrLevel.b2),
+  AdjectiveEntry(word: 'geduldig',  english: 'patient',       comparative: 'geduldiger',   superlative: 'am geduldigsten',  level: CefrLevel.b2),
+  AdjectiveEntry(word: 'neugierig', english: 'curious',       comparative: 'neugieriger',  superlative: 'am neugierigsten', level: CefrLevel.b2),
+  AdjectiveEntry(word: 'aufmerksam', english: 'attentive',    comparative: 'aufmerksamer', superlative: 'am aufmerksamsten', level: CefrLevel.b2),
+  AdjectiveEntry(word: 'vernünftig', english: 'reasonable',   comparative: 'vernünftiger', superlative: 'am vernünftigsten', level: CefrLevel.b2),
+  AdjectiveEntry(word: 'wesentlich', english: 'essential',    comparative: 'wesentlicher', superlative: 'am wesentlichsten', level: CefrLevel.b2),
+  AdjectiveEntry(word: 'deutlich',  english: 'clear / distinct', comparative: 'deutlicher', superlative: 'am deutlichsten', level: CefrLevel.b2),
+];

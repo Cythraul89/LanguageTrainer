@@ -32,6 +32,7 @@ class VerbEntry {
   final Map<GrammaticalPerson, String> praeteritum;
   final String partizip2;
   final CefrLevel level;
+  final String? prefix;
 
   const VerbEntry({
     required this.infinitive,
@@ -41,7 +42,10 @@ class VerbEntry {
     required this.praeteritum,
     required this.partizip2,
     required this.level,
+    this.prefix,
   });
+
+  bool get isSeparable => prefix != null;
 
   // Perfekt = auxiliary (Präsens) + Partizip II, derived at runtime.
   String perfektForm(GrammaticalPerson person) {
@@ -51,4 +55,9 @@ class VerbEntry {
 
   String cardId(GrammaticalPerson person, Tense tense) =>
       'verb:$infinitive:${person.name}:${tense.name}';
+  String get translationCardId => 'verb_translation:$infinitive';
+  String get partizip2CardId => 'verb_partizip2:$infinitive';
+  String get auxiliaryCardId => 'verb_auxiliary:$infinitive';
+  String get reverseCardId => 'verb_reverse:$infinitive';
+  String get separableCardId => 'verb_separable:$infinitive';
 }

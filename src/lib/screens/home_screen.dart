@@ -3,6 +3,7 @@ import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/quiz_item.dart';
 import 'package:language_trainer/models/user_progress.dart';
 import 'package:language_trainer/screens/quiz_screen.dart';
+import 'package:language_trainer/screens/vocab_browser_screen.dart';
 import 'package:language_trainer/services/gamification_service.dart';
 import 'package:language_trainer/services/review_scheduler.dart';
 
@@ -63,17 +64,20 @@ class _HomeScreenState extends State<HomeScreen> {
       widget.scheduler.getSelectedLevels(),
       widget.scheduler.getSelectedCardTypes(),
       widget.gamification.getProgress(),
+      widget.scheduler.getDifficultCount(),
     ]);
-    final stats     = results[0] as Map<CardType, ({int total, int due})>;
-    final levels    = results[1] as Set<CefrLevel>;
-    final cardTypes = results[2] as Set<CardType>;
-    final progress  = results[3] as UserProgress;
+    final stats          = results[0] as Map<CardType, ({int total, int due})>;
+    final levels         = results[1] as Set<CefrLevel>;
+    final cardTypes      = results[2] as Set<CardType>;
+    final progress       = results[3] as UserProgress;
+    final difficultCount = results[4] as int;
     final totalDue  = stats.entries
         .where((e) => cardTypes.contains(e.key))
         .fold(0, (s, e) => s + e.value.due);
     return _HomeData(
         stats: stats, levels: levels, cardTypes: cardTypes,
-        progress: progress, totalDue: totalDue);
+        progress: progress, totalDue: totalDue,
+        difficultCount: difficultCount);
   }
 
   @override
@@ -116,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : () async {
                         final items =
                             await widget.scheduler.getDueItems();
+                        await widget.gamification.startSession();
                         if (!context.mounted) return;
                         await Navigator.push(
                           context,
@@ -135,6 +140,45 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? 'Nothing due'
                       : 'Start Review (${d.totalDue})',
                 ),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: d.difficultCount == 0
+                    ? null
+                    : () async {
+                        final items =
+                            await widget.scheduler.getDifficultItems();
+                        await widget.gamification.startSession();
+                        if (!context.mounted) return;
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => QuizScreen(
+                              items: items,
+                              scheduler: widget.scheduler,
+                              gamification: widget.gamification,
+                            ),
+                          ),
+                        );
+                        _refresh();
+                      },
+                icon: const Icon(Icons.psychology_outlined),
+                label: Text(
+                  d.difficultCount == 0
+                      ? 'No difficult words'
+                      : 'Difficult words (${d.difficultCount})',
+                ),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const VocabBrowserScreen(),
+                  ),
+                ),
+                icon: const Icon(Icons.menu_book_outlined),
+                label: const Text('Browse vocabulary'),
               ),
             ],
           );
@@ -241,37 +285,103 @@ class _CategorySelector extends StatelessWidget {
   final Set<CardType> selected;
   final void Function(Set<CardType>) onChanged;
 
+  static const _groups = [
+    (
+      label: 'Substantive',
+      types: [
+        CardType.noun,
+        CardType.nounPlural,
+        CardType.nounTranslation,
+        CardType.nounReverse,
+      ],
+    ),
+    (
+      label: 'Verben',
+      types: [
+        CardType.verbPraesens,
+        CardType.verbPraeteritum,
+        CardType.verbPerfekt,
+        CardType.verbPartizipII,
+        CardType.verbAuxiliary,
+        CardType.verbTranslation,
+        CardType.verbReverse,
+        CardType.verbSeparable,
+      ],
+    ),
+    (
+      label: 'Adjektive',
+      types: [
+        CardType.adjTranslation,
+        CardType.adjComparative,
+        CardType.adjSuperlative,
+        CardType.adjReverse,
+      ],
+    ),
+    (
+      label: 'Präpositionen',
+      types: [
+        CardType.prepTranslation,
+        CardType.prepCase,
+      ],
+    ),
+  ];
+
   static const _labels = {
-    CardType.noun: 'Nouns',
+    CardType.noun: 'Artikel',
+    CardType.nounPlural: 'Plural',
+    CardType.nounTranslation: 'Übersetzung',
+    CardType.nounReverse: 'DE schreiben',
     CardType.verbPraesens: 'Präsens',
     CardType.verbPraeteritum: 'Präteritum',
     CardType.verbPerfekt: 'Perfekt',
+    CardType.verbPartizipII: 'Partizip II',
+    CardType.verbAuxiliary: 'Hilfsverb',
+    CardType.verbTranslation: 'Bedeutung',
+    CardType.verbReverse: 'Verb schreiben',
+    CardType.verbSeparable: 'Trennbar',
+    CardType.adjTranslation: 'Adj. Bedeutung',
+    CardType.adjComparative: 'Komparativ',
+    CardType.adjSuperlative: 'Superlativ',
+    CardType.adjReverse: 'DE schreiben',
+    CardType.prepTranslation: 'Bedeutung',
+    CardType.prepCase: 'Kasus',
   };
+
+  void _toggle(CardType type, bool on) {
+    if (!on && selected.length == 1) return;
+    final next = Set<CardType>.from(selected);
+    on ? next.add(type) : next.remove(type);
+    onChanged(next);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final labelSmall = Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Practice category',
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: CardType.values.map((type) {
-            final active = selected.contains(type);
-            return FilterChip(
-              label: Text(_labels[type]!),
-              selected: active,
-              onSelected: (on) {
-                if (!on && selected.length == 1) return; // keep ≥ 1
-                final next = Set<CardType>.from(selected);
-                on ? next.add(type) : next.remove(type);
-                onChanged(next);
-              },
-            );
-          }).toList(),
-        ),
+        for (final group in _groups) ...[
+          Text(group.label, style: labelSmall),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 0,
+            children: group.types.map((type) {
+              final active = selected.contains(type);
+              return FilterChip(
+                label: Text(_labels[type]!),
+                selected: active,
+                onSelected: (on) => _toggle(type, on),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 8),
+        ],
       ],
     );
   }
@@ -287,10 +397,24 @@ class _DueSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const rows = [
-      ('Nouns', CardType.noun),
+      ('Artikel', CardType.noun),
+      ('Plural', CardType.nounPlural),
+      ('Übersetzung (N)', CardType.nounTranslation),
+      ('DE schreiben (N)', CardType.nounReverse),
       ('Präsens', CardType.verbPraesens),
       ('Präteritum', CardType.verbPraeteritum),
       ('Perfekt', CardType.verbPerfekt),
+      ('Partizip II', CardType.verbPartizipII),
+      ('Hilfsverb', CardType.verbAuxiliary),
+      ('Bedeutung (V)', CardType.verbTranslation),
+      ('Verb schreiben', CardType.verbReverse),
+      ('Adj. Bedeutung', CardType.adjTranslation),
+      ('Komparativ', CardType.adjComparative),
+      ('Superlativ', CardType.adjSuperlative),
+      ('Adj. DE schreiben', CardType.adjReverse),
+      ('Trennbar', CardType.verbSeparable),
+      ('Präp. Bedeutung', CardType.prepTranslation),
+      ('Kasus', CardType.prepCase),
     ];
     final totalDue = stats.entries
         .where((e) => selectedTypes.contains(e.key))
@@ -377,11 +501,13 @@ class _HomeData {
   final Set<CardType> cardTypes;
   final UserProgress progress;
   final int totalDue;
+  final int difficultCount;
   const _HomeData({
     required this.stats,
     required this.levels,
     required this.cardTypes,
     required this.progress,
     required this.totalDue,
+    required this.difficultCount,
   });
 }
