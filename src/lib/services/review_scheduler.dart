@@ -197,10 +197,9 @@ class ReviewScheduler {
         }
       }
       if (cardTypes.contains(CardType.adjReverse)) {
-        final id = 'adj_reverse:${adj.word}';
-        final sm2 = _sm2For(savedMap[id]);
+        final sm2 = _sm2For(savedMap[adj.reverseCardId]);
         if (eligible(sm2)) {
-          due.add(AdjReverseQuizItem(cardId: id, sm2: sm2, entry: adj));
+          due.add(AdjReverseQuizItem(cardId: adj.reverseCardId, sm2: sm2, entry: adj));
         }
       }
     }
@@ -317,7 +316,7 @@ class ReviewScheduler {
       countAdj(CardType.adjTranslation, adj.translationCardId);
       countAdj(CardType.adjComparative, adj.comparativeCardId);
       countAdj(CardType.adjSuperlative, adj.superlativeCardId);
-      countAdj(CardType.adjReverse, 'adj_reverse:${adj.word}');
+      countAdj(CardType.adjReverse, adj.reverseCardId);
     }
 
     for (final verb in kVerbs.where((v) => levels.contains(v.level) && v.isSeparable)) {

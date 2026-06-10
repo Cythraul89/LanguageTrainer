@@ -18,4 +18,5 @@ class AdjectiveEntry {
   String get translationCardId => 'adj_translation:$word';
   String get comparativeCardId => 'adj_comparative:$word';
   String get superlativeCardId => 'adj_superlative:$word';
+  String get reverseCardId => 'adj_reverse:$word';
 }

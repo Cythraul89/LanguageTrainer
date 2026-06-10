@@ -1,5 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:language_trainer/data/prepositions.dart';
+import 'package:language_trainer/data/verbs.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/quiz_item.dart';
 import 'package:language_trainer/models/verb.dart';
@@ -29,6 +31,8 @@ void main() {
     });
 
     test('returns only recognised QuizItem subtypes', () async {
+      // Enable all types so every subtype can appear.
+      await scheduler.setSelectedCardTypes(CardType.values.toSet());
       final items = await scheduler.getDueItems();
       for (final item in items) {
         expect(
@@ -44,6 +48,12 @@ void main() {
             isA<VerbAuxiliaryQuizItem>(),
             isA<VerbReverseQuizItem>(),
             isA<AdjTranslationQuizItem>(),
+            isA<AdjComparativeQuizItem>(),
+            isA<AdjSuperlativeQuizItem>(),
+            isA<AdjReverseQuizItem>(),
+            isA<VerbSeparableQuizItem>(),
+            isA<PrepTranslationQuizItem>(),
+            isA<PrepCaseQuizItem>(),
           ]),
         );
       }
@@ -178,8 +188,15 @@ void main() {
 
   group('getStats', () {
     test('all default-enabled CardTypes have entries', () async {
-      // adjComparative and adjSuperlative are opt-in (not in default set).
-      const optIn = {CardType.adjComparative, CardType.adjSuperlative};
+      // These types are opt-in (not in the default selected set).
+      const optIn = {
+        CardType.adjComparative,
+        CardType.adjSuperlative,
+        CardType.adjReverse,
+        CardType.verbSeparable,
+        CardType.prepTranslation,
+        CardType.prepCase,
+      };
       final stats = await scheduler.getStats();
       for (final ct in CardType.values) {
         if (optIn.contains(ct)) continue;
@@ -264,6 +281,227 @@ void main() {
       if (gehenItem != null) {
         expect(gehenItem.correctAnswer, 'bin gegangen');
       }
+    });
+  });
+
+  // ── Adjective reverse ─────────────────────────────────────────────────────────
+
+  group('adjReverse', () {
+    test('filter returns only AdjReverseQuizItems', () async {
+      await scheduler.setSelectedCardTypes({CardType.adjReverse});
+      final items = await scheduler.getDueItems();
+      expect(items, isNotEmpty);
+      expect(items.every((i) => i is AdjReverseQuizItem), isTrue);
+    });
+
+    test('cardId uses reverseCardId getter (adj_reverse: prefix)', () async {
+      await scheduler.setSelectedCardTypes({CardType.adjReverse});
+      final items = await scheduler.getDueItems();
+      for (final item in items.cast<AdjReverseQuizItem>()) {
+        expect(item.cardId, startsWith('adj_reverse:'));
+        expect(item.cardId, 'adj_reverse:${item.entry.word}');
+      }
+    });
+
+    test('getStats counts adjReverse when enabled', () async {
+      await scheduler.setSelectedCardTypes({CardType.adjReverse});
+      final stats = await scheduler.getStats();
+      expect(stats[CardType.adjReverse]!.total, greaterThan(0));
+      expect(stats[CardType.adjReverse]!.due,
+          equals(stats[CardType.adjReverse]!.total));
+    });
+
+    test('adjReverse cardId round-trips through saveResult', () async {
+      await scheduler.setSelectedCardTypes({CardType.adjReverse});
+      await scheduler.setSessionSize(50000);
+      final items = await scheduler.getDueItems();
+      final item = items.whereType<AdjReverseQuizItem>().first;
+      final learned = Sm2Service.applyGrade(
+          Sm2Service.applyGrade(Sm2State.initial, 5), 5);
+      await scheduler.saveResult(item.cardId, item.cardType, learned);
+      final after = await scheduler.getDueItems();
+      expect(after.any((i) => i.cardId == item.cardId), isFalse);
+    });
+  });
+
+  // ── Separable verb prefix ─────────────────────────────────────────────────────
+
+  group('verbSeparable', () {
+    test('filter returns only VerbSeparableQuizItems', () async {
+      await scheduler.setSelectedCardTypes({CardType.verbSeparable});
+      final items = await scheduler.getDueItems();
+      expect(items, isNotEmpty);
+      expect(items.every((i) => i is VerbSeparableQuizItem), isTrue);
+    });
+
+    test('all VerbSeparableQuizItems have non-empty prefix', () async {
+      await scheduler.setSelectedCardTypes({CardType.verbSeparable});
+      final items = await scheduler.getDueItems();
+      for (final item in items.cast<VerbSeparableQuizItem>()) {
+        expect(item.prefix, isNotEmpty);
+      }
+    });
+
+    test('separable items correspond to verbs flagged isSeparable in data',
+        () async {
+      await scheduler.setSelectedCardTypes({CardType.verbSeparable});
+      final items = await scheduler.getDueItems();
+      final separableInfinitives =
+          kVerbs.where((v) => v.isSeparable).map((v) => v.infinitive).toSet();
+      for (final item in items.cast<VerbSeparableQuizItem>()) {
+        expect(separableInfinitives, contains(item.infinitive));
+      }
+    });
+
+    test('known separable verb einkaufen has prefix ein', () async {
+      await scheduler.setSelectedCardTypes({CardType.verbSeparable});
+      await scheduler.setSelectedLevels({CefrLevel.a1});
+      await scheduler.setSessionSize(50000);
+      final items = await scheduler.getDueItems();
+      final einkaufen = items
+          .whereType<VerbSeparableQuizItem>()
+          .where((i) => i.infinitive == 'einkaufen')
+          .firstOrNull;
+      expect(einkaufen, isNotNull);
+      expect(einkaufen!.prefix, 'ein');
+    });
+
+    test('getStats counts verbSeparable when enabled', () async {
+      await scheduler.setSelectedCardTypes({CardType.verbSeparable});
+      final stats = await scheduler.getStats();
+      expect(stats[CardType.verbSeparable]!.total, greaterThan(0));
+    });
+  });
+
+  // ── Preposition translation ───────────────────────────────────────────────────
+
+  group('prepTranslation', () {
+    test('filter returns only PrepTranslationQuizItems', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepTranslation});
+      final items = await scheduler.getDueItems();
+      expect(items, isNotEmpty);
+      expect(items.every((i) => i is PrepTranslationQuizItem), isTrue);
+    });
+
+    test('all PrepTranslationQuizItems have non-empty english', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepTranslation});
+      final items = await scheduler.getDueItems();
+      for (final item in items.cast<PrepTranslationQuizItem>()) {
+        expect(item.entry.english, isNotEmpty);
+      }
+    });
+
+    test('getStats counts prepTranslation when enabled', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepTranslation});
+      final stats = await scheduler.getStats();
+      expect(stats[CardType.prepTranslation]!.total,
+          equals(kPrepositions.length));
+    });
+
+    test('prepTranslation cardId uses translationCardId getter', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepTranslation});
+      final items = await scheduler.getDueItems();
+      for (final item in items.cast<PrepTranslationQuizItem>()) {
+        expect(item.cardId, 'prep_translation:${item.entry.word}');
+      }
+    });
+  });
+
+  // ── Preposition case ──────────────────────────────────────────────────────────
+
+  group('prepCase', () {
+    test('filter returns only PrepCaseQuizItems', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepCase});
+      final items = await scheduler.getDueItems();
+      expect(items, isNotEmpty);
+      expect(items.every((i) => i is PrepCaseQuizItem), isTrue);
+    });
+
+    test('all PrepCaseQuizItems have at least one case', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepCase});
+      final items = await scheduler.getDueItems();
+      for (final item in items.cast<PrepCaseQuizItem>()) {
+        expect(item.entry.cases, isNotEmpty);
+      }
+    });
+
+    test('two-way prepositions list both Dativ and Akkusativ', () {
+      final twoWay =
+          kPrepositions.where((p) => p.cases.length > 1).toList();
+      expect(twoWay, isNotEmpty);
+      for (final p in twoWay) {
+        expect(p.cases, containsAll(['Dativ', 'Akkusativ']));
+      }
+    });
+
+    test('casesDisplay joins cases with " / "', () {
+      final twoWay = kPrepositions.firstWhere((p) => p.cases.length > 1);
+      expect(twoWay.casesDisplay, contains(' / '));
+    });
+
+    test('Akkusativ-only preps (durch, für) have single case', () {
+      final durch =
+          kPrepositions.firstWhere((p) => p.word == 'durch');
+      expect(durch.cases, equals(['Akkusativ']));
+      final fuer =
+          kPrepositions.firstWhere((p) => p.word == 'für');
+      expect(fuer.cases, equals(['Akkusativ']));
+    });
+
+    test('Dativ-only prep (mit) has single case Dativ', () {
+      final mit = kPrepositions.firstWhere((p) => p.word == 'mit');
+      expect(mit.cases, equals(['Dativ']));
+    });
+
+    test('getStats counts prepCase when enabled', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepCase});
+      final stats = await scheduler.getStats();
+      expect(
+          stats[CardType.prepCase]!.total, equals(kPrepositions.length));
+    });
+
+    test('prepCase cardId round-trips through saveResult', () async {
+      await scheduler.setSelectedCardTypes({CardType.prepCase});
+      await scheduler.setSessionSize(50000);
+      final items = await scheduler.getDueItems();
+      final item = items.whereType<PrepCaseQuizItem>().first;
+      final learned = Sm2Service.applyGrade(
+          Sm2Service.applyGrade(Sm2State.initial, 5), 5);
+      await scheduler.saveResult(item.cardId, item.cardType, learned);
+      final after = await scheduler.getDueItems();
+      expect(after.any((i) => i.cardId == item.cardId), isFalse);
+    });
+  });
+
+  // ── VerbEntry.isSeparable / prefix data integrity ─────────────────────────────
+
+  group('VerbEntry separable data', () {
+    test('isSeparable is true iff prefix is non-null', () {
+      for (final v in kVerbs) {
+        if (v.prefix != null) {
+          expect(v.isSeparable, isTrue, reason: '${v.infinitive} has prefix');
+        } else {
+          expect(v.isSeparable, isFalse,
+              reason: '${v.infinitive} has no prefix');
+        }
+      }
+    });
+
+    test('separableCardId contains infinitive', () {
+      for (final v in kVerbs.where((v) => v.isSeparable)) {
+        expect(v.separableCardId, contains(v.infinitive));
+      }
+    });
+
+    test('known separable verbs are flagged', () {
+      const expected = {
+        'einladen', 'anrufen', 'aufstehen', 'abholen', 'ankommen',
+        'abfahren', 'einkaufen', 'anfangen', 'aufräumen', 'ausgehen',
+        'aufhören', 'mitnehmen', 'vorstellen', 'zurückkommen',
+      };
+      final actual =
+          kVerbs.where((v) => v.isSeparable).map((v) => v.infinitive).toSet();
+      expect(actual, containsAll(expected));
     });
   });
 }
