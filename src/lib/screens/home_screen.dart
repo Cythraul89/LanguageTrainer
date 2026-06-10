@@ -285,6 +285,47 @@ class _CategorySelector extends StatelessWidget {
   final Set<CardType> selected;
   final void Function(Set<CardType>) onChanged;
 
+  static const _groups = [
+    (
+      label: 'Substantive',
+      types: [
+        CardType.noun,
+        CardType.nounPlural,
+        CardType.nounTranslation,
+        CardType.nounReverse,
+      ],
+    ),
+    (
+      label: 'Verben',
+      types: [
+        CardType.verbPraesens,
+        CardType.verbPraeteritum,
+        CardType.verbPerfekt,
+        CardType.verbPartizipII,
+        CardType.verbAuxiliary,
+        CardType.verbTranslation,
+        CardType.verbReverse,
+        CardType.verbSeparable,
+      ],
+    ),
+    (
+      label: 'Adjektive',
+      types: [
+        CardType.adjTranslation,
+        CardType.adjComparative,
+        CardType.adjSuperlative,
+        CardType.adjReverse,
+      ],
+    ),
+    (
+      label: 'Präpositionen',
+      types: [
+        CardType.prepTranslation,
+        CardType.prepCase,
+      ],
+    ),
+  ];
+
   static const _labels = {
     CardType.noun: 'Artikel',
     CardType.nounPlural: 'Plural',
@@ -297,35 +338,50 @@ class _CategorySelector extends StatelessWidget {
     CardType.verbAuxiliary: 'Hilfsverb',
     CardType.verbTranslation: 'Bedeutung',
     CardType.verbReverse: 'Verb schreiben',
+    CardType.verbSeparable: 'Trennbar',
     CardType.adjTranslation: 'Adj. Bedeutung',
     CardType.adjComparative: 'Komparativ',
     CardType.adjSuperlative: 'Superlativ',
+    CardType.adjReverse: 'DE schreiben',
+    CardType.prepTranslation: 'Bedeutung',
+    CardType.prepCase: 'Kasus',
   };
+
+  void _toggle(CardType type, bool on) {
+    if (!on && selected.length == 1) return;
+    final next = Set<CardType>.from(selected);
+    on ? next.add(type) : next.remove(type);
+    onChanged(next);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final labelSmall = Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Practice category',
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: CardType.values.map((type) {
-            final active = selected.contains(type);
-            return FilterChip(
-              label: Text(_labels[type]!),
-              selected: active,
-              onSelected: (on) {
-                if (!on && selected.length == 1) return; // keep ≥ 1
-                final next = Set<CardType>.from(selected);
-                on ? next.add(type) : next.remove(type);
-                onChanged(next);
-              },
-            );
-          }).toList(),
-        ),
+        for (final group in _groups) ...[
+          Text(group.label, style: labelSmall),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 0,
+            children: group.types.map((type) {
+              final active = selected.contains(type);
+              return FilterChip(
+                label: Text(_labels[type]!),
+                selected: active,
+                onSelected: (on) => _toggle(type, on),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 8),
+        ],
       ],
     );
   }
@@ -355,6 +411,10 @@ class _DueSummaryCard extends StatelessWidget {
       ('Adj. Bedeutung', CardType.adjTranslation),
       ('Komparativ', CardType.adjComparative),
       ('Superlativ', CardType.adjSuperlative),
+      ('Adj. DE schreiben', CardType.adjReverse),
+      ('Trennbar', CardType.verbSeparable),
+      ('Präp. Bedeutung', CardType.prepTranslation),
+      ('Kasus', CardType.prepCase),
     ];
     final totalDue = stats.entries
         .where((e) => selectedTypes.contains(e.key))

@@ -760,6 +760,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'ludet ein',  GrammaticalPerson.sie: 'luden ein',
     },
     partizip2: 'eingeladen',
+    prefix: 'ein',
   ),
   VerbEntry(
     infinitive: 'anrufen', english: 'to phone / call', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
@@ -774,6 +775,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'rieft an',   GrammaticalPerson.sie: 'riefen an',
     },
     partizip2: 'angerufen',
+    prefix: 'an',
   ),
   VerbEntry(
     infinitive: 'aufstehen', english: 'to get up / stand up', auxiliary: Auxiliary.sein, level: CefrLevel.a2,
@@ -788,6 +790,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'standet auf',  GrammaticalPerson.sie: 'standen auf',
     },
     partizip2: 'aufgestanden',
+    prefix: 'auf',
   ),
   VerbEntry(
     infinitive: 'abholen', english: 'to pick up / collect', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
@@ -802,6 +805,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'holtet ab',  GrammaticalPerson.sie: 'holten ab',
     },
     partizip2: 'abgeholt',
+    prefix: 'ab',
   ),
   VerbEntry(
     infinitive: 'verstehen', english: 'to understand', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
@@ -1286,6 +1290,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'kamt an',  GrammaticalPerson.sie: 'kamen an',
     },
     partizip2: 'angekommen',
+    prefix: 'an',
   ),
   VerbEntry(
     infinitive: 'abfahren', english: 'to depart / set off', auxiliary: Auxiliary.sein, level: CefrLevel.a2,
@@ -1300,6 +1305,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'fuhrt ab',  GrammaticalPerson.sie: 'fuhren ab',
     },
     partizip2: 'abgefahren',
+    prefix: 'ab',
   ),
   VerbEntry(
     infinitive: 'packen', english: 'to pack', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
@@ -1314,5 +1320,125 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'packtet',  GrammaticalPerson.sie: 'packten',
     },
     partizip2: 'gepackt',
+  ),
+  VerbEntry(
+    infinitive: 'einkaufen', english: 'to go shopping / buy', auxiliary: Auxiliary.haben, level: CefrLevel.a1,
+    praesens: {
+      GrammaticalPerson.ich: 'kaufe ein',   GrammaticalPerson.du: 'kaufst ein',
+      GrammaticalPerson.er: 'kauft ein',    GrammaticalPerson.wir: 'kaufen ein',
+      GrammaticalPerson.ihr: 'kauft ein',   GrammaticalPerson.sie: 'kaufen ein',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'kaufte ein',   GrammaticalPerson.du: 'kauftest ein',
+      GrammaticalPerson.er: 'kaufte ein',    GrammaticalPerson.wir: 'kauften ein',
+      GrammaticalPerson.ihr: 'kauftet ein',  GrammaticalPerson.sie: 'kauften ein',
+    },
+    partizip2: 'eingekauft',
+    prefix: 'ein',
+  ),
+  VerbEntry(
+    infinitive: 'anfangen', english: 'to start / begin', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'fange an',   GrammaticalPerson.du: 'fängst an',
+      GrammaticalPerson.er: 'fängt an',    GrammaticalPerson.wir: 'fangen an',
+      GrammaticalPerson.ihr: 'fangt an',   GrammaticalPerson.sie: 'fangen an',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'fing an',   GrammaticalPerson.du: 'fingst an',
+      GrammaticalPerson.er: 'fing an',    GrammaticalPerson.wir: 'fingen an',
+      GrammaticalPerson.ihr: 'fingt an',  GrammaticalPerson.sie: 'fingen an',
+    },
+    partizip2: 'angefangen',
+    prefix: 'an',
+  ),
+  VerbEntry(
+    infinitive: 'aufräumen', english: 'to tidy up / clean up', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'räume auf',   GrammaticalPerson.du: 'räumst auf',
+      GrammaticalPerson.er: 'räumt auf',    GrammaticalPerson.wir: 'räumen auf',
+      GrammaticalPerson.ihr: 'räumt auf',   GrammaticalPerson.sie: 'räumen auf',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'räumte auf',   GrammaticalPerson.du: 'räumtest auf',
+      GrammaticalPerson.er: 'räumte auf',    GrammaticalPerson.wir: 'räumten auf',
+      GrammaticalPerson.ihr: 'räumtet auf',  GrammaticalPerson.sie: 'räumten auf',
+    },
+    partizip2: 'aufgeräumt',
+    prefix: 'auf',
+  ),
+  VerbEntry(
+    infinitive: 'ausgehen', english: 'to go out', auxiliary: Auxiliary.sein, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'gehe aus',   GrammaticalPerson.du: 'gehst aus',
+      GrammaticalPerson.er: 'geht aus',    GrammaticalPerson.wir: 'gehen aus',
+      GrammaticalPerson.ihr: 'geht aus',   GrammaticalPerson.sie: 'gehen aus',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'ging aus',   GrammaticalPerson.du: 'gingst aus',
+      GrammaticalPerson.er: 'ging aus',    GrammaticalPerson.wir: 'gingen aus',
+      GrammaticalPerson.ihr: 'gingt aus',  GrammaticalPerson.sie: 'gingen aus',
+    },
+    partizip2: 'ausgegangen',
+    prefix: 'aus',
+  ),
+  VerbEntry(
+    infinitive: 'aufhören', english: 'to stop / finish', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'höre auf',   GrammaticalPerson.du: 'hörst auf',
+      GrammaticalPerson.er: 'hört auf',    GrammaticalPerson.wir: 'hören auf',
+      GrammaticalPerson.ihr: 'hört auf',   GrammaticalPerson.sie: 'hören auf',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'hörte auf',   GrammaticalPerson.du: 'hörtest auf',
+      GrammaticalPerson.er: 'hörte auf',    GrammaticalPerson.wir: 'hörten auf',
+      GrammaticalPerson.ihr: 'hörtet auf',  GrammaticalPerson.sie: 'hörten auf',
+    },
+    partizip2: 'aufgehört',
+    prefix: 'auf',
+  ),
+  VerbEntry(
+    infinitive: 'mitnehmen', english: 'to take along / bring', auxiliary: Auxiliary.haben, level: CefrLevel.a2,
+    praesens: {
+      GrammaticalPerson.ich: 'nehme mit',   GrammaticalPerson.du: 'nimmst mit',
+      GrammaticalPerson.er: 'nimmt mit',    GrammaticalPerson.wir: 'nehmen mit',
+      GrammaticalPerson.ihr: 'nehmt mit',   GrammaticalPerson.sie: 'nehmen mit',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'nahm mit',   GrammaticalPerson.du: 'nahmst mit',
+      GrammaticalPerson.er: 'nahm mit',    GrammaticalPerson.wir: 'nahmen mit',
+      GrammaticalPerson.ihr: 'nahmt mit',  GrammaticalPerson.sie: 'nahmen mit',
+    },
+    partizip2: 'mitgenommen',
+    prefix: 'mit',
+  ),
+  VerbEntry(
+    infinitive: 'vorstellen', english: 'to introduce / imagine', auxiliary: Auxiliary.haben, level: CefrLevel.b1,
+    praesens: {
+      GrammaticalPerson.ich: 'stelle vor',   GrammaticalPerson.du: 'stellst vor',
+      GrammaticalPerson.er: 'stellt vor',    GrammaticalPerson.wir: 'stellen vor',
+      GrammaticalPerson.ihr: 'stellt vor',   GrammaticalPerson.sie: 'stellen vor',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'stellte vor',   GrammaticalPerson.du: 'stelltest vor',
+      GrammaticalPerson.er: 'stellte vor',    GrammaticalPerson.wir: 'stellten vor',
+      GrammaticalPerson.ihr: 'stelltet vor',  GrammaticalPerson.sie: 'stellten vor',
+    },
+    partizip2: 'vorgestellt',
+    prefix: 'vor',
+  ),
+  VerbEntry(
+    infinitive: 'zurückkommen', english: 'to come back / return', auxiliary: Auxiliary.sein, level: CefrLevel.b1,
+    praesens: {
+      GrammaticalPerson.ich: 'komme zurück',   GrammaticalPerson.du: 'kommst zurück',
+      GrammaticalPerson.er: 'kommt zurück',    GrammaticalPerson.wir: 'kommen zurück',
+      GrammaticalPerson.ihr: 'kommt zurück',   GrammaticalPerson.sie: 'kommen zurück',
+    },
+    praeteritum: {
+      GrammaticalPerson.ich: 'kam zurück',   GrammaticalPerson.du: 'kamst zurück',
+      GrammaticalPerson.er: 'kam zurück',    GrammaticalPerson.wir: 'kamen zurück',
+      GrammaticalPerson.ihr: 'kamt zurück',  GrammaticalPerson.sie: 'kamen zurück',
+    },
+    partizip2: 'zurückgekommen',
+    prefix: 'zurück',
   ),
 ];

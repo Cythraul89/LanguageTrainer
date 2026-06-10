@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:language_trainer/data/adjectives.dart';
 import 'package:language_trainer/data/nouns.dart';
+import 'package:language_trainer/data/prepositions.dart';
 import 'package:language_trainer/data/verbs.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/verb.dart';
@@ -20,7 +21,7 @@ class _VocabBrowserScreenState extends State<VocabBrowserScreen>
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 3, vsync: this);
+    _tabs = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -36,7 +37,7 @@ class _VocabBrowserScreenState extends State<VocabBrowserScreen>
         title: const Text('Vocabulary'),
         bottom: TabBar(
           controller: _tabs,
-          tabs: const [Tab(text: 'Nouns'), Tab(text: 'Verbs'), Tab(text: 'Adjectives')],
+          tabs: const [Tab(text: 'Nouns'), Tab(text: 'Verbs'), Tab(text: 'Adjectives'), Tab(text: 'Prepositions')],
         ),
       ),
       body: Column(
@@ -60,6 +61,7 @@ class _VocabBrowserScreenState extends State<VocabBrowserScreen>
                 _NounList(query: _query),
                 _VerbList(query: _query),
                 _AdjList(query: _query),
+                _PrepList(query: _query),
               ],
             ),
           ),
@@ -224,6 +226,38 @@ class _AdjList extends StatelessWidget {
           subtitle: Text(a.english),
           trailing: Text(
             '${a.comparative} · ${a.superlative}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _PrepList extends StatelessWidget {
+  const _PrepList({required this.query});
+  final String query;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = query.isEmpty
+        ? kPrepositions
+        : kPrepositions.where((p) =>
+            p.word.toLowerCase().contains(query) ||
+            p.english.toLowerCase().contains(query)).toList();
+
+    if (items.isEmpty) {
+      return const Center(child: Text('No results'));
+    }
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, i) {
+        final p = items[i];
+        return ListTile(
+          title: Text(p.word),
+          subtitle: Text(p.english),
+          trailing: Text(
+            p.casesDisplay,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         );

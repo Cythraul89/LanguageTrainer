@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:language_trainer/data/adjectives.dart';
 import 'package:language_trainer/data/nouns.dart';
+import 'package:language_trainer/data/prepositions.dart';
 import 'package:language_trainer/data/verbs.dart';
 import 'package:language_trainer/models/noun.dart';
 import 'package:language_trainer/models/quiz_item.dart';
@@ -195,6 +196,45 @@ class ReviewScheduler {
               cardId: adj.superlativeCardId, sm2: sm2, entry: adj));
         }
       }
+      if (cardTypes.contains(CardType.adjReverse)) {
+        final id = 'adj_reverse:${adj.word}';
+        final sm2 = _sm2For(savedMap[id]);
+        if (eligible(sm2)) {
+          due.add(AdjReverseQuizItem(cardId: id, sm2: sm2, entry: adj));
+        }
+      }
+    }
+
+    for (final verb in kVerbs.where((v) => levels.contains(v.level) && v.isSeparable)) {
+      if (cardTypes.contains(CardType.verbSeparable)) {
+        final sm2 = _sm2For(savedMap[verb.separableCardId]);
+        if (eligible(sm2)) {
+          due.add(VerbSeparableQuizItem(
+            cardId: verb.separableCardId,
+            sm2: sm2,
+            infinitive: verb.infinitive,
+            english: verb.english,
+            prefix: verb.prefix!,
+          ));
+        }
+      }
+    }
+
+    for (final prep in kPrepositions.where((p) => levels.contains(p.level))) {
+      if (cardTypes.contains(CardType.prepTranslation)) {
+        final sm2 = _sm2For(savedMap[prep.translationCardId]);
+        if (eligible(sm2)) {
+          due.add(PrepTranslationQuizItem(
+              cardId: prep.translationCardId, sm2: sm2, entry: prep));
+        }
+      }
+      if (cardTypes.contains(CardType.prepCase)) {
+        final sm2 = _sm2For(savedMap[prep.caseCardId]);
+        if (eligible(sm2)) {
+          due.add(PrepCaseQuizItem(
+              cardId: prep.caseCardId, sm2: sm2, entry: prep));
+        }
+      }
     }
 
     due.shuffle();
@@ -277,6 +317,29 @@ class ReviewScheduler {
       countAdj(CardType.adjTranslation, adj.translationCardId);
       countAdj(CardType.adjComparative, adj.comparativeCardId);
       countAdj(CardType.adjSuperlative, adj.superlativeCardId);
+      countAdj(CardType.adjReverse, 'adj_reverse:${adj.word}');
+    }
+
+    for (final verb in kVerbs.where((v) => levels.contains(v.level) && v.isSeparable)) {
+      if (cardTypes.contains(CardType.verbSeparable)) {
+        totals[CardType.verbSeparable] = totals[CardType.verbSeparable]! + 1;
+        final sm2 = _sm2For(savedMap[verb.separableCardId]);
+        if (Sm2Service.isDue(sm2)) {
+          dues[CardType.verbSeparable] = dues[CardType.verbSeparable]! + 1;
+        }
+      }
+    }
+
+    for (final prep in kPrepositions.where((p) => levels.contains(p.level))) {
+      void countPrep(CardType ct, String id) {
+        if (!cardTypes.contains(ct)) return;
+        totals[ct] = totals[ct]! + 1;
+        final sm2 = _sm2For(savedMap[id]);
+        if (Sm2Service.isDue(sm2)) dues[ct] = dues[ct]! + 1;
+      }
+
+      countPrep(CardType.prepTranslation, prep.translationCardId);
+      countPrep(CardType.prepCase, prep.caseCardId);
     }
 
     return {
@@ -335,6 +398,10 @@ class ReviewScheduler {
         'adjTranslation' => CardType.adjTranslation,
         'adjComparative' => CardType.adjComparative,
         'adjSuperlative' => CardType.adjSuperlative,
+        'adjReverse' => CardType.adjReverse,
+        'verbSeparable' => CardType.verbSeparable,
+        'prepTranslation' => CardType.prepTranslation,
+        'prepCase' => CardType.prepCase,
         _ => CardType.noun,
       };
 

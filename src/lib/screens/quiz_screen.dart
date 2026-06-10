@@ -8,6 +8,7 @@ import 'package:language_trainer/services/review_scheduler.dart';
 import 'package:language_trainer/services/sm2.dart';
 import 'package:language_trainer/widgets/article_buttons.dart';
 import 'package:language_trainer/widgets/auxiliary_buttons.dart';
+import 'package:language_trainer/widgets/case_buttons.dart';
 import 'package:language_trainer/widgets/conjugation_field.dart';
 import 'package:language_trainer/widgets/feedback_overlay.dart';
 
@@ -236,6 +237,29 @@ class _QuizScreenState extends State<QuizScreen> {
           hint: 'Superlativ?',
           hintStyle: labelStyle,
         ),
+      AdjReverseQuizItem(entry: final a) => _promptColumn(
+          headline: a.english,
+          hint: 'Wie heißt das Adjektiv?',
+          hintStyle: labelStyle,
+        ),
+      VerbSeparableQuizItem(infinitive: final inf, english: final en) =>
+        _promptColumn(
+          headline: inf,
+          sub: en,
+          hint: 'Was ist das trennbare Praefix?',
+          hintStyle: labelStyle,
+        ),
+      PrepTranslationQuizItem(entry: final p) => _promptColumn(
+          headline: p.word,
+          hint: 'Was bedeutet diese Praeposition?',
+          hintStyle: labelStyle,
+        ),
+      PrepCaseQuizItem(entry: final p) => _promptColumn(
+          headline: p.word,
+          sub: p.english,
+          hint: 'Welchen Kasus regiert diese Praeposition?',
+          hintStyle: labelStyle,
+        ),
       VerbQuizItem() => () {
           final v = _current as VerbQuizItem;
           return Column(
@@ -332,6 +356,25 @@ class _QuizScreenState extends State<QuizScreen> {
             onSubmit: (answer) =>
                 _onAnswer(_normalise(answer) == _normalise(a.superlative)),
           ),
+        AdjReverseQuizItem(entry: final a) => ConjugationField(
+            hintText: 'Adjektiv eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(a.word)),
+          ),
+        VerbSeparableQuizItem(prefix: final p) => ConjugationField(
+            hintText: 'Praefix eingeben…',
+            onSubmit: (answer) =>
+                _onAnswer(_normalise(answer) == _normalise(p)),
+          ),
+        PrepTranslationQuizItem(entry: final p) => ConjugationField(
+            hintText: 'English translation…',
+            onSubmit: (answer) =>
+                _onAnswer(_acceptsTranslation(answer, p.english)),
+          ),
+        PrepCaseQuizItem(entry: final p) => CaseButtons(
+            onAnswer: (picked) =>
+                _onAnswer(p.cases.contains(picked)),
+          ),
         VerbQuizItem() => ConjugationField(
             onSubmit: (answer) {
               final v = _current as VerbQuizItem;
@@ -352,11 +395,16 @@ class _QuizScreenState extends State<QuizScreen> {
         AdjTranslationQuizItem(entry: final a) => a.english,
         AdjComparativeQuizItem(entry: final a) => a.comparative,
         AdjSuperlativeQuizItem(entry: final a) => a.superlative,
+        AdjReverseQuizItem(entry: final a) => a.word,
+        VerbSeparableQuizItem(prefix: final p) => p,
+        PrepTranslationQuizItem(entry: final p) => p.english,
+        PrepCaseQuizItem(entry: final p) => p.casesDisplay,
         VerbQuizItem() => (_current as VerbQuizItem).correctAnswer,
       };
 
   // Whether the current card uses free-text input (override available).
-  static bool _isTextInput(QuizItem item) => item is! NounQuizItem && item is! VerbAuxiliaryQuizItem;
+  static bool _isTextInput(QuizItem item) =>
+      item is! NounQuizItem && item is! VerbAuxiliaryQuizItem && item is! PrepCaseQuizItem;
 
   // Accept any slash-separated variant; strip leading "to " for verb translations.
   static bool _acceptsTranslation(String answer, String expected) {

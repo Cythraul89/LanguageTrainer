@@ -1,5 +1,6 @@
 import 'package:language_trainer/models/adjective.dart';
 import 'package:language_trainer/models/noun.dart';
+import 'package:language_trainer/models/preposition.dart';
 import 'package:language_trainer/models/verb.dart';
 
 enum CardType {
@@ -17,6 +18,10 @@ enum CardType {
   adjTranslation,
   adjComparative,
   adjSuperlative,
+  adjReverse,
+  verbSeparable,
+  prepTranslation,
+  prepCase,
 }
 
 class Sm2State {
@@ -200,4 +205,48 @@ class VerbQuizItem extends QuizItem {
     required this.tense,
     required this.correctAnswer,
   });
+}
+
+class AdjReverseQuizItem extends QuizItem {
+  final AdjectiveEntry entry;
+
+  const AdjReverseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.adjReverse);
+}
+
+class VerbSeparableQuizItem extends QuizItem {
+  final String infinitive;
+  final String english;
+  final String prefix;
+
+  const VerbSeparableQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.infinitive,
+    required this.english,
+    required this.prefix,
+  }) : super(cardType: CardType.verbSeparable);
+}
+
+class PrepTranslationQuizItem extends QuizItem {
+  final PrepositionEntry entry;
+
+  const PrepTranslationQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.prepTranslation);
+}
+
+class PrepCaseQuizItem extends QuizItem {
+  final PrepositionEntry entry;
+
+  const PrepCaseQuizItem({
+    required super.cardId,
+    required super.sm2,
+    required this.entry,
+  }) : super(cardType: CardType.prepCase);
 }
