@@ -214,7 +214,7 @@ def render_title(pdf, noun_count, verb_count, adj_count):
     pdf.set_text_color(80, 80, 80)
     for line in [
         f"{noun_count} nouns  ·  {verb_count} verbs  ·  {adj_count} adjectives",
-        "Levels: A1 – C1",
+        "Levels: A1 - C1",
     ]:
         pdf.cell(0, 7, line, align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
