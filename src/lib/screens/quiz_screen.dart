@@ -42,7 +42,6 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
     _queue = List.of(widget.items);
-    widget.gamification.startSession();
   }
 
   QuizItem get _current => _queue[_index];
@@ -70,17 +69,21 @@ class _QuizScreenState extends State<QuizScreen> {
     if (!correct) _queue.add(_current);
   }
 
-  void _onOverride() {
+  Future<void> _onOverride() async {
     setState(() {
       _overridden = true;
       _correct = true;
     });
-    final newSm2 = Sm2Service.applyGrade(_current.sm2, 5);
-    widget.scheduler.saveResult(_current.cardId, _current.cardType, newSm2);
-    widget.gamification.processAnswer(isCorrect: true, isFirstAttempt: _lastWasFirstAttempt);
+    // Remove from re-queue before awaiting DB writes so a quick "Next" tap
+    // cannot advance past the card before the queue is corrected.
     if (_queue.last.cardId == _current.cardId) {
       _queue.removeLast();
     }
+    // Intentionally re-grades from the pre-wrong sm2: override means
+    // "I knew it despite the typo", so the interval is based on a correct answer.
+    final newSm2 = Sm2Service.applyGrade(_current.sm2, 5);
+    await widget.scheduler.saveResult(_current.cardId, _current.cardType, newSm2);
+    await widget.gamification.processAnswer(isCorrect: true, isFirstAttempt: _lastWasFirstAttempt);
   }
 
   void _next() {
@@ -152,7 +155,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     correct: _correct,
                     correctAnswer: _correctAnswer(),
                     onOverride: _isTextInput(_current) && !_correct && !_overridden
-                            ? _onOverride
+                            ? () { _onOverride(); }
                             : null,
                     onNext: _next,
                   ),

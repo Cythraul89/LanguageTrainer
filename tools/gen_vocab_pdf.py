@@ -34,11 +34,11 @@ def parse_nouns(path):
     text = path.read_text(encoding="utf-8")
     pattern = re.compile(
         r"NounEntry\s*\("
-        r"[^)]*?word:\s*'([^']+)'"
-        r"[^)]*?article:\s*Article\.(\w+)"
-        r"[^)]*?plural:\s*'([^']+)'"
-        r"[^)]*?english:\s*'([^']+)'"
-        r"[^)]*?level:\s*CefrLevel\.(\w+)",
+        r".*?word:\s*'([^']+)'"
+        r".*?article:\s*Article\.(\w+)"
+        r".*?plural:\s*'([^']+)'"
+        r".*?english:\s*'([^']+)'"
+        r".*?level:\s*CefrLevel\.(\w+)",
         re.DOTALL,
     )
     result = {lv: [] for lv in LEVELS}
@@ -71,11 +71,11 @@ def parse_adjectives(path):
     text = path.read_text(encoding="utf-8")
     pattern = re.compile(
         r"AdjectiveEntry\s*\("
-        r"[^)]*?word:\s*'([^']+)'"
-        r"[^)]*?english:\s*'([^']+)'"
-        r"[^)]*?comparative:\s*'([^']+)'"
-        r"[^)]*?superlative:\s*'([^']+)'"
-        r"[^)]*?level:\s*CefrLevel\.(\w+)",
+        r".*?word:\s*'([^']+)'"
+        r".*?english:\s*'([^']+)'"
+        r".*?comparative:\s*'([^']+)'"
+        r".*?superlative:\s*'([^']+)'"
+        r".*?level:\s*CefrLevel\.(\w+)",
         re.DOTALL,
     )
     result = {lv: [] for lv in LEVELS}

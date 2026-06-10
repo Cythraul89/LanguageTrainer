@@ -120,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : () async {
                         final items =
                             await widget.scheduler.getDueItems();
+                        await widget.gamification.startSession();
                         if (!context.mounted) return;
                         await Navigator.push(
                           context,
@@ -147,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : () async {
                         final items =
                             await widget.scheduler.getDifficultItems();
+                        await widget.gamification.startSession();
                         if (!context.mounted) return;
                         await Navigator.push(
                           context,
