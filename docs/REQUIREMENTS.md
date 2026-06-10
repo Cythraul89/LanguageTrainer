@@ -3,9 +3,9 @@
 ## 1. Purpose
 
 Personal, ad-free Flutter app for drilling German vocabulary using spaced
-repetition. Supports noun gender, noun plural, noun/verb/adjective translation,
+repetition. Supports noun gender, noun plural, noun/verb/adjective/preposition translation,
 EN→DE reverse, verb conjugation (three tenses), auxiliary selection,
-Partizip II, and adjective comparative/superlative quizzes. All state is
+Partizip II, adjective comparative/superlative, separable-verb prefix, and preposition case quizzes. All state is
 stored locally with no network dependency.
 
 ---
@@ -45,6 +45,7 @@ VerbEntry {
   praesens:     Map<GrammaticalPerson, String>
   praeteritum:  Map<GrammaticalPerson, String>
   partizip2:    String               // past participle, e.g. "gemacht"
+  prefix:       String?              // separable prefix, e.g. "ein" for einladen; null if not separable
 }
 ```
 
@@ -53,6 +54,10 @@ Perfekt is derived at runtime: auxiliary conjugated in Präsens + Partizip II.
 ```
 GrammaticalPerson enum: ich | du | er | wir | ihr | sie
 ```
+
+Derived:
+  isSeparable: bool     // prefix != null
+  separableCardId: String
 
 ### 3.3 Adjective
 
@@ -69,7 +74,25 @@ AdjectiveEntry {
 Only gradable adjectives are included — ungradable adjectives (möglich,
 genug, etc.) are excluded from the dataset.
 
-### 3.4 Review Card
+Derived:
+  reverseCardId: String
+
+### 3.4 Preposition
+
+```
+PrepositionEntry {
+  word:    String        // e.g. "durch"
+  english: String        // e.g. "through"
+  cases:   List<String>  // one or more of: Akkusativ | Dativ | Genitiv
+                         // two-way preps have two entries: ['Dativ', 'Akkusativ']
+  level:   CefrLevel
+}
+```
+
+Derived:
+  casesDisplay: String   // cases.join(' / ')
+
+### 3.5 Review Card
 
 One card per (item, quiz-type) pair:
 
@@ -90,6 +113,10 @@ QuizItem (sealed)
   AdjTranslationQuizItem  { cardId, cardType=adjTranslation, sm2, entry: AdjectiveEntry }
   AdjComparativeQuizItem  { cardId, cardType=adjComparative, sm2, entry: AdjectiveEntry }
   AdjSuperlativeQuizItem  { cardId, cardType=adjSuperlative, sm2, entry: AdjectiveEntry }
+  AdjReverseQuizItem      { cardId, cardType=adjReverse, sm2, entry: AdjectiveEntry }
+  VerbSeparableQuizItem   { cardId, cardType=verbSeparable, sm2, infinitive, english, prefix }
+  PrepTranslationQuizItem { cardId, cardType=prepTranslation, sm2, entry: PrepositionEntry }
+  PrepCaseQuizItem        { cardId, cardType=prepCase, sm2, entry: PrepositionEntry }
 
 Sm2State {
   easeFactor:  double    // ≥ 1.3, default 2.5
@@ -102,10 +129,11 @@ CardType enum:
   noun | nounPlural | nounTranslation | nounReverse |
   verbPraesens | verbPraeteritum | verbPerfekt |
   verbPartizipII | verbAuxiliary | verbTranslation | verbReverse |
-  adjTranslation | adjComparative | adjSuperlative
+  adjTranslation | adjComparative | adjSuperlative | adjReverse |
+  verbSeparable | prepTranslation | prepCase
 ```
 
-### 3.5 Card ID Scheme
+### 3.6 Card ID Scheme
 
 ```
 noun:<Word>                         // e.g. "noun:Hund"
@@ -120,6 +148,10 @@ verb_reverse:<infinitive>           // e.g. "verb_reverse:machen"
 adj_translation:<word>              // e.g. "adj_translation:groß"
 adj_comparative:<word>              // e.g. "adj_comparative:groß"
 adj_superlative:<word>              // e.g. "adj_superlative:groß"
+adj_reverse:<word>                  // e.g. "adj_reverse:groß"
+verb_separable:<infinitive>         // e.g. "verb_separable:einladen"
+prep_translation:<word>             // e.g. "prep_translation:durch"
+prep_case:<word>                    // e.g. "prep_case:durch"
 ```
 
 Card IDs are stable — renaming a word/infinitive would orphan its SM-2 state.
@@ -131,25 +163,26 @@ Card IDs are stable — renaming a word/infinitive would orphan its SM-2 state.
 Curated, hardcoded in Dart source (`lib/data/`). Can be expanded without
 schema changes; existing cards keep their SM-2 state when new words are added.
 
-| Category   | Count | Deck cards generated                                   |
-|------------|------:|-------------------------------------------------------:|
-| Nouns      |  204  | up to ~816 (noun + plural + translation + reverse)      |
-| Verbs      |   93  | up to ~2 046 (6 persons × 3 tenses + 4 extra types)    |
-| Adjectives |   49  | up to ~147 (translation + comparative + superlative)   |
-| **Total**  |       | **up to ~3 009** (depending on active CardTypes)       |
+| Category      | Count | Deck cards generated                                            |
+|---------------|------:|----------------------------------------------------------------:|
+| Nouns         |  204  | up to 816 (noun + plural + translation + reverse)               |
+| Verbs         |  101  | up to 2 236 (6 persons × 3 tenses + 4 extra + 14 separable)    |
+| Adjectives    |   49  | up to 196 (translation + comparative + superlative + reverse)  |
+| Prepositions  |   29  | up to 58 (translation + case)                                   |
+| **Total**     |       | **up to ~3 306** (depending on active CardTypes)               |
 
 Thematic groups: everyday objects, family, food, travel, birthday,
 relationships, abstract B1 concepts.
 
 CEFR coverage:
 
-| Level | Nouns | Verbs | Adjectives |
-|-------|------:|------:|-----------:|
-| A1    |    61 |    30 |         19 |
-| A2    |    78 |    46 |         15 |
-| B1    |    65 |    17 |          7 |
-| B2    |     0 |     0 |          8 |
-| C1–C2 | reserved for future expansion              |
+| Level | Nouns | Verbs | Adjectives | Prepositions |
+|-------|------:|------:|-----------:|-------------:|
+| A1    |    61 |    31 |         19 |           15 |
+| A2    |    78 |    51 |         15 |           10 |
+| B1    |    65 |    19 |          7 |            4 |
+| B2    |     0 |     0 |          8 |            0 |
+| C1–C2 | reserved for future expansion                          |
 
 ---
 
@@ -166,28 +199,34 @@ first launch. At least one level must remain selected.
 
 Users select one or more card categories from the Home screen:
 
-| German label    | CardType           | Default |
-|-----------------|--------------------|---------|
-| Artikel         | `noun`             | ✓       |
-| Plural          | `nounPlural`       | ✓       |
-| Übersetzung     | `nounTranslation`  | ✓       |
-| DE schreiben    | `nounReverse`      | ✓       |
-| Präsens         | `verbPraesens`     | ✓       |
-| Präteritum      | `verbPraeteritum`  | ✓       |
-| Perfekt         | `verbPerfekt`      | ✓       |
-| Partizip II     | `verbPartizipII`   | ✓       |
-| Hilfsverb       | `verbAuxiliary`    | ✓       |
-| Bedeutung       | `verbTranslation`  | ✓       |
-| Verb schreiben  | `verbReverse`      | ✓       |
-| Adj. Bedeutung  | `adjTranslation`   | ✓       |
-| Komparativ      | `adjComparative`   | ✗       |
-| Superlativ      | `adjSuperlative`   | ✗       |
+| German label      | CardType           | Default |
+|-------------------|--------------------|---------|
+| Artikel           | `noun`             | ✓       |
+| Plural            | `nounPlural`       | ✓       |
+| Übersetzung       | `nounTranslation`  | ✓       |
+| DE schreiben      | `nounReverse`      | ✓       |
+| Präsens           | `verbPraesens`     | ✓       |
+| Präteritum        | `verbPraeteritum`  | ✓       |
+| Perfekt           | `verbPerfekt`      | ✓       |
+| Partizip II       | `verbPartizipII`   | ✓       |
+| Hilfsverb         | `verbAuxiliary`    | ✓       |
+| Bedeutung         | `verbTranslation`  | ✓       |
+| Verb schreiben    | `verbReverse`      | ✓       |
+| Adj. Bedeutung    | `adjTranslation`   | ✓       |
+| Komparativ        | `adjComparative`   | ✗       |
+| Superlativ        | `adjSuperlative`   | ✗       |
+| Trennbar          | `verbSeparable`    | ✗       |
+| Adj. DE schreiben | `adjReverse`       | ✗       |
+| Präp. Bedeutung   | `prepTranslation`  | ✗       |
+| Kasus             | `prepCase`         | ✗       |
 
 Selection is persisted in `AppPreferences` (key `selected_card_types`).
 At least one must remain selected.
 
 The filter is applied in both `_queryItems()` (quiz) and `getStats()`
 (stats screen) so the due-count summary always reflects the active filter.
+
+The Home screen groups the filter chips into four sections: Substantive, Verben, Adjektive, Präpositionen.
 
 ---
 
@@ -295,6 +334,25 @@ layout issue), the card is re-graded 5 and removed from the re-queue.
 - **Prompt**: German adjective + English gloss.
 - **Answer**: Free-text superlative form including `am`, e.g. `am größten`.
 
+### 9.13 Adjective Reverse Quiz (`adjReverse`)
+- **Prompt**: English adjective.
+- **Answer**: Free-text German adjective base form.
+
+### 9.14 Separable Verb Prefix Quiz (`verbSeparable`)
+- **Prompt**: German infinitive + English gloss.
+- **Answer**: Free-text separable prefix, e.g. `ein` for `einladen`.
+- Only generated for verbs flagged with a prefix in the data.
+
+### 9.15 Preposition Translation Quiz (`prepTranslation`)
+- **Prompt**: German preposition.
+- **Answer**: Free-text English translation. Slash-separated variants accepted.
+
+### 9.16 Preposition Case Quiz (`prepCase`)
+- **Prompt**: German preposition + English gloss.
+- **Answer**: Three tappable buttons — `Akkusativ`, `Dativ`, `Genitiv`.
+- Two-way (Wechselpräpositionen) prepositions accept either `Dativ` or `Akkusativ`.
+- Correct answer shown on failure: `cases.join(' / ')`, e.g. `Dativ / Akkusativ`.
+
 ---
 
 ## 10. Difficult Words Session
@@ -309,7 +367,7 @@ due date.
 ## 11. Vocabulary Browser
 
 A searchable read-only reference screen accessible from the Home screen.
-Three tabs: Nouns, Verbs, Adjectives.
+Four tabs: Nouns / Verbs / Adjectives / Prepositions.
 
 - **Nouns tab**: article chip (colour-coded der=blue/die=red/das=green),
   word, English gloss, plural.
@@ -317,7 +375,8 @@ Three tabs: Nouns, Verbs, Adjectives.
   conjugation table (Präsens / Präteritum / Perfekt for all 6 persons
   plus Partizip II row).
 - **Adjectives tab**: base form, English gloss, comparative, superlative.
-- Live search filters all three tabs simultaneously.
+- **Prepositions tab**: preposition, English gloss, case(s) (Akkusativ / Dativ / Genitiv or two-way).
+- Live search filters all four tabs simultaneously.
 
 ---
 
@@ -402,7 +461,7 @@ the shell — not tab destinations.
 ### 14.2 HomeScreen
 
 - CEFR level `FilterChip` row.
-- CardType `FilterChip` row (14 types).
+- CardType `FilterChip` row (18 types). CardType filter chips are grouped into four labelled sections: Substantive, Verben, Adjektive, Präpositionen.
 - Due-count card: per-type rows with total; unselected rows dimmed.
 - "Start Review (N)" `FilledButton` — disabled when N = 0.
 - "Difficult words (N)" `OutlinedButton` — disabled when no difficult cards.
@@ -444,7 +503,7 @@ the shell — not tab destinations.
 
 ### 14.8 VocabBrowserScreen
 
-- Tabs: Nouns / Verbs / Adjectives.
+- Tabs: Nouns / Verbs / Adjectives / Prepositions.
 - Shared live search bar at top.
 
 ---

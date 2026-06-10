@@ -8,15 +8,15 @@
 │  AdaptiveShell                                                       │
 │  HomeScreen · QuizScreen · StatsScreen · AchievementsScreen         │
 │  SettingsScreen · AboutScreen · VocabBrowserScreen                   │
-│  Widgets: ArticleButtons · AuxiliaryButtons · ConjugationField       │
-│           FeedbackOverlay                                            │
+│  Widgets: ArticleButtons · AuxiliaryButtons · CaseButtons            │
+│           ConjugationField · FeedbackOverlay                         │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Service                                                             │
 │  ReviewScheduler ←→ Sm2Service (pure)                               │
 │  GamificationService                                                 │
 ├─────────────────────────────────────────────────────────────────────┤
 │  Data                                                                │
-│  AppDatabase (Drift/SQLite)    kNouns · kVerbs · kAdjectives (const)│
+│  AppDatabase (Drift/SQLite)    kNouns · kVerbs · kAdjectives · kPrepositions (const)│
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -62,11 +62,12 @@ ArtBtn AuxBtn ConjField FeedbackOverlay
    /    |     \                |
 Sm2Svc  │   AppDatabase ◄─────┘
         │     /       \
-   ┌────┴────┐   ┌─────┴──────────┐
-   │  kNouns  │   │ ReviewEntries  │
-   │  kVerbs  │   │ AppPreferences │
-   │ kAdjs    │   │ UserProgress   │
-   └──────────┘   └────────────────┘
+   ┌────┴────────┐   ┌─────┴──────────┐
+   │  kNouns     │   │ ReviewEntries  │
+   │  kVerbs     │   │ AppPreferences │
+   │  kAdjs      │   │ UserProgress   │
+   │  kPreps     │   └────────────────┘
+   └─────────────┘
 ```
 
 ---
@@ -121,6 +122,7 @@ QuizScreen iterates linearly
          │
          ├─ NounQuizItem             → ArticleButtons (der/die/das)
          ├─ VerbAuxiliaryQuizItem    → AuxiliaryButtons (haben/sein)
+         ├─ PrepCaseQuizItem         → CaseButtons (Akkusativ/Dativ/Genitiv)
          └─ everything else          → ConjugationField (free text)
                 │
                 ▼
@@ -283,13 +285,15 @@ src/
     │   ├── noun.dart                     ← NounEntry, Article, CefrLevel
     │   ├── verb.dart                     ← VerbEntry, GrammaticalPerson, Tense, Auxiliary
     │   ├── adjective.dart                ← AdjectiveEntry
-    │   ├── quiz_item.dart                ← QuizItem (sealed, 12 subtypes), Sm2State, CardType
+    │   ├── preposition.dart              ← PrepositionEntry
+    │   ├── quiz_item.dart                ← QuizItem (sealed, 16 subtypes), Sm2State, CardType
     │   ├── achievement.dart              ← Achievement, AchievementTrigger, kAchievements
     │   └── user_progress.dart            ← UserProgress (XP, level, stats)
     ├── data/
     │   ├── nouns.dart                    ← const kNouns (204 entries, A1–B2)
-    │   ├── verbs.dart                    ← const kVerbs (93 entries, A1–B1)
-    │   └── adjectives.dart               ← const kAdjectives (49 entries, A1–B2)
+    │   ├── verbs.dart                    ← const kVerbs (101 entries, A1–B1; 14 separable)
+    │   ├── adjectives.dart               ← const kAdjectives (49 entries, A1–B2)
+    │   └── prepositions.dart             ← const kPrepositions (29 entries, A1–B1)
     ├── services/
     │   ├── sm2.dart                      ← Sm2Service — pure algorithm, no I/O
     │   ├── database.dart                 ← AppDatabase (Drift), all three tables
@@ -312,6 +316,7 @@ src/
     └── widgets/
         ├── article_buttons.dart          ← der / die / das tappable buttons
         ├── auxiliary_buttons.dart        ← haben / sein tappable buttons
+        ├── case_buttons.dart             ← Akkusativ / Dativ / Genitiv tappable buttons
         ├── conjugation_field.dart        ← free-text input with optional hint text
         └── feedback_overlay.dart         ← correct/incorrect banner + Next + Override
 ```
