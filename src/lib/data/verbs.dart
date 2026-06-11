@@ -235,7 +235,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'heißt',  GrammaticalPerson.sie: 'heißen',
     },
     praeteritum: {
-      GrammaticalPerson.ich: 'hieß',    GrammaticalPerson.du: 'hießt',
+      GrammaticalPerson.ich: 'hieß',    GrammaticalPerson.du: 'hießest',
       GrammaticalPerson.er: 'hieß',     GrammaticalPerson.wir: 'hießen',
       GrammaticalPerson.ihr: 'hießt',   GrammaticalPerson.sie: 'hießen',
     },
@@ -545,7 +545,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'lest',  GrammaticalPerson.sie: 'lesen',
     },
     praeteritum: {
-      GrammaticalPerson.ich: 'las',   GrammaticalPerson.du: 'last',
+      GrammaticalPerson.ich: 'las',   GrammaticalPerson.du: 'lasest',
       GrammaticalPerson.er: 'las',    GrammaticalPerson.wir: 'lasen',
       GrammaticalPerson.ihr: 'last',  GrammaticalPerson.sie: 'lasen',
     },
@@ -701,7 +701,7 @@ const kVerbs = <VerbEntry>[
     praeteritum: {
       GrammaticalPerson.ich: 'schloss',    GrammaticalPerson.du: 'schlossest',
       GrammaticalPerson.er: 'schloss',     GrammaticalPerson.wir: 'schlossen',
-      GrammaticalPerson.ihr: 'schlosset',  GrammaticalPerson.sie: 'schlossen',
+      GrammaticalPerson.ihr: 'schlosst',  GrammaticalPerson.sie: 'schlossen',
     },
     partizip2: 'geschlossen',
   ),
@@ -755,7 +755,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'ladet ein',  GrammaticalPerson.sie: 'laden ein',
     },
     praeteritum: {
-      GrammaticalPerson.ich: 'lud ein',    GrammaticalPerson.du: 'ludst ein',
+      GrammaticalPerson.ich: 'lud ein',    GrammaticalPerson.du: 'ludest ein',
       GrammaticalPerson.er: 'lud ein',     GrammaticalPerson.wir: 'luden ein',
       GrammaticalPerson.ihr: 'ludet ein',  GrammaticalPerson.sie: 'luden ein',
     },
@@ -1001,7 +1001,7 @@ const kVerbs = <VerbEntry>[
     praeteritum: {
       GrammaticalPerson.ich: 'verglich',    GrammaticalPerson.du: 'verglichst',
       GrammaticalPerson.er: 'verglich',     GrammaticalPerson.wir: 'verglichen',
-      GrammaticalPerson.ihr: 'verglichet',  GrammaticalPerson.sie: 'verglichen',
+      GrammaticalPerson.ihr: 'verglicht',  GrammaticalPerson.sie: 'verglichen',
     },
     partizip2: 'verglichen',
   ),
@@ -1055,7 +1055,7 @@ const kVerbs = <VerbEntry>[
       GrammaticalPerson.ihr: 'beweist',  GrammaticalPerson.sie: 'beweisen',
     },
     praeteritum: {
-      GrammaticalPerson.ich: 'bewies',    GrammaticalPerson.du: 'bewiest',
+      GrammaticalPerson.ich: 'bewies',    GrammaticalPerson.du: 'bewiesest',
       GrammaticalPerson.er: 'bewies',     GrammaticalPerson.wir: 'bewiesen',
       GrammaticalPerson.ihr: 'bewiest',   GrammaticalPerson.sie: 'bewiesen',
     },

@@ -24,7 +24,11 @@ class ReviewScheduler {
 
   Future<Set<CefrLevel>> getSelectedLevels() async {
     final raw = await _db.getPreference(_kLevelsKey) ?? _kDefaultLevels;
-    return raw.split(',').map(_parseLevel).toSet();
+    final parsed = raw.split(',').map(_parseLevel).whereType<CefrLevel>().toSet();
+    if (parsed.isEmpty) {
+      return _kDefaultLevels.split(',').map(_parseLevel).whereType<CefrLevel>().toSet();
+    }
+    return parsed;
   }
 
   Future<void> setSelectedLevels(Set<CefrLevel> levels) =>
@@ -32,7 +36,11 @@ class ReviewScheduler {
 
   Future<Set<CardType>> getSelectedCardTypes() async {
     final raw = await _db.getPreference(_kCardTypesKey) ?? _kDefaultCardTypes;
-    return raw.split(',').map(_parseCardType).toSet();
+    final parsed = raw.split(',').map(_parseCardType).whereType<CardType>().toSet();
+    if (parsed.isEmpty) {
+      return _kDefaultCardTypes.split(',').map(_parseCardType).whereType<CardType>().toSet();
+    }
+    return parsed;
   }
 
   Future<void> setSelectedCardTypes(Set<CardType> types) =>
@@ -54,10 +62,11 @@ class ReviewScheduler {
       );
 
   Future<int> getDifficultCount() async {
-    final saved = await _db.getAllReviewEntries();
-    return saved
-        .where((e) => e.repetitions > 0 && e.easeFactor < 2.0)
-        .length;
+    final items = await _queryItems(
+      eligible: (sm2) => sm2.repetitions > 0 && sm2.easeFactor < 2.0,
+      cap: null,
+    );
+    return items.length;
   }
 
   Future<List<QuizItem>> getDueItems() =>
@@ -65,6 +74,7 @@ class ReviewScheduler {
 
   Future<List<QuizItem>> _queryItems({
     required bool Function(Sm2State) eligible,
+    Object? cap = const _UseSessionSize(),
   }) async {
     final levels = await getSelectedLevels();
     final cardTypes = await getSelectedCardTypes();
@@ -237,8 +247,9 @@ class ReviewScheduler {
     }
 
     due.shuffle();
-    final limit = await getSessionSize();
-    return due.length > limit ? due.sublist(0, limit) : due;
+    final int? limit = cap is _UseSessionSize ? await getSessionSize() : cap as int?;
+    if (limit != null && due.length > limit) return due.sublist(0, limit);
+    return due;
   }
 
   Future<Map<CardType, ({int total, int due})>> getStats() async {
@@ -382,7 +393,7 @@ class ReviewScheduler {
         Tense.perfekt => CardType.verbPerfekt,
       };
 
-  static CardType _parseCardType(String s) => switch (s.trim()) {
+  static CardType? _parseCardType(String s) => switch (s.trim()) {
         'noun' => CardType.noun,
         'nounPlural' => CardType.nounPlural,
         'nounTranslation' => CardType.nounTranslation,
@@ -401,16 +412,22 @@ class ReviewScheduler {
         'verbSeparable' => CardType.verbSeparable,
         'prepTranslation' => CardType.prepTranslation,
         'prepCase' => CardType.prepCase,
-        _ => CardType.noun,
+        _ => null,
       };
 
-  static CefrLevel _parseLevel(String s) => switch (s.trim()) {
+  static CefrLevel? _parseLevel(String s) => switch (s.trim()) {
         'a1' => CefrLevel.a1,
         'a2' => CefrLevel.a2,
         'b1' => CefrLevel.b1,
         'b2' => CefrLevel.b2,
         'c1' => CefrLevel.c1,
         'c2' => CefrLevel.c2,
-        _ => CefrLevel.a1,
+        _ => null,
       };
+}
+
+// Sentinel used as the default value for the `cap` parameter of _queryItems.
+// Distinct from `null` (which means no cap) and `int` (explicit cap).
+class _UseSessionSize {
+  const _UseSessionSize();
 }

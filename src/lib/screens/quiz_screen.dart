@@ -35,6 +35,10 @@ class _QuizScreenState extends State<QuizScreen> {
   bool _correct = false;
   bool _overridden = false;
   bool _lastWasFirstAttempt = false;
+  // Tracks sm2 before any answer this session (for override re-grading).
+  final Map<String, Sm2State> _originalSm2 = {};
+  // Tracks sm2 after the most recent answer (for correct retry grading).
+  final Map<String, Sm2State> _updatedSm2 = {};
 
   // Set once the queue is exhausted.
   Future<SessionSummary>? _summaryFuture;
@@ -54,20 +58,29 @@ class _QuizScreenState extends State<QuizScreen> {
     _lastWasFirstAttempt = firstAttempt;
     _seenThisSession.add(_current.cardId);
 
+    // Snapshot the pre-session sm2 on first encounter for override use.
+    _originalSm2.putIfAbsent(_current.cardId, () => _current.sm2);
+
+    // Grade from the most recently saved state (handles wrong-then-retry).
+    final baseSm2 = _updatedSm2[_current.cardId] ?? _current.sm2;
+    final grade = correct ? 5 : 0;
+    final newSm2 = Sm2Service.applyGrade(baseSm2, grade);
+    _updatedSm2[_current.cardId] = newSm2;
+
+    // Re-queue wrong cards synchronously before any await so _next() always
+    // sees the correct queue length even if the user taps Next immediately.
+    if (!correct) _queue.add(_current);
+
     setState(() {
       _answered = true;
       _correct = correct;
       _overridden = false;
     });
 
-    final grade = correct ? 5 : 0;
-    final newSm2 = Sm2Service.applyGrade(_current.sm2, grade);
     await widget.scheduler.saveResult(
         _current.cardId, _current.cardType, newSm2);
     await widget.gamification
         .processAnswer(isCorrect: correct, isFirstAttempt: firstAttempt);
-
-    if (!correct) _queue.add(_current);
   }
 
   Future<void> _onOverride() async {
@@ -75,16 +88,17 @@ class _QuizScreenState extends State<QuizScreen> {
       _overridden = true;
       _correct = true;
     });
-    // Remove from re-queue before awaiting DB writes so a quick "Next" tap
-    // cannot advance past the card before the queue is corrected.
-    if (_queue.last.cardId == _current.cardId) {
+    // Remove from re-queue (was added synchronously in _onAnswer).
+    if (_queue.isNotEmpty && _queue.last.cardId == _current.cardId) {
       _queue.removeLast();
     }
-    // Intentionally re-grades from the pre-wrong sm2: override means
-    // "I knew it despite the typo", so the interval is based on a correct answer.
-    final newSm2 = Sm2Service.applyGrade(_current.sm2, 5);
+    // Re-grade from the pre-session sm2: override means "I knew it despite
+    // the typo", so the interval is as if the card was correct all along.
+    final originalSm2 = _originalSm2[_current.cardId] ?? _current.sm2;
+    final newSm2 = Sm2Service.applyGrade(originalSm2, 5);
+    _updatedSm2[_current.cardId] = newSm2;
     await widget.scheduler.saveResult(_current.cardId, _current.cardType, newSm2);
-    await widget.gamification.processAnswer(isCorrect: true, isFirstAttempt: _lastWasFirstAttempt);
+    await widget.gamification.overrideLastAnswer(isFirstAttempt: _lastWasFirstAttempt);
   }
 
   void _next() {
@@ -121,6 +135,24 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_queue.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Review')),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Nothing due right now.'),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Back'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     if (_done) return _SessionCompleteScreen(summaryFuture: _summaryFuture!);
 
     return PopScope(
@@ -314,7 +346,7 @@ class _QuizScreenState extends State<QuizScreen> {
         NounPluralQuizItem(entry: final n) => ConjugationField(
             hintText: 'Plural eingeben…',
             onSubmit: (answer) =>
-                _onAnswer(_normalise(answer) == _normalise(n.plural)),
+                _onAnswer(_normalisedMatch(answer, n.plural)),
           ),
         NounTranslationQuizItem(entry: final n) => ConjugationField(
             hintText: 'English translation…',
@@ -327,19 +359,19 @@ class _QuizScreenState extends State<QuizScreen> {
         VerbPartizipIIQuizItem(partizip2: final p2) => ConjugationField(
             hintText: 'Partizip II eingeben…',
             onSubmit: (answer) =>
-                _onAnswer(_normalise(answer) == _normalise(p2)),
+                _onAnswer(_normalisedMatch(answer, p2)),
           ),
         NounReverseQuizItem(entry: final n) => ConjugationField(
             hintText: 'z. B. der Hund…',
             onSubmit: (answer) {
               final correct = '${n.article.name} ${n.word}';
-              _onAnswer(_normalise(answer) == _normalise(correct));
+              _onAnswer(_normalisedMatch(answer, correct));
             },
           ),
         VerbReverseQuizItem(infinitive: final inf) => ConjugationField(
             hintText: 'Infinitiv eingeben…',
             onSubmit: (answer) =>
-                _onAnswer(_normalise(answer) == _normalise(inf)),
+                _onAnswer(_normalisedMatch(answer, inf)),
           ),
         AdjTranslationQuizItem(entry: final a) => ConjugationField(
             hintText: 'English translation…',
@@ -349,22 +381,22 @@ class _QuizScreenState extends State<QuizScreen> {
         AdjComparativeQuizItem(entry: final a) => ConjugationField(
             hintText: 'Komparativ eingeben…',
             onSubmit: (answer) =>
-                _onAnswer(_normalise(answer) == _normalise(a.comparative)),
+                _onAnswer(_normalisedMatch(answer, a.comparative)),
           ),
         AdjSuperlativeQuizItem(entry: final a) => ConjugationField(
             hintText: 'Superlativ eingeben…',
             onSubmit: (answer) =>
-                _onAnswer(_normalise(answer) == _normalise(a.superlative)),
+                _onAnswer(_normalisedMatch(answer, a.superlative)),
           ),
         AdjReverseQuizItem(entry: final a) => ConjugationField(
             hintText: 'Adjektiv eingeben…',
             onSubmit: (answer) =>
-                _onAnswer(_normalise(answer) == _normalise(a.word)),
+                _onAnswer(_normalisedMatch(answer, a.word)),
           ),
         VerbSeparableQuizItem(prefix: final p) => ConjugationField(
             hintText: 'Praefix eingeben…',
             onSubmit: (answer) =>
-                _onAnswer(_normalise(answer) == _normalise(p)),
+                _onAnswer(_normalisedMatch(answer, p)),
           ),
         PrepTranslationQuizItem(entry: final p) => ConjugationField(
             hintText: 'English translation…',
@@ -378,7 +410,7 @@ class _QuizScreenState extends State<QuizScreen> {
         VerbQuizItem() => ConjugationField(
             onSubmit: (answer) {
               final v = _current as VerbQuizItem;
-              _onAnswer(_normalise(answer) == _normalise(v.correctAnswer));
+              _onAnswer(_normalisedMatch(answer, v.correctAnswer));
             },
           ),
       };
@@ -413,8 +445,14 @@ class _QuizScreenState extends State<QuizScreen> {
     return expected.split(RegExp(r'\s*/\s*')).any((v) => norm(v) == a);
   }
 
-  static String _normalise(String s) =>
-      s.trim().toLowerCase().replaceAll('ss', 'ß');
+  static String _normalise(String s) => s.trim().toLowerCase();
+
+  // Accept answer if it exactly matches OR if user typed ss where ß was expected.
+  static bool _normalisedMatch(String answer, String expected) {
+    final a = _normalise(answer);
+    final e = _normalise(expected);
+    return a == e || a.replaceAll('ss', 'ß') == e;
+  }
 
   static String _personLabel(GrammaticalPerson p) => switch (p) {
         GrammaticalPerson.ich => 'ich',

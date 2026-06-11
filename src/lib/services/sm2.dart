@@ -6,17 +6,21 @@ class Sm2Service {
   static Sm2State applyGrade(Sm2State state, int grade) {
     assert(grade >= 0 && grade <= 5);
 
+    // EF is updated on every graded response (Wozniak step 6).
+    // grade 0 → EF drops by 0.8; grade 5 → EF rises by 0.1.
+    final newEF = (state.easeFactor +
+            (0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02)))
+        .clamp(1.3, double.infinity);
+
     if (grade < 3) {
+      // Lapse: reset repetition counter and interval; EF penalty applied above.
       return state.copyWith(
+        easeFactor: newEF,
         repetitions: 0,
         intervalDays: 1,
         nextReview: DateTime.now().add(const Duration(days: 1)),
       );
     }
-
-    final newEF = (state.easeFactor +
-            (0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02)))
-        .clamp(1.3, double.infinity);
 
     final newReps = state.repetitions + 1;
     final int newInterval;

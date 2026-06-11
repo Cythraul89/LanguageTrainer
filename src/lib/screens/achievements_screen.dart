@@ -3,16 +3,29 @@ import 'package:language_trainer/models/achievement.dart';
 import 'package:language_trainer/models/user_progress.dart';
 import 'package:language_trainer/services/gamification_service.dart';
 
-class AchievementsScreen extends StatelessWidget {
+class AchievementsScreen extends StatefulWidget {
   const AchievementsScreen({super.key, required this.gamification});
   final GamificationService gamification;
+
+  @override
+  State<AchievementsScreen> createState() => _AchievementsScreenState();
+}
+
+class _AchievementsScreenState extends State<AchievementsScreen> {
+  late Future<UserProgress> _data;
+
+  @override
+  void initState() {
+    super.initState();
+    _data = widget.gamification.getProgress();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Achievements')),
       body: FutureBuilder<UserProgress>(
-        future: gamification.getProgress(),
+        future: _data,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
