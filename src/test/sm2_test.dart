@@ -45,7 +45,8 @@ void main() {
       s = Sm2Service.applyGrade(s, 0);
       expect(s.repetitions, 0);
       expect(s.intervalDays, 1);
-      expect(s.easeFactor, closeTo(ef, 0.001)); // EF unchanged on failure
+      // grade 0 delta: 0.1 - 5*(0.08+5*0.02) = -0.8 → ef(2.7) - 0.8 = 1.9
+      expect(s.easeFactor, closeTo(ef - 0.8, 0.001));
     });
 
     test('EF never drops below 1.3', () {
