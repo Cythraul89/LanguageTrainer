@@ -38,6 +38,7 @@ class GamificationService {
   // ── Session-local state (reset by startSession) ───────────────────────────
   int _sessionXp = 0;
   int _consecutiveCorrect = 0;
+  int _preWrongConsecutive = 0;
   final List<Achievement> _sessionUnlocked = [];
   int _sessionStartLevel = 1;
 
@@ -68,6 +69,7 @@ class GamificationService {
       _sessionXp += xp;
       _consecutiveCorrect++;
     } else {
+      _preWrongConsecutive = _consecutiveCorrect;
       _consecutiveCorrect = 0;
     }
 
@@ -85,6 +87,28 @@ class GamificationService {
 
     _sessionUnlocked.addAll(newlyUnlocked);
     return AnswerReward(xpEarned: xp, unlocked: newlyUnlocked);
+  }
+
+  /// Call instead of a second processAnswer when the user overrides a wrong
+  /// answer as a typo. Undoes the streak damage and awards correct-answer XP
+  /// without double-counting the card.
+  Future<void> overrideLastAnswer({required bool isFirstAttempt}) async {
+    // Restore the streak to what it was before the wrong answer, then credit
+    // the correct answer.
+    _consecutiveCorrect = _preWrongConsecutive + 1;
+    final xp = _kXpCorrect + (isFirstAttempt ? _kXpFirstTimeBonus : 0);
+    _sessionXp += xp;
+
+    await _db.transaction(() async {
+      final row = await _db.getProgress();
+      await _db.updateProgress(UserProgressEntriesCompanion(
+        totalXp: Value(row.totalXp + xp),
+        totalCorrect: Value(row.totalCorrect + 1),
+        totalFirstCorrect: Value(
+            row.totalFirstCorrect + (isFirstAttempt ? 1 : 0)),
+      ));
+      _sessionUnlocked.addAll(await _checkAndUnlock());
+    });
   }
 
   /// Call when the session queue is exhausted.

@@ -92,11 +92,8 @@ class AppDatabase extends _$AppDatabase {
   // ── User progress ──────────────────────────────────────────────────────────
 
   /// Returns the singleton progress row, creating it on first call.
+  /// Uses INSERT OR IGNORE to be safe against concurrent first-call races.
   Future<UserProgressEntry> getProgress() async {
-    final row = await (select(userProgressEntries)
-          ..where((t) => t.id.equals(1)))
-        .getSingleOrNull();
-    if (row != null) return row;
     await into(userProgressEntries).insert(
       const UserProgressEntriesCompanion(
         id: Value(1),
@@ -106,9 +103,10 @@ class AppDatabase extends _$AppDatabase {
         sessionsCompleted: Value(0),
         unlockedAchievements: Value(''),
       ),
+      mode: InsertMode.insertOrIgnore,
     );
-    return (await (select(userProgressEntries)..where((t) => t.id.equals(1)))
-        .getSingleOrNull())!;
+    return (select(userProgressEntries)..where((t) => t.id.equals(1)))
+        .getSingle();
   }
 
   /// Partial update — only companion fields wrapped in Value() are written.

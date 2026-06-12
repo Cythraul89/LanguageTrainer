@@ -17,9 +17,10 @@ from fpdf import FPDF, XPos, YPos
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
 ROOT = Path(__file__).parent.parent
-NOUNS_FILE = ROOT / "src/lib/data/nouns.dart"
-VERBS_FILE = ROOT / "src/lib/data/verbs.dart"
-ADJ_FILE   = ROOT / "src/lib/data/adjectives.dart"
+NOUNS_FILE  = ROOT / "src/lib/data/nouns.dart"
+VERBS_FILE  = ROOT / "src/lib/data/verbs.dart"
+ADJ_FILE    = ROOT / "src/lib/data/adjectives.dart"
+PREPS_FILE  = ROOT / "src/lib/data/prepositions.dart"
 OUT_FILE   = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "vocabulary.pdf"
 
 LEVELS = ["a1", "a2", "b1", "b2", "c1"]
@@ -83,6 +84,26 @@ def parse_adjectives(path):
         word, english, comp, sup, level = m.group(1,2,3,4,5)
         if level in result:
             result[level].append((word, english, comp, sup))
+    return result
+
+def parse_prepositions(path):
+    """Returns {level: [(word, english, cases_display), ...]}"""
+    text = path.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r"PrepositionEntry\s*\("
+        r".*?word:\s*'([^']+)'"
+        r".*?english:\s*'([^']+)'"
+        r".*?cases:\s*\[([^\]]+)\]"
+        r".*?level:\s*CefrLevel\.(\w+)",
+        re.DOTALL,
+    )
+    result = {lv: [] for lv in LEVELS}
+    for m in pattern.finditer(text):
+        word, english, cases_raw, level = m.group(1, 2, 3, 4)
+        if level not in result:
+            continue
+        cases = [c.strip().strip("'\"") for c in cases_raw.split(',') if c.strip()]
+        result[level].append((word, english, ' / '.join(cases)))
     return result
 
 # ── PDF helpers ───────────────────────────────────────────────────────────────
@@ -196,9 +217,28 @@ def render_adjectives(pdf, adj_by_level):
             ], odd=(i % 2 == 0))
         pdf.ln(3)
 
+def render_prepositions(pdf, preps_by_level):
+    pdf.add_page()
+    pdf.section_title("Prepositions")
+    cols = [("Preposition", 40), ("English", 80), ("Case(s)", 70)]
+    for lv in LEVELS:
+        rows = preps_by_level.get(lv, [])
+        if not rows:
+            continue
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_text_color(*INDIGO)
+        pdf.cell(0, 6, LEVEL_LABELS[lv], new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.set_text_color(*BODY_TXT)
+        pdf.table_header(cols)
+        for i, (word, english, cases) in enumerate(rows):
+            pdf.table_row([
+                (word, 40), (english, 80), (cases, 70),
+            ], odd=(i % 2 == 0))
+        pdf.ln(3)
+
 # ── Title page ────────────────────────────────────────────────────────────────
 
-def render_title(pdf, noun_count, verb_count, adj_count):
+def render_title(pdf, noun_count, verb_count, adj_count, prep_count):
     pdf.add_page()
     pdf.ln(40)
     pdf.set_font("Helvetica", "B", 28)
@@ -213,8 +253,8 @@ def render_title(pdf, noun_count, verb_count, adj_count):
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(80, 80, 80)
     for line in [
-        f"{noun_count} nouns  ·  {verb_count} verbs  ·  {adj_count} adjectives",
-        "Levels: A1 - C1",
+        f"{noun_count} nouns  -  {verb_count} verbs  -  {adj_count} adjectives  -  {prep_count} prepositions",
+        "Levels: A1 - B2",
     ]:
         pdf.cell(0, 7, line, align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
@@ -224,23 +264,26 @@ def main():
     nouns = parse_nouns(NOUNS_FILE)
     verbs = parse_verbs(VERBS_FILE)
     adjs  = parse_adjectives(ADJ_FILE)
+    preps = parse_prepositions(PREPS_FILE)
 
     noun_count = sum(len(v) for v in nouns.values())
     verb_count = sum(len(v) for v in verbs.values())
     adj_count  = sum(len(v) for v in adjs.values())
+    prep_count = sum(len(v) for v in preps.values())
 
     pdf = VocabPDF(orientation="P", unit="mm", format="A4")
     pdf.set_auto_page_break(auto=True, margin=14)
     pdf.set_margins(left=14, top=14, right=14)
 
-    render_title(pdf, noun_count, verb_count, adj_count)
+    render_title(pdf, noun_count, verb_count, adj_count, prep_count)
     render_nouns(pdf, nouns)
     render_verbs(pdf, verbs)
     render_adjectives(pdf, adjs)
+    render_prepositions(pdf, preps)
 
     OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     pdf.output(str(OUT_FILE))
-    print(f"Written {OUT_FILE}  ({noun_count} nouns, {verb_count} verbs, {adj_count} adjectives)")
+    print(f"Written {OUT_FILE}  ({noun_count} nouns, {verb_count} verbs, {adj_count} adjectives, {prep_count} prepositions)")
 
 
 if __name__ == "__main__":

@@ -256,21 +256,28 @@ void main() {
   // ── Perfekt answer derivation ─────────────────────────────────────────────────
 
   group('VerbQuizItem — perfekt answer', () {
-    test('haben verb perfekt form contains partizip2', () async {
+    test('haben verb perfekt form is "habe/hat/... <partizip2>"', () async {
       await scheduler.setSelectedCardTypes({CardType.verbPerfekt});
+      await scheduler.setSessionSize(50000);
       final items = await scheduler.getDueItems();
-      final habenItem = items.whereType<VerbQuizItem>().firstWhere(
-            (i) => i.tense == Tense.perfekt && !i.correctAnswer.startsWith('bin'),
-            orElse: () => items.whereType<VerbQuizItem>().first,
-          );
-      // Haben-verb perfekt: "habe gemacht", "hat gemacht", etc.
-      expect(habenItem.correctAnswer, isNotEmpty);
+      // machen (haben-verb, ich): "habe gemacht"
+      final machenIch = items
+          .whereType<VerbQuizItem>()
+          .where((i) =>
+              i.infinitive == 'machen' &&
+              i.person == GrammaticalPerson.ich &&
+              i.tense == Tense.perfekt)
+          .firstOrNull;
+      expect(machenIch, isNotNull,
+          reason: 'machen/ich/perfekt must be in items');
+      expect(machenIch!.correctAnswer, 'habe gemacht');
     });
 
-    test('sein verb perfekt form starts with a sein conjugation', () async {
+    test('sein verb perfekt form is "bin/bist/... <partizip2>"', () async {
       await scheduler.setSelectedCardTypes({CardType.verbPerfekt});
+      await scheduler.setSessionSize(50000);
       final items = await scheduler.getDueItems();
-      // "gehen" is a sein-verb — "ich bin gegangen"
+      // gehen (sein-verb, ich): "bin gegangen"
       final gehenItem = items
           .whereType<VerbQuizItem>()
           .where((i) =>
@@ -278,9 +285,9 @@ void main() {
               i.person == GrammaticalPerson.ich &&
               i.tense == Tense.perfekt)
           .firstOrNull;
-      if (gehenItem != null) {
-        expect(gehenItem.correctAnswer, 'bin gegangen');
-      }
+      expect(gehenItem, isNotNull,
+          reason: 'gehen/ich/perfekt must be in items with large session size');
+      expect(gehenItem!.correctAnswer, 'bin gegangen');
     });
   });
 

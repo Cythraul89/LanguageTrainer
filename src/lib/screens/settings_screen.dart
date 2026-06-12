@@ -15,6 +15,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   late Future<_SettingsData> _data;
+  int? _sliderValue; // local drag state; null when not dragging
 
   @override
   void initState() {
@@ -81,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         style: Theme.of(context).textTheme.titleMedium),
                   ),
                   Text(
-                    '${d.sessionSize}',
+                    '${_sliderValue ?? d.sessionSize}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
@@ -90,12 +91,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               Slider(
-                value: d.sessionSize.toDouble(),
+                value: (_sliderValue ?? d.sessionSize).toDouble(),
                 min: 5,
                 max: 50,
                 divisions: 9,
-                label: '${d.sessionSize}',
-                onChanged: (v) async {
+                label: '${_sliderValue ?? d.sessionSize}',
+                onChanged: (v) => setState(() => _sliderValue = v.round()),
+                onChangeEnd: (v) async {
+                  _sliderValue = null;
                   await widget.scheduler.setSessionSize(v.round());
                   _reload();
                 },
